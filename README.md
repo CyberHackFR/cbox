@@ -20,7 +20,7 @@ Avant de démarrer l'installation, assurez-vous qu'à l'état actuel, le script 
 * Un nouvel utilisateur sudo appelé `cboxadmin` sera créé sur le système.
 * Le service CBox sera activé.
 * Le serveur de noms des systèmes sera défini sur le serveur DNS proxy inclus dans CBox. Il peut être configuré à l'aide de l'assistant initial.
-* La CBox sera installée dans `/opt/xbox/` et ses configurations seront copiées à partir du dossier de dépôt cloné `/etc/cbox`.
+* La CBox sera installée dans `/opt/cbox/` et ses configurations seront copiées à partir du dossier de dépôt cloné `/etc/cbox`.
 
 Après le clonage, vous devez modifier et remplacer les informations d'identification par défaut dans:
 * `config/secrets/*.conf`
