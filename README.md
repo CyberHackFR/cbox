@@ -1,62 +1,62 @@
-![](docs/box4security.png)
+![]()
 
-Open-source powered SIEM, Vulnerability Scanning, Host- & Network-IDS. All wrapped in a modern Python web app and shipped in Docker containers.   
-The BOX4security builds upon solid blocks like Elastic Stack, OpenVAS, and Suricata to deliver security insights. Additionally, it features one-click updating, automatized installation, easy configuration through an initial wizard, and a role-based permission model for web and API access. 
+SIEM open source, analyse de vulnérabilité, Host- & Network-IDS. Le tout enveloppé dans une application Web Python moderne et expédié dans des conteneurs Docker.
+La CBox s'appuie sur des blocs solides comme Elastic Stack, OpenVAS et Suricata pour fournir des informations sur la sécurité. De plus, il propose une mise à jour en un clic, une installation automatisée, une configuration facile via un assistant initial et un modèle d'autorisation basé sur les rôles pour l'accès Web et API. 
 
-We welcome you to try it out and take hold of your network's security.
+Nous vous invitons à l'essayer et à assurer la sécurité de votre réseau.
 
 
 # Install
-We provide an automated method of installation via a bash script.
+Nous proposons une méthode d'installation automatisée via un script bash.
 
-**Currently only Ubuntu 20.04 LTS Server is supported and tested.** 
+**Actuellement, seul Ubuntu 20.04 LTS Server est pris en charge et testé.** 
 
-Remark: While the installation script is designed to have the same outcome every time it is run (idempotency), it is recommended to launch the installation from a stable console. We recommend running it in a `screen` session.
+Remarque : Bien que le script d'installation soit conçu pour avoir le même résultat à chaque exécution (idempotence), il est recommandé de lancer l'installation depuis une console stable. Nous vous recommandons de l'exécuter dans une session `screen`.
 
-Before you start the installation, be sure that at the current state, the installation script includes the following system modifications:
+Avant de démarrer l'installation, assurez-vous qu'à l'état actuel, le script d'installation inclut les modifications système suivantes:
 
-* New packages will be installed to resolve dependencies.
-* A new folder `/data` will be created in your root directory. The folder serves for data storage of Elasticsearch and Suricata alerts and flows.
-* A new sudo user called `amadmin` will be created on the system.
-* The BOX4security service will be enabled.
-* The systems' nameserver will be set to the proxying DNS server included in the BOX4security. It can be configured using the initial wizard.
-* The BOX4security will be installed to `/opt/box4s/` and its configs will be copied from the cloned repo folder `/etc/box4s`.
+* De nouveaux packages seront installés pour résoudre les dépendances.
+* Un nouveau dossier `/data` sera créé dans votre répertoire racine. Le dossier sert au stockage des données des alertes et des flux Elasticsearch et Suricata.
+* Un nouvel utilisateur sudo appelé `cboxadmin` sera créé sur le système.
+* Le service CBox sera activé.
+* Le serveur de noms des systèmes sera défini sur le serveur DNS proxy inclus dans CBox. Il peut être configuré à l'aide de l'assistant initial.
+* La CBox sera installée dans `/opt/xbox/` et ses configurations seront copiées à partir du dossier de dépôt cloné `/etc/cbox`.
 
-After cloning you should edit and replace the default credentials in:
+Après le clonage, vous devez modifier et remplacer les informations d'identification par défaut dans:
 * `config/secrets/*.conf`
 * `docker/elastalert/etc/elastalert/smtp_auth_file.yaml`
 
-Once you are ready, the installation is as simple as: 
+Une fois que vous êtes prêt, l'installation est aussi simple que: 
 ```
-git clone https://github.com/4sConsult/box4security.git
-# Edit configuration files before running install.sh!
-sudo /bin/bash /box4security/scripts/Automation/install.sh
+git clone https://github.com/CyberHackFR/cbox.git
+# Modifiez les fichiers de configuration avant d'exécuter install.sh!
+sudo /bin/bash /cbox/scripts/Automation/install.sh
 ```
 
-The script may ask you some questions and will notify you about the progress.
+Le script peut vous poser quelques questions et vous informera de la progression.
 
-After it is done, browse to `https://YOUR_SERVER_IP`
+Une fois l'opération terminée, accédez à `https://SERVEUR_IP`
 
-# Contribute
-## Our Philosophy
+# Contribuer
+## Notre Philosophie
 
-BOX4security started as an in-house product, developed here at 4sConsult.
-It is used in security assessments of customers' networks while also allowing a permanent installation in the environment.  
+CBox a commencé comme un produit interne, développé ici chez CyberHack.
+Il est utilisé dans les évaluations de sécurité des réseaux des clients tout en permettant une installation permanente dans l'environnement.  
 
-By going open-source we no longer withheld the software stack from the public and instead want to engage with the security community. Anyone is free to contribute and create a fork of this repository. As with all products, we ask you to respect the license. While anyone is free to use the product in commercial use, we kindly ask you to contribute backward by creating pull requests upstream. This way, all users of the BOX4security can evaluate and 
+En optant pour l'open source, nous n'avons plus caché la pile logicielle au public et souhaitons à la place nous engager avec la communauté de la sécurité. Tout le monde est libre de contribuer et de créer un fork de ce référentiel. Comme pour tous les produits, nous vous demandons de respecter la licence. Bien que tout le monde soit libre d'utiliser le produit à des fins commerciales, nous vous demandons de bien vouloir contribuer en arrière en créant des demandes d'extraction en amont. De cette façon, tous les utilisateurs de la CBox peuvent évaluer.
 
-We are also happy to help you get started with the repository and contributing to it!
-Don't hesitate to reach out to our engineers by dropping an [email](mailto:box@4sconsult.de) in our mailbox.
+Nous sommes également ravis de vous aider à démarrer avec le référentiel et à y contribuer!
+N'hésitez pas à contacter nos ingénieurs en déposant un [email](mailto:box@cyberhack.fr) dans notre boîte aux lettres.
 
-Fairly often smaller and *easy-fix* issues are deliberately left open for newer contributors. Browse for *help-wanted* and *good-first-issue* to 
+Assez souvent, des problèmes plus petits et *easy-fix* sont délibérément laissés ouverts aux nouveaux contributeurs. Recherchez *help-wanted* et *good-first-issue* pour
 
-## Bug Reporting and Feature Requests
-### Security
-**DO NOT** publish security vulnerabilities or possible exploits on any platforms, including this repository's issues tab. Instead, drop us an [email](mailto:box@4sconsult.de), so we can take a look at it.
-Possibly, remotely accessible instances of this software may be affected by your findings!
+## Rapports de bogues et demandes de fonctionnalités
+### Sécurité
+**DO NOT** publier les vulnérabilités de sécurité ou les exploits possibles sur toutes les plateformes, y compris l'onglet problèmes de ce référentiel. Au lieu de cela, envoyez-nous un [email](mailto:box@cyberhack.fr), afin que nous puissions y jeter un œil.
+Il est possible que les instances accessibles à distance de ce logiciel soient affectées par vos découvertes !
 
-### General Bugs and Feature Requests
-Any other forms of findings and requests are very welcome to be posted and discussed publicly on the issues tab of this repository.
+### Bugs généraux et demandes de fonctionnalités
+Toutes les autres formes de conclusions et de demandes sont les bienvenues pour être publiées et discutées publiquement sur l'onglet problèmes de ce référentiel.
 
-# License
-As introduced in the contribution section, the BOX4security is licensed under the [AGPL-3.0](LICENSE) ([TL;DR](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0))).
+# Licence
+Comme introduit dans la section contribution, la CBox est sous licence [AGPL-3.0](LICENSE) ([TL;DR](https://tldrlegal.com/license/gnu-affero-general-public-license-v3-(agpl-3.0))).
