@@ -1,0 +1,29 @@
+.text-justify {
+    text-align: justify;
+}
+video {
+  width: 100%    !important;
+  height: auto   !important;
+  display: block;
+}
+
+.foursgrey {
+  color: #36515A !important;
+
+}
+.foursgrey-bg {
+    background-color: #36515A !important;
+    color: white !important;
+}
+
+small.helper {
+  color: #36515A !important;
+}
+
+.ui.action.input.cert input[type="file"] {
+  display: none;
+}
+
+.foursfooter {
+    border-bottom: 0 !important;
+}

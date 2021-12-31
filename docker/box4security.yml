@@ -1,0 +1,277 @@
+version: '2.3'
+
+services:
+  elasticsearch:
+    build: elasticsearch/.
+    container_name: elasticsearch
+    restart: always
+    ports:
+     - 127.0.0.1:9200:9200
+    image: 4sconsult/elasticsearch:0.0.5
+    volumes:
+     - /data/elasticsearch:/data/elasticsearch
+     - /data/elasticsearch_backup:/data/elasticsearch_backup
+    env_file:
+      - /etc/box4s/.env.es
+  kibana:
+    build: kibana/.
+    container_name: kibana
+    restart: always
+    environment:
+     - INT_IP=${INT_IP}
+    env_file:
+     - /etc/box4s/wazuh.conf
+    ports:
+     - 127.0.0.1:5601:5601
+    image: 4sconsult/kibana:0.0.5
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    stop_signal: SIGKILL
+    user: "1000:44269"
+  spiderfoot:
+    build: spiderfoot
+    container_name: spiderfoot
+    restart: always
+    volumes:
+        - spiderfoot_data:/var/lib/spiderfoot
+    ports:
+        - 5001:8080
+    user: "2000:44269"
+    image: 4sconsult/spiderfoot:0.0.5
+  openvas:
+    build: openvas
+    container_name: openvas
+    restart: always
+    environment:
+      - INT_IP=${INT_IP}
+    ports:
+      - 127.0.0.1:9392:9392
+    expose:
+      - 9390
+    volumes:
+      - gvm-data:/data
+      - varlib_logstash:/var/lib/logstash
+    image: 4sconsult/openvas:0.0.5
+    env_file:
+      - /etc/box4s/openvas.conf
+  suricata:
+    build: suricata/.
+    container_name: suricata
+    restart: always
+    image: "4sconsult/suricata:0.0.5"
+    network_mode: "host"
+    env_file:
+      - /etc/box4s/.env.suri
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    volumes:
+      - varlib_suricata:/var/lib/suricata/rules
+      - data:/data
+      - varlib_box4s:/var/lib/box4s/
+    user: "0:44269"
+  metricbeat:
+    build: metricbeat/.
+    container_name: metricbeat
+    image: 4sconsult/metricbeat:0.0.5
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    user: "0:44269"
+  heartbeat:
+    build: heartbeat/.
+    container_name: heartbeat
+    image: 4sconsult/heartbeat:0.0.5
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+  logstash:
+    build: logstash/.
+    container_name: logstash
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    env_file:
+     - /etc/default/logstash
+     - /etc/box4s/db.conf
+     - /etc/box4s/.env.ls
+    ports:
+      - 9600:9600
+      - 5044:5044
+      - 5046:5046
+    image: 4sconsult/logstash:0.0.5
+    volumes:
+      - varlib_logstash:/var/lib/logstash/
+      - etcbox4s_logstash:/etc/logstash/conf.d/general/
+      - varlib_box4s:/var/lib/box4s/
+    user: "0:44269"
+  filebeat:
+    build: filebeat/.
+    container_name: filebeat
+    depends_on:
+        elasticsearch:
+            condition: service_healthy
+    image: 4sconsult/filebeat:0.0.5
+    volumes:
+      - varlib_logstash:/var/lib/logstash/
+      - data:/data
+    user: root:44269
+  web:
+    container_name: web
+    networks:
+      default:
+        ipv4_address: 172.20.08.11
+    image: 4sconsult/web:0.0.5
+    build: web/.
+    command: >
+     bash -c "python main.py db upgrade head &&
+     gunicorn --bind 0.0.0.0:5000 main:app"
+    volumes:
+       - static_volume:/home/app/web/source/static
+       - /var/log/box4s/:/var/log/box4s/
+       - varlib_box4s/:/var/lib/box4s/
+       - varlib_elastalert_rules:/var/lib/elastalert/rules/
+       - /etc/box4s/smtp.conf:/etc/box4s/smtp.conf
+       - /etc/box4s/modules.conf:/etc/box4s/modules.conf
+       - /etc/msmtprc:/etc/box4s/msmtprc
+       - /etc/ssl/certs/BOX4s-SMTP.pem:/etc/ssl/certs/BOX4s-SMTP.pem
+       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+       - /etc/environment:/etc/environment
+       - /etc/box4s/logstash/BOX4s-special.conf:/etc/box4s/logstash/BOX4s-special.conf
+       - /etc/default/logstash:/etc/default/logstash
+       - /etc/netplan:/etc/_netplan/
+       - /etc/box4s/certs/:/etc/box4s/certs/
+       - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - 5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/_health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - web/web.env
+      - /etc/box4s/web.conf
+      - /etc/box4s/smtp.conf
+      - /etc/box4s/modules.conf
+      - /var/lib/box4s/VERSION
+    environment:
+      - KUNDE
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "app:44269"
+  db:
+    container_name: db
+    image: 4sconsult/db:0.0.5
+    build: db/.
+    volumes:
+      - varlib_postgresql/:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - /etc/box4s/db.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    user: "0:44269"
+  nginx:
+    container_name: nginx
+    image: 4sconsult/nginx:0.0.5
+    build: nginx/.
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_volume:/home/app/web/source/static
+      - /etc/box4s/certs:/etc/nginx/certs
+    depends_on:
+      - web
+      - kibana
+      - wiki
+    user: "0:44269"
+  dnsmasq:
+    container_name: dnsmasq
+    image: 4sconsult/dnsmasq:0.0.5
+    build: dnsmasq/.
+    ports:
+      - 53:5353/tcp
+      - 53:5353/udp
+    volumes:
+      - varlib_box4s:/var/lib/box4s/
+    user: "dnsmasq:44269"
+  elastalert:
+    container_name: elastalert
+    image: 4sconsult/elastalert:0.0.5
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    build: elastalert/.
+    restart: always
+    volumes:
+      - varlib_elastalert_rules:/opt/elastalert/rules
+      - /var/lib/box4s/elastalert_smtp.yaml:/opt/elastalert/smtp_auth_file.yaml
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+    expose:
+      - 3030
+      - 3333
+    user: "0:44269"
+  core4s:
+    container_name: core4s
+    build: core4s/.
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /data/suricata/eve.json:/core4s/workfolder/suricata/eve.json
+      - /var/lib/box4s:/core4s/workfolder/var/lib/box4s
+      - varlib_logstash:/core4s/workfolder/var/lib/logstash
+      - varlib_box4s:/core4s/workfolder/wazuh_files
+      - /etc/box4s/:/core4s/config/secrets:ro
+    image: 4sconsult/core4s:0.0.5
+  wiki:
+    container_name: wiki
+    image: 4sconsult/wiki:0.0.5
+    build: wiki/.
+    restart: always
+    volumes:
+      - varlib_docs:/wiki/
+    expose:
+      - 80
+    user: "0:44269"
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.20.08.0/24
+volumes:
+  # to persist data beyond container's life
+  spiderfoot_data:
+  gvm-data:
+    external: true
+  static_volume:
+  data:
+    external: true
+  varlib_suricata:
+    external: true
+  varlib_postgresql:
+    external: true
+  varlib_box4s:
+    external: true
+  varlib_logstash:
+    external: true
+  varlib_docs:
+    external: true
+  varlib_elastalert_rules:
+    external: true
+  etcbox4s_logstash:
+    external: true

@@ -1,0 +1,5 @@
+/docker/web/source/wazuh/*.deb
+/docker/web/source/wazuh/*.pkg
+/docker/web/source/wazuh/*.rpm
+/docker/web/source/wazuh/*.msi
+.vscode/

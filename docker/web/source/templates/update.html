@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="ui main text container">
+  {% block flash_messages %}
+    {%- with messages = get_flashed_messages(with_categories=true) -%}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="ui message {{category}}">{{ message|safe }}</div>
+            {% endfor %}
+        {% endif %}
+    {%- endwith %}
+  {% endblock %}
+  <h1 class="ui header">BOX4Security - Updates<div class="sub header">Verfügbare Aktualisierungen</div></h1>
+  <div class="ui inverted section divider"></div>
+  <div class="section">
+    <div class="table">
+      <table id="tbl" class="ui celled structured table">
+        <thead>
+          <tr>
+            <th class="collapsing">Version</th>
+            <th class="">Beschreibung</th>
+            <th class="collapsing">Zeit</th>
+            <th class="center aligned collapsing">Update</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <div class="ui center aligned grid">
+      <div class="center aligned row">
+        <div class="one column">
+          <i class="large notched circle loading icon"></i>
+        </div>
+      </div>
+    </div>
+    <div id='tbl-errormsg' class="transition hidden ui icon negative message">
+      <i class="exclamation circle icon"></i>
+      <div class="content">
+        <div class="header">
+          Abfrage der verfügbaren Updates fehlgeschlagen
+        </div>
+      </div>
+  </div>
+  </div>
+</div>
+<div class="ui modal">
+  <div class="header"></div>
+  <div class="content">
+    <p id=""></p>
+    <div class="ui icon message">
+      <i class="notched circle loading icon"></i>
+      <div class="content">
+        <div class="header">
+          Der Updatevorgang läuft..
+        </div>
+        <p>Das System wird aktualisiert. Bitte lassen Sie das Fenster geöffnet.</p>
+      </div>
+    </div>
+    <div class="ui segment">
+      <p id="logLines"><br> </p>
+    </div>
+    <a class="ui labeled icon button transition hidden" href="//{{request.host}}/api/update/log/download"><i class="icon green download"></i>Download Update-Log</a>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+  <script src="/static/external/moment.min.js"></script>
+  <script src="/static/external/marked.min.js"></script>
+  <script type="text/javascript">
+    // helper function to fetch an API endpoint
+    function apiEndpoint(endpoint, method='GET', redirect='follow') {
+    return fetch(`//{{ request.host }}/${endpoint}`, {method: method, redirect: redirect})
+      .then((response) => {
+        return response.json()
+      })
+      .then(json => {
+        return json
+      })
+      .catch((err) => {
+        console.log('Fetch Error :-S', err);
+      });
+    }
+    const getEndpoint = async(endpoint, method) => {
+    const ret = await apiEndpoint(endpoint, method)
+    return ret
+    }
+  </script>
+  <script type="text/javascript">
+  $('div.item.active').removeClass('active');
+  $('#administration').addClass('active');
+  </script>
+  <script type="text/javascript">
+      // fetch all available releases and add to table
+      $.ajax('//{{ request.host }}/api/ver/releases/', {
+        dataType: "json",
+        timeout: 5000,
+        success: (data) => {
+          $('#tbl-errormsg').prev().addClass('transition hidden');
+          addToTable(data);
+        },
+        error: (jqXhr, textStatus, errorMessage) => {
+          if(textStatus==="timeout"){
+            $('#tbl-errormsg').children('.content').append(`<p>Zeitüberschreitung beim Verbindungsaufbau mit dem Updateserver. Die Verbindung wird automatisch erneut aufgebaut. Bitte führen Sie die Aktion zu einem späteren Zeitpunkt durch. Bei fortlaufendem Auftreten dieses Fehlers ist die Überprüfung der Internetverbindung empfohlen.</p>`);
+          } else {
+            $('#tbl-errormsg').children('.content').append(`<p>Fehler bei dem Verbindungsaufbau mit dem Updateserver. Die Verbindung wird automatisch erneut aufgebaut. Bitte führen Sie die Aktion zu einem späteren Zeitpunkt durch.</p>`);
+          }
+          $('#tbl-errormsg').prev().addClass('transition hidden');
+          $('#tbl-errormsg').removeClass('transition hidden');
+        }
+      })
+      async function addToTable(data) {
+        // Fetch current version from api
+        const currver = await getEndpoint('api/ver/');
+        let tbody = $(`#tbl tbody`);
+        // For each available version, populate fields and add to table
+        data.forEach((version, i) => {
+          if ((currver.env.toLowerCase() === 'dev') || ! (new semver.SemVer(version.version).prerelease.length)) {
+            let date = moment(version.date);
+            let ago = Math.abs(date.diff(moment(),'days'));
+            if(ago == 0) {
+              // Difference is less than 1 day, display hours
+              ago = Math.abs(date.diff(moment(),'hours'));
+              var strago = `vor ${ago} Stunden`;
+            } else {
+              var strago = `vor ${ago} Tagen`;
+            }
+            if (version.version === "1.6.3") {
+              // Set message for this tag, as it does not exist in the backend.
+              version.message = "Einführung der Update-Funktion und Hinzunahme standardisierter Dashboards"
+            }
+            var description = `<td>
+                <div class="ui accordion">
+                  <div class="title">
+                   <i class="dropdown icon"></i>
+                   ${version.message}
+                  </div>
+                  <div class="fluid content">
+                    <div class="ui divider"></div>`
+                   + marked(version.changelog) +
+                 `</div>
+               </div>
+              </td>`;
+            // Build row depending on if version is equal, higher or lower
+            switch (semver.compare(currver.version, version.version)) {
+
+              case 0:
+              // Versions are equal
+              var row = `<tr>
+                <td class="collapsing"><b>${version.version}</b></td>
+                ${description}
+                <td class="collapsing">${strago}</td>
+                <td class="center aligned collapsing">
+                    <i class="green checkmark icon"></i>
+                </td>
+              </tr>`;
+                break;
+              case 1:
+                // Left version higher
+                var row = `<tr>
+                  <td class="collapsing">${version.version}</td>
+                  ${description}
+                  <td class="collapsing">${strago}</td>
+                  <td class="center aligned collapsing">
+                      <i class="green checkmark icon"></i>
+                  </td>
+                </tr>`;
+                break;
+              case -1:
+                // Right version higher
+                var row = `<tr>
+                  <td class="collapsing">${version.version}</td>
+                  ${description}
+                  <td class="collapsing">${strago}</td>
+                  <td class="center aligned collapsing">`;
+                  if(i == 0) {
+                    // most recent update
+                    row+=`<a data-version="${version.version}" class="ui icon green button">
+                      <i class="download icon"></i>
+                    </a>`
+                  } else {
+                    // intermediate update
+                    row+=`<i class="chevron circle up icon"></i>`
+                  }
+                  row+=`</td>
+                </tr>`;
+                break;
+            }
+            // add row to table
+            tbody.append(row);
+          }
+        });
+        $('.ui.accordion').accordion();
+        $('a.green.button').on('click', async (e) => {
+          // Launch update process to most selected version
+          selectedVersion = $(e.delegateTarget).data('version')
+          const resp = await fetch('//{{request.host}}/api/update/launch/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            redirect: 'follow',
+            body: JSON.stringify({target: selectedVersion})
+          });
+          if(resp.ok)
+          // endpoint gave 200 OK -> update was started
+          {
+            // disable button and change its look
+            $(e.delegateTarget).unbind('click').addClass('grey').removeClass('green').children('i').removeClass('downloads').addClass('notched circle loading');
+            updateRunner(selectedVersion);
+          } else {
+            // TODO: Failed to query for update
+          }
+        });
+      }
+    async function updateRunner(target) {
+      // Modify and show modal
+      var modal = $('.ui.modal');
+      modal.children('.header').text(`Update auf ${target}`);
+      modal.modal('show');
+
+      var running = true;
+      // while update process running
+      while (running) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+
+        getEndpoint('api/update/log/').then((rs) => {
+          modal.find('#logLines').html(rs.lines.join(' <br/>'));
+        });
+        const resStatus = await getEndpoint('api/update/status/');
+        if(resStatus){
+          // successfully received, else just query again in 1.5s
+          switch (resStatus.status) {
+            case "running":
+
+              break;
+            case "successful":
+              running = false;  // break out of while loop
+              {
+                // empty version table
+                $('#tbl').children('tbody').empty();
+                getEndpoint('api/ver/releases/').then((ret) => {
+                  addToTable(ret);
+                  // update version table
+                });
+                // Block to change modal
+                modal.children().find('.message .header').text('Update abgeschlossen.');
+                modal.children().find('.message i').addClass('checkmark').removeClass('notched circle loading');
+                modal.children().find('.message .content p').text('Update erfolgreich abgeschlossen. Sie können das Fenster nun schließen.');
+                modal.append('<i class="close icon"></i>')
+                modal.children('.content').find('a.ui.labeled').removeClass('transition hidden');
+              }
+
+              break;
+            case "rollback-running":
+              {
+                // System is rolling back, display it to the user
+                modal.children().find('.message .header').text('Automatisches Zurücksetzen auf letzte Version');
+                modal.children().find('.message i').addClass('undo loading').removeClass('notched circle');
+                modal.children().find('.message .content p').html('Das Update konnte nicht erfolgreich abgeschlossen werden.<br> Bitte lassen Sie dieses Fenster geöffnet. Das System setzt sich automatisch auf den zuletzt erfolgreich installierten Stand zurück.');
+              }
+              break;
+            case "rollback-successful":
+              running = false; // break out of while loop
+              {
+                // empty version table
+                $('#tbl').children('tbody').empty();
+                getEndpoint('api/ver/releases/').then((ret) => {
+                  addToTable(ret);
+                  // update version table
+                });
+                // Block to change modal
+                modal.children().find('.message .header').text('Zurücksetzen erfolgreich abgeschlossen.');
+                modal.children().find('.message i').addClass('green undo').removeClass('notched circle loading');
+                modal.children().find('.message .content p').text('Die BOX4security wurde auf die letzte erfolgreich installierte Version zurückgesetzt. Sie können das Fenster nun schließen.');
+                modal.append('<i class="close icon"></i>')
+                modal.children('.content').find('a.ui.labeled').removeClass('transition hidden');
+              }
+              break;
+            case "failed":
+              running = false;  // break out of while loop
+              break;
+          }
+        }
+      }
+    }
+  </script>
+{% endblock %}

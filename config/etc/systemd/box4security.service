@@ -1,0 +1,21 @@
+[Unit]
+Description=box4security
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutSec=infinity
+# Pass environmentfile to service
+EnvironmentFile=/etc/environment
+EnvironmentFile=/etc/box4s/modules.conf
+
+# Compose Box4Security up
+ExecStart=/usr/bin/box4s/box4s_service.sh up
+
+# Compose Box4Security down
+ExecStop=/usr/bin/box4s/box4s_service.sh down
+
+[Install]
+WantedBy=multi-user.target
