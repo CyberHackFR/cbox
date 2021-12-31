@@ -1,5 +1,5 @@
 [Unit]
-Description=box4security
+Description=cbox
 Requires=docker.service
 After=docker.service
 
@@ -9,13 +9,13 @@ RestartSec=5
 TimeoutSec=infinity
 # Pass environmentfile to service
 EnvironmentFile=/etc/environment
-EnvironmentFile=/etc/box4s/modules.conf
+EnvironmentFile=/etc/cbox/modules.conf
 
-# Compose Box4Security up
-ExecStart=/usr/bin/box4s/box4s_service.sh up
+# Compose CBox up
+ExecStart=/usr/bin/cbox/cbox_service.sh up
 
-# Compose Box4Security down
-ExecStop=/usr/bin/box4s/box4s_service.sh down
+# Compose CBox down
+ExecStop=/usr/bin/cbox/cbox_service.sh down
 
 [Install]
 WantedBy=multi-user.target
