@@ -13,7 +13,7 @@ if [[ -z $BODY ]]; then
 fi
 ctr=0
 while [ $ctr -lt 6 ]; do
-        echo -e $BODY | sed "1 i\To:BOX4s <box@4sconsult.de>\nSubject: [Kunde: $KUNDE] BOX4s $2\n\n" | msmtp $1
+        echo -e $BODY | sed "1 i\To:CBox <box@cyberhack.fr>\nSubject: [CLIENT: $CLIENT] CBox $2\n\n" | msmtp $1
         retVal=$?
         if [ $retVal -eq 0 ]; then
          break

@@ -4,7 +4,7 @@ actions:
                 options:
                           ignore_empty_list: True
                           continue_if_exception: True
-                description: "Delete Suricata BOX4security indices older than 30 days"
+                description: "Delete Suricata CBox indices older than 30 days"
                 filters:
                         - filtertype: age
                           source: creation_date
@@ -19,7 +19,7 @@ actions:
                 options:
                           ignore_empty_list: True
                           continue_if_exception: True
-                description: "Delete other BOX4security indices older than 180 days"
+                description: "Delete other CBox indices older than 180 days"
                 filters:
                         - filtertype: age
                           source: creation_date
@@ -49,7 +49,7 @@ actions:
                 options:
                     ignore_empty_list: True
                     continue_if_exception: True
-                description: "Delete BOX4security metricbeat indices older than 3 days"
+                description: "Delete CBox metricbeat indices older than 3 days"
                 filters:
                         - filtertype: age
                           source: creation_date

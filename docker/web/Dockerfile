@@ -1,4 +1,4 @@
-from python:3.8.2-slim-buster as builder
+FROM python:3.8.2-slim-buster as builder
 
 # Prevents Python from writing pyc files to disc
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -22,8 +22,8 @@ ENV APP_HOME=/home/app/web
 
 RUN mkdir -p /home/app && \
   addgroup app && \
-  addgroup --gid 44269 boxforsecurity && \
-  useradd -g app -G boxforsecurity app && \
+  addgroup --gid 44269 cyberhackbox && \
+  useradd -g app -G cyberhackbox app && \
   mkdir $APP_HOME
 WORKDIR $APP_HOME
 
@@ -43,12 +43,12 @@ RUN pip install --upgrade pip && \
 # copy source
 COPY . $APP_HOME
 RUN chown -R app:app $HOME && \
-  mkdir -p /var/log/box4s/ && \
-  chown -R app:app /var/log/box4s/ && \
-  mkdir -p /var/lib/box4s && \
-  chown -R app:app /var/lib/box4s/ && \
-  mkdir -p /etc/box4s && \
-  chown -R app:app /etc/box4s && \
+  mkdir -p /var/log/cbox/ && \
+  chown -R app:app /var/log/cbox/ && \
+  mkdir -p /var/lib/cbox && \
+  chown -R app:app /var/lib/cbox/ && \
+  mkdir -p /etc/cbox && \
+  chown -R app:app /etc/cbox && \
   mkdir -p /etc/nginx/certs && \
   chown -R root:44269 /etc/nginx/certs
 

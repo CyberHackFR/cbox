@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-pipe=/var/lib/box4s/web.pipe
+pipe=/var/lib/cbox/web.pipe
 [ -p "$pipe" ] || mkfifo -m 0600 "$pipe" || exit 1
 while :; do
     while read -r cmd; do

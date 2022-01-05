@@ -9,7 +9,7 @@
 loglocation="/var/log/cronchecker"
 logfile="$loglocation/cronjobchecker_$1.json"
 tempfile="$loglocation/cronjobchecker_$1.json.tmp"
-email_reciever="box@4sconsult.de"
+email_reciever="box@cyberhack.fr"
 vulnwhisp_log="$loglocation/vulnwhisp.log"
 ########################################
 timestamp=$(date +%d-%m-%Y_%H-%M-%S)
@@ -38,13 +38,13 @@ alert()
 {
         #TODO: send email with boxname and error code(name of the cronjob, maybe also include output of sudo grep CRON /var/log/syslog)
         if [ $1 = "unexpected_error" ];then
-                echo "Unerwarteter Fehler beim Ausführen vom Cronjobchecker Script\nInput Cronjob: $1" | /core4s/scripts/sendmail.sh $email_reciever "Cronjob Skript endetete mit unerwartetem Fehler"
+                echo "Erreur inattendue lors de l'exécution du script cronjobchecker\nTâche cron d'entrée: $1" | /core4s/scripts/sendmail.sh $email_reciever "Le script Cronjob s'est terminé avec une erreur inattendue"
         else
                 #try the job again, mark error but do not send email
                 last_success=$(jq -r '.cronjobs[] | select(.title == "'$1'")| .run_last' "$logfile")
                 last_fail=$(jq -r '.cronjobs[] | select(.title == "'$1'")| .fail_last_prev' "$logfile")
 				loginfo=$(sudo grep "$1" /var/log/syslog)
-                echo "Fehler beim Ausführen von Cronjob $1\nFehler trat um $last_fail auf!\nLetzte Erfolgreiche Ausführung war um: $last_success\nLogs:\n\n$loginfo" | /core4s/scripts/sendmail.sh $email_reciever "Cronjob Fehler für $1"
+                echo "Erreur lors de l'exécution de la tâche cron $1\nErreur est survenue au $last_fail!\nLa dernière exécution réussie a eu lieu à: $last_success\nLogs:\n\n$loginfo" | /core4s/scripts/sendmail.sh $email_reciever "Erreur Cronjob pour $1"
         fi
 }
 ###

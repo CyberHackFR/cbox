@@ -7,7 +7,7 @@ export PASSWORD=$OPENVAS_PASS
 sed -i 's/su -c "gvmd --listen=127.0.0.1 --port=9390" gvm/su -c "gvmd --listen=0.0.0.0 --port=9390" gvm/g' /start.sh
 
 # Insert our config insertion before the end of start script..
-sed -i "\$i echo 'Inserting 4sConsult config ...'" /start.sh
+sed -i "\$i echo 'Inserting CyberHack config ...'" /start.sh
 sed -i "\$i chmod +x /root/insertconfig.sh" /start.sh 
 sed -i "\$i /root/insertconfig.sh" /start.sh 
 

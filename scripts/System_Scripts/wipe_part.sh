@@ -3,7 +3,7 @@ DEVICE="/dev/sdc1" #actually partition not DEVICE
 
 if [[ $EUID -ne 0 ]]; then
   # root check
-  echo "Wipe-Prozess erfordert Root-Privilegien." 1>&2
+  echo "Le processus d'effacement nécessite des privilèges root." 1>&2
   exit 1
 fi
 

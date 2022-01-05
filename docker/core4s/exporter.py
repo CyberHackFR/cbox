@@ -12,7 +12,7 @@ import configparser
 import sqlite3
 CONFIG_PATH = '/core4s/config/secrets/openvas.conf'
 REPORTS_PATH = '/core4s/workfolder/var/lib/logstash/openvas/'
-DB_PATH = '/core4s/workfolder/var/lib/box4s/processed_vulns.db'
+DB_PATH = '/core4s/workfolder/var/lib/cbox/processed_vulns.db'
 REPORT_NAME_TEMPLATE = 'openvas_scan_{0}_{1}.json'
 
 config = configparser.ConfigParser()

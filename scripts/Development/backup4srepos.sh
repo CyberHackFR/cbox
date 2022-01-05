@@ -1,4 +1,6 @@
 #!/bin/bash
+# TODO: FIX this script
+
 REPOS=(
     ssh://git@gitlab.com/4sconsult/box4s-license-server.git 
     ssh://git@gitlab.com/4sconsult/elastic-standard.git 

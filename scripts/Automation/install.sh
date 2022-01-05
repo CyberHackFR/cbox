@@ -130,8 +130,8 @@ if [ "$CURL" == "" ] || [ "$WGET" == "" ] || [ "$SUDO" == "" ] || [ "$TOILET" ==
   then
     waitForNet
     echo "### Installing deps for apt-fast"
-    apt -y update
-    apt -y install curl wget sudo toilet figlet
+    sudo apt -y update
+    sudo apt -y install curl wget sudo toilet figlet
 fi
 
 ##################################################
@@ -293,10 +293,10 @@ echo "Installing $TAG."
 # Clone Repository                               #
 #                                                #
 ##################################################
-banner "Repository ..." # TODO: Repository for cbox
+banner "Repository ..."
 
 echo -n "Downloading the repository @ $TAG" 1>&3
-git clone --depth 1 --branch $TAG https://github.com/4sConsult/BOX4security $INSTALL_DIR
+git clone --depth 1 --branch $TAG https://github.com/CyberHackFR/cbox.git $INSTALL_DIR
 echo "[ OK ]" 1>&3
 
 # Copy certificates over
@@ -461,18 +461,18 @@ echo " [ OK ]" 1>&3
 # Initially clone the Wiki repo
 echo -n "Downloading documentation.. " 1>&3
 # Delete already existing repository
-delete_If_Exists /var/lib/box4s_docs
-mkdir -p /var/lib/box4s_docs
-cd /var/lib/box4s_docs
+delete_If_Exists /var/lib/cbox_docs
+mkdir -p /var/lib/cbox_docs
+cd /var/lib/cbox_docs
 sudo git clone https://github.com/4sconsult/box4s-docs.git . # TODO: Change repository
 echo " [ OK ]" 1>&3
 
 echo -n "Configuring CBox.. " 1>&3
 # Copy gollum config to wiki root
-cp $SCRIPTDIR/../../docker/wiki/config.ru /var/lib/box4s_docs/config.ru
+cp $SCRIPTDIR/../../docker/wiki/config.ru /var/lib/cbox_docs/config.ru
 
 # Copy version file
-cp $SCRIPTDIR/../../VERSION /var/lib/box4s/VERSION
+cp $SCRIPTDIR/../../VERSION /var/lib/cbox/VERSION
 
 # Copy config files
 cd $SCRIPTDIR/../../
@@ -491,7 +491,7 @@ sudo chmod 770 /etc/msmtprc
 sudo mkdir -p /var/lib/elastalert/rules
 
 # Copy default elastalert smtp auth file
-sudo cp $SCRIPTDIR/../../docker/elastalert/etc/elastalert/smtp_auth_file.yaml /var/lib/box4s/elastalert_smtp.yaml
+sudo cp $SCRIPTDIR/../../docker/elastalert/etc/elastalert/smtp_auth_file.yaml /var/lib/cbox/elastalert_smtp.yaml
 echo " [ OK ]" 1>&3
 
 echo -n "Setting system environment variables.. " 1>&3
@@ -500,11 +500,11 @@ IPINFO=$(ip a | grep -E "inet [0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" | 
 IPINFO2=$(echo $IPINFO | grep -o -P '(?<=inet)((?!inet).)*(?=ens|eth|eno|enp)')
 INT_IP=$(echo $IPINFO2 | sed 's/\/.*//')
 grep -qxF  INT_IP=$INT_IP /etc/environment || echo INT_IP=$INT_IP >> /etc/environment
-grep -qxF BOX4s_CONFIG_DIR="$CONFIG_DIR" /etc/environment || echo BOX4s_CONFIG_DIR="$CONFIG_DIR" | sudo tee -a /etc/environment
-grep -qxF BOX4s_INSTALL_DIR="$INSTALL_DIR" /etc/environment || echo BOX4s_INSTALL_DIR="$INSTALL_DIR" | sudo tee -a /etc/environment
+grep -qxF CBOX_CONFIG_DIR="$CONFIG_DIR" /etc/environment || echo CBOX_CONFIG_DIR="$CONFIG_DIR" | sudo tee -a /etc/environment
+grep -qxF CBOX_INSTALL_DIR="$INSTALL_DIR" /etc/environment || echo CBOX_INSTALL_DIR="$INSTALL_DIR" | sudo tee -a /etc/environment
 source /etc/environment
 grep -qxF  INT_IP="$INT_IP" /etc/default/logstash || echo INT_IP="$INT_IP" >> /etc/default/logstash
-grep -qxF KUNDE="NEWSYSTEM" /etc/default/logstash || echo KUNDE="NEWSYSTEM" | sudo tee -a /etc/default/logstash
+grep -qxF CLIENT="NEWSYSTEM" /etc/default/logstash || echo CLIENT="NEWSYSTEM" | sudo tee -a /etc/default/logstash
 set -e
 echo " [ OK ] " 1>&3
 
@@ -514,11 +514,11 @@ sudo cp $SCRIPTDIR/../../config/etc/network/interfaces /etc/network/interfaces
 sudo sed -i '/.*dhcp/q' /etc/network/interfaces
 
 IF_MGMT=$(ip addr | cut -d ' ' -f2| tr ':' '\n' | awk NF | grep -v lo | head -n 1)
-awk "NR==1,/auto ens[0-9]*/{sub(/auto ens[0-9]*/, \"auto $IF_MGMT\")} 1" /etc/network/interfaces > /tmp/4s-ifaces
-sudo mv /tmp/4s-ifaces /etc/network/interfaces
-awk "NR==1,/iface ens[0-9]* inet dhcp/{sub(/iface ens[0-9]* inet dhcp/, \"iface $IF_MGMT inet dhcp\")} 1" /etc/network/interfaces > /tmp/4s-ifaces
-echo 'dns-nameservers 127.0.0.53' >> /tmp/4s-ifaces
-sudo mv /tmp/4s-ifaces /etc/network/interfaces
+awk "NR==1,/auto ens[0-9]*/{sub(/auto ens[0-9]*/, \"auto $IF_MGMT\")} 1" /etc/network/interfaces > /tmp/cbox-ifaces
+sudo mv /tmp/cbox-ifaces /etc/network/interfaces
+awk "NR==1,/iface ens[0-9]* inet dhcp/{sub(/iface ens[0-9]* inet dhcp/, \"iface $IF_MGMT inet dhcp\")} 1" /etc/network/interfaces > /tmp/cbox-ifaces
+echo 'dns-nameservers 127.0.0.53' >> /tmp/cbox-ifaces
+sudo mv /tmp/cbox-ifaces /etc/network/interfaces
 
 # Apply the new config without a restart
 ip link set $IF_MGMT down
@@ -559,19 +559,19 @@ sudo chmod 444 $CONFIG_DIR/modules.conf
 echo " [ OK ] " 1>&3
 
 echo -n "Generating Wazuh Agent-Password.. " 1>&3
-delete_If_Exists /var/lib/box4s/wazuh-authd.pass
-strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 14 | tr -d '\n' > /var/lib/box4s/wazuh-authd.pass
-sudo chmod 755 /var/lib/box4s/wazuh-authd.pass
+delete_If_Exists /var/lib/cbox/wazuh-authd.pass
+strings /dev/urandom | grep -o '[[:alnum:]]' | head -n 14 | tr -d '\n' > /var/lib/cbox/wazuh-authd.pass
+sudo chmod 755 /var/lib/cbox/wazuh-authd.pass
 echo " [ OK ] " 1>&3
 
-echo -n "BOX4security service setup and enabling.. " 1>&3
-# Setup the new Box4Security Service and enable it
-sudo mkdir -p /usr/bin/box4s/
-sudo cp $SCRIPTDIR/../../scripts/System_Scripts/box4s_service.sh /usr/bin/box4s/box4s_service.sh
-sudo chmod +x /usr/bin/box4s/box4s_service.sh
-sudo cp $SCRIPTDIR/../../config/etc/systemd/box4security.service /etc/systemd/system/box4security.service
+echo -n "CBox service setup and enabling.. " 1>&3
+# Setup the new CBox Service and enable it
+sudo mkdir -p /usr/bin/cbox/
+sudo cp $SCRIPTDIR/../../scripts/System_Scripts/cbox_service.sh /usr/bin/cbox/cbox_service.sh
+sudo chmod +x /usr/bin/cbox/cbox_service.sh
+sudo cp $SCRIPTDIR/../../config/etc/systemd/cbox.service /etc/systemd/system/cbox.service
 sudo systemctl daemon-reload
-sudo systemctl enable box4security.service
+sudo systemctl enable cbox.service
 echo " [ OK ] " 1>&3
 
 ##################################################
@@ -593,9 +593,9 @@ LSMEM=$(python3 -c "print(int($MEM*0.25))")
 sed "s/-Xms[[:digit:]]\+g -Xmx[[:digit:]]\+g/-Xms${LSMEM}g -Xmx${LSMEM}g/g" $SCRIPTDIR/../../docker/logstash/.env.ls > $CONFIG_DIR/.env.ls
 echo " [ OK ] " 1>&3
 
-echo -n "Downloading BOX4security software images. This may take a long time.. " 1>&3
+echo -n "Downloading CBox software images. This may take a long time.. " 1>&3
 # Login to docker registry
-sudo docker-compose -f $SCRIPTDIR/../../docker/box4security.yml pull
+sudo docker-compose -f $SCRIPTDIR/../../docker/cbox.yml pull
 sudo docker-compose -f $SCRIPTDIR/../../docker/wazuh/wazuh.yml pull
 echo " [ OK ] " 1>&3
 
@@ -605,31 +605,31 @@ cd /tmp/
 curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBIN" -o IP2LOCATION-LITE-DB5.BIN.zip
 curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBINIPV6" -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
 sudo unzip -o IP2LOCATION-LITE-DB5.BIN.zip
-sudo mv IP2LOCATION-LITE-DB5.BIN /var/lib/box4s/IP2LOCATION-LITE-DB5.BIN
+sudo mv IP2LOCATION-LITE-DB5.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.BIN
 sudo unzip -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
-sudo mv IP2LOCATION-LITE-DB5.IPV6.BIN /var/lib/box4s/IP2LOCATION-LITE-DB5.IPV6.BIN
+sudo mv IP2LOCATION-LITE-DB5.IPV6.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.IPV6.BIN
 echo " [ OK ] " 1>&3
 
 
 # Filter Functionality
-echo -n "Setting up BOX4security Filters.. " 1>&3
-sudo touch /var/lib/box4s/15_logstash_suppress.conf
-sudo touch /var/lib/box4s/suricata_suppress.bpf
-sudo chmod -R 777 /var/lib/box4s/
+echo -n "Setting up CBox Filters.. " 1>&3
+sudo touch /var/lib/cbox/15_logstash_suppress.conf
+sudo touch /var/lib/cbox/suricata_suppress.bpf
+sudo chmod -R 777 /var/lib/cbox/
 echo " [ OK ] " 1>&3
 
 echo -n "Making scripts executable.. " 1>&3
 chmod +x -R $INSTALL_DIR/scripts
 echo " [ OK ] " 1>&3
 
-echo -n "Enabling BOX4s internal DNS server.. " 1>&3
+echo -n "Enabling CBox internal DNS server.. " 1>&3
 # DNSMasq Setup
 sudo systemctl enable resolvconf.service
 echo "nameserver 127.0.0.1" > /etc/resolvconf/resolv.conf.d/head
-sudo cp $SCRIPTDIR/../../docker/dnsmasq/resolv.personal /var/lib/box4s/resolv.personal
+sudo cp $SCRIPTDIR/../../docker/dnsmasq/resolv.personal /var/lib/cbox/resolv.personal
 # Fix DNS resolv permission
-sudo chown root:44269 /var/lib/box4s/resolv.personal
-sudo chmod 770 /var/lib/box4s/resolv.personal
+sudo chown root:44269 /var/lib/cbox/resolv.personal
+sudo chmod 770 /var/lib/cbox/resolv.personal
 sudo systemctl stop systemd-resolved
 sudo systemctl start resolvconf.service
 sudo resolvconf --enable-updates
@@ -638,12 +638,12 @@ echo " [ OK ] " 1>&3
 
 ##################################################
 #                                                #
-# Box4s start                                    #
+# CBox start                                    #
 #                                                #
 ##################################################
-banner "Starting BOX4security..."
+banner "Starting CBox..."
 
-sudo systemctl start box4security
+sudo systemctl start cbox
 
 echo -n "Waiting for Elasticsearch to become available.. " 1>&3
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh elasticsearch
@@ -666,8 +666,8 @@ sudo systemctl daemon-reload
 #Ignore own INT_IP
 echo -n "Enabling filter to ignore own IP.. " 1>&3
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh db
-echo "INSERT INTO blocks_by_bpffilter(src_ip, src_port, dst_ip, dst_port, proto) VALUES ('"$INT_IP"',0,'0.0.0.0',0,'');" | PGPASSWORD=$POSTGRES_PASSWORD PGUSER=$POSTGRES_USER psql postgres://localhost/box4S_db
-echo "INSERT INTO blocks_by_bpffilter(src_ip, src_port, dst_ip, dst_port, proto) VALUES ('0.0.0.0',0,'"$INT_IP"',0,'');" | PGPASSWORD=$POSTGRES_PASSWORD PGUSER=$POSTGRES_USER psql postgres://localhost/box4S_db
+echo "INSERT INTO blocks_by_bpffilter(src_ip, src_port, dst_ip, dst_port, proto) VALUES ('"$INT_IP"',0,'0.0.0.0',0,'');" | PGPASSWORD=$POSTGRES_PASSWORD PGUSER=$POSTGRES_USER psql postgres://localhost/cbox_db
+echo "INSERT INTO blocks_by_bpffilter(src_ip, src_port, dst_ip, dst_port, proto) VALUES ('0.0.0.0',0,'"$INT_IP"',0,'');" | PGPASSWORD=$POSTGRES_PASSWORD PGUSER=$POSTGRES_USER psql postgres://localhost/cbox_db
 echo " [ OK ] " 1>&3
 
 echo -n "Waiting for Kibana to become available.. " 1>&3
@@ -677,6 +677,7 @@ sleep 30
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kibana 600 && echo "  OK ] " 1>&3 || echo "  NOT OK ] " 1>&3
 
 # Import Dashboard
+# TODO: FIXIT Dashboard en frances
 echo -n "Installing Dashboards und Patterns.. " 1>&3
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Startseite/Startseite-Uebersicht.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-Alarme.ndjson
@@ -700,7 +701,7 @@ curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true"
 # Installiere Scores Index Pattern
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Patterns/scores.ndjson
 
-# Erstelle initialen VulnWhisperer Index
+# Create initial VulnWhisperer index
 curl -XPUT "localhost:9200/logstash-vulnwhisperer-$(date +%Y.%m)"
 echo " [ OK ] " 1>&3
 
@@ -716,7 +717,7 @@ echo " [ OK ] " 1>&3
 
 echo -n "Downloading Wazuh clients.. " 1>&3
 # Download wazuh clients
-sudo docker exec core4s /bin/bash /core4s/scripts/Automation/download_wazuh_clients.sh 3.12.1
+sudo docker exec core4s /bin/bash /core4s/scripts/Automation/download_wazuh_clients.sh 3.12.3
 echo " [ OK ] " 1>&3
 
 echo -n "Updating tools. This may take a very long time.. " 1>&3

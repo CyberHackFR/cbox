@@ -2,9 +2,9 @@
 # Please consult the documentation for further information on configuration options:
 # https://www.elastic.co/guide/en/elasticsearch/reference/index.html
 # ---------------------------------- Cluster -----------------------------------
-cluster.name: box4scluster
+cluster.name: cboxcluster
 # ------------------------------------ Node ------------------------------------
-node.name: box4security
+node.name: cbox
 # ----------------------------------- Paths ------------------------------------
 path.data: /data/elasticsearch
 path.logs: /var/log/elasticsearch

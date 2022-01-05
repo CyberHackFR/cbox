@@ -2,8 +2,8 @@
 set -e
 # Log file to use
 # Create path if allowed or do NOP
-mkdir -p /var/log/box4s/1stLevelRepair || :
-LOG_DIR="/var/log/box4s/1stLevelRepair"
+mkdir -p /var/log/cbox/1stLevelRepair || :
+LOG_DIR="/var/log/cbox/1stLevelRepair"
 if [[ ! -w $LOG_DIR ]]; then
   LOG_DIR="$HOME"
 fi

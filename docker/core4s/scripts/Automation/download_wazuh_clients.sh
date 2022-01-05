@@ -1,7 +1,7 @@
 #!/bin/sh
 if [ $# -eq 0 ]
   then
-    WAZUH_VERSION=3.12.1
+    WAZUH_VERSION=3.12.3
   else
     WAZUH_VERSION=$1
 fi

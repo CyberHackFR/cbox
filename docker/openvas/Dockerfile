@@ -1,4 +1,5 @@
-FROM securecompliance/gvm:20.08-v1
+FROM securecompliance/gvm:latest
+#20.08-v1 oldtag
 
 ADD etc/ /etc/openvas/
 ADD scripts/ /root/

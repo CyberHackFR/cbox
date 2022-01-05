@@ -115,10 +115,10 @@ def faq():
     """Return the FAQ page.
 
     Required Role: FAQ OR Super Admin
-    Environment variable KUNDE is the client company name and set to Standard if not existent.
+    Environment variable CLIENT is the client company name and set to Standard if not existent.
     The value is displayed in the contact form.
     """
-    client = os.getenv('KUNDE')
+    client = os.getenv('CLIENT')
     return render_template('faq.html', client=client)
 
 
@@ -195,24 +195,24 @@ def user():
 def faq_mail():
     """Handle the submitted contanct form and send via email.
 
-    Environment variable KUNDE is the client company name.
-    If there is no $KUNDE variable it is shown to the value from the user form.
-    If even there it is not defined it is set to "Undefinierter Kunde" for the email.
+    Environment variable CLIENT is the client company name.
+    If there is no $CLIENT variable it is shown to the value from the user form.
+    If even there it is not defined it is set to "CLIENT Non défini" for the email.
     The value is displayed in the contact form.
 
-    The E-Mail is sent to a MS Teams Channel: 0972f9a3.4sconsult.de@emea.teams.ms
+    The E-Mail is sent to a MS Teams Channel: box@cyberhack.fr
     """
-    client = os.getenv('KUNDE')
+    client = os.getenv('CLIENT')
     if not client:
-        client = request.values.get('company', 'Undefinierter Kunde')
+        client = request.values.get('company', 'CLIENT Non défini')
 
     # Build a subject or set default one of none given
-    subject = "[{}] {}".format(client, request.values.get('subject') or 'BOX4Security FAQ-Kontaktformular')
+    subject = "[{}] {}".format(client, request.values.get('subject') or 'Formulaire de contact FAQ CyberhackBox')
 
     # Build the body
     body = """
-        Kunde: {}
-        Kontakt: {}
+        CLIENT: {}
+        Contact: {}
         {}
         """.format(client, request.values.get('email'), request.values.get('body'))
 
@@ -220,7 +220,7 @@ def faq_mail():
     msg = Message(subject=subject, recipients=['0972f9a3.4sconsult.de@emea.teams.ms'], body=body)
     msg.msgId = msg.msgId.split('@')[0] + '@4sconsult.de'  # shorter msgID so microsoft likes it
     mail.send(msg)
-    client = os.getenv('KUNDE', '')  # Reset client variable
+    client = os.getenv('CLIENT', '')  # Reset client variable
     return render_template('faq.html', client=client, mailsent=True)
 
 

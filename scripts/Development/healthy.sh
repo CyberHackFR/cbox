@@ -26,7 +26,7 @@ stay_healthy() {
 for name in "${CONTAINERS_WITH_HEALTHCHECK[@]}"
 do
     # first let all get healthy, then check every second if one got unhealthy!
-    /home/amadmin/box4security/scripts/System_Scripts/wait-for-healthy-container.sh $name
+    /home/cboxadmin/cbox/scripts/System_Scripts/wait-for-healthy-container.sh $name
 done
 stay_healthy
 echo "All containers staid healthy for $SAFETY_TIME seconds."

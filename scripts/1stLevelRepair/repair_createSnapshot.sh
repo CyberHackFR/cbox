@@ -1,8 +1,8 @@
-# Called by web application - creates snapshot at /var/lib/box4s/snapshots/
+# Called by web application - creates snapshot at /var/lib/cbox/snapshots/
 # Create dir if not present
 timestamp=$(date +%d-%m-%Y_%H-%M-%S)
 #location to save snapshot to in the end
-snaplocation="/var/lib/box4s/snapshots"
+snaplocation="/var/lib/cbox/snapshots"
 #location where snapshot first gets assembled - cannot contain copy targets
 templocation="/tmp"
 name="Snapshot-$timestamp"
@@ -32,15 +32,15 @@ function copyFolder(){
 
 #COPY FILES
 #copy version to check if snapshot can be copied
-cp /var/lib/box4s/VERSION $folder
-copyFolder /etc/box4s
-copyFolder /var/lib/box4s
-delete_If_Exists $folder/var/lib/box4s/snapshots
+cp /var/lib/cbox/VERSION $folder
+copyFolder /etc/cbox
+copyFolder /var/lib/cbox
+delete_If_Exists $folder/var/lib/cbox/snapshots
 copyFolder /var/lib/postgresql
-copyFolder /var/lib/box4s_suricata_rules
+copyFolder /var/lib/cbox_suricata_rules
 copyFolder /var/lib/logstash
 copyFolder /var/lib/elastalert
-copyFolder /var/lib/box4s_docs
+copyFolder /var/lib/cbox_docs
 
 
 #create zip and remove snap_folder

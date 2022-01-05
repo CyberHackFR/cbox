@@ -17,12 +17,12 @@ RUN apt update && \
     mkdir -p /var/log/suricata && \
     mkdir -p /var/run/suricata && \
     mkdir -p /etc/suricata/ && \
-    mkdir -p /var/lib/box4s && \
-    touch /var/lib/box4s/suricata_suppress.bpf && \
+    mkdir -p /var/lib/cbox && \
+    touch /var/lib/cbox/suricata_suppress.bpf && \
     mv /root/etc/* /etc/suricata/ && \
     chmod 777 /var/lib/suricata/rules -R && \
     chmod +x /root/scripts/update.sh && \
     chmod +x /root/scripts/ingest_testdata.sh
 
 USER root
-CMD /usr/bin/suricata -vvv -c /etc/suricata/suricata.yaml -F /var/lib/box4s/suricata_suppress.bpf -i $SURI_INTERFACE
+CMD /usr/bin/suricata -vvv -c /etc/suricata/suricata.yaml -F /var/lib/cbox/suricata_suppress.bpf -i $SURI_INTERFACE

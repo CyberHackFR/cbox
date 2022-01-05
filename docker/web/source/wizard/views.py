@@ -129,8 +129,8 @@ def apply():
     with open('/etc/environment', 'r') as fd_env:
         with open(tmp, 'w') as fd_tmp:
             for line in fd_env:
-                if "KUNDE=" in line:
-                    line = "KUNDE={kunde}\n".format(kunde='NEWKUNDE')
+                if "CLIENT=" in line:
+                    line = "CLIENT={kunde}\n".format(kunde='NEWCLIENT')
                 elif "INT_IP=" in line:
                     line = f"INT_IP={BOX4s.ip_address}\n"
                 fd_tmp.write(line)

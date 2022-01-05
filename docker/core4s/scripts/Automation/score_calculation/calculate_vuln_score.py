@@ -27,11 +27,11 @@ THRESHOLD = {
 # List of rules
 # Hold a dictionary which must have a `text` member for displaying measures to increase score.
 RULES = {
-    'critical': {'text': 'Im Netzwerk existiert mindestens eine kritische Schwachstelle.'},
-    'high': {'text': 'Im Netzwerk existiert mindestens eine Schwachstelle mit hoher Schwere.'},
-    'medium': {'text': 'Im Netzwerk existiert mindestens eine mittlere Schwachstelle.'},
-    'low': {'text': 'Im Netzwerk existiert mindestens eine geringe Schwachstelle.'},
-    'disabled': {'text': 'Es werden keine Schwachstellenscans durchgeführt.'},
+    'critical': {'text': 'Au moins une vulnérabilité critique existe dans le réseau.'},
+    'high': {'text': 'Au moins une vulnérabilité haut existe dans le réseau.'},
+    'medium': {'text': 'Au moins une vulnérabilité moyen existe dans le réseau.'},
+    'low': {'text': 'Au moins une vulnérabilité faible existe dans le réseau.'},
+    'disabled': {'text': 'Aucune analyse de vulnérabilité n\'est effectuée.'},
 }
 
 # Calculate the total weight by summing up the dictionary.

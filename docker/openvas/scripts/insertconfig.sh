@@ -1,6 +1,6 @@
 #!/bin/bash
-CONFIG=/etc/openvas/4s-OpenVAS.xml
-LOCK=/data/imported_4sConsult_Config
+CONFIG=/etc/openvas/cbox-OpenVAS.xml
+LOCK=/data/imported_CyberHack_Config
 if [ ! -f "$LOCK" ]; then
   python3 -m venv .venv-openvas
   source .venv-openvas/bin/activate

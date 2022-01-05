@@ -2,8 +2,8 @@
 set -e
 # Log file to use
 # Create path if allowed or do NOP
-mkdir -p /var/log/box4s/1stLevelRepair || :
-LOG_DIR="/var/log/box4s/1stLevelRepair"
+mkdir -p /var/log/cbox/1stLevelRepair || :
+LOG_DIR="/var/log/cbox/1stLevelRepair"
 if [[ ! -w $LOG_DIR ]]; then
   LOG_DIR="$HOME"
 fi
@@ -49,10 +49,10 @@ function waitForNet() {
 # no-recreate: Does not create an empty BOX4security after deleting the current one
 #
 
-echo -n "Stopping BOX4security Service.. " 1>&2
+echo -n "Stopping CBox Service.. " 1>&2
 
 if [[ $(systemctl list-units --all -t service --full --no-legend "box4security.service" | cut -f1 -d' ') == $n.service ]]; then
-  sudo systemctl stop box4security.service
+  sudo systemctl stop cbox.service
   #Remove all Docker containers and Volumes
   sudo docker rm -f $(docker ps -a -q) >/dev/null || :
   sudo docker volume rm $(docker volume ls -q) >/dev/null || :
@@ -65,18 +65,19 @@ if [ -d /data ]; then
   # Directory to remove
   sudo srm -zr /data
 fi
-delete_If_Exists /var/lib/box4s
+delete_If_Exists /var/lib/cbox
 delete_If_Exists /var/lib/postgresql
-delete_If_Exists /var/lib/box4s_openvas
-delete_If_Exists /var/lib/box4s_suricata_rules
-delete_If_Exists /var/lib/box4s_docs
+delete_If_Exists /var/lib/cbox_openvas
+delete_If_Exists /var/lib/cbox_suricata_rules
+delete_If_Exists /var/lib/cbox_docs
 delete_If_Exists /var/lib/elastalert
 delete_If_Exists /var/lib/logstash
-delete_If_Exists /etc/box4s
-delete_If_Exists /tmp/box4s
+delete_If_Exists /etc/cbox
+delete_If_Exists /tmp/cbox
 waitForNet
 echo "[ DONE ]" 1>&2
 
-echo -n "Installing new BOX4security.. " 1>&2
+# TODO: fix this
+echo -n "Installing new CBox.. " 1>&2
 curl -sL https://gitlab.com/snippets/1982942/raw | sudo bash
 echo "[ DONE ]" 1>&2

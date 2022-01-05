@@ -29,12 +29,12 @@ THRESHOLD = {
 # List of rules
 # Hold a dictionary which must have a `text` member for displaying measures to increase score.
 RULES = {
-    'critical': {'text': 'Mindestens ein Alarm von sehr hoher Schwere ist aufgetreten.'},
-    'high': {'text': 'Mindestens ein Alarm von hoher Schwere ist aufgetreten.'},
-    'medium': {'text': 'Mindestens ein Alarm von mittlere Schwere ist aufgetreten.'},
-    'low': {'text': 'Mindestens ein Alarm von geringer Schwere ist aufgetreten.'},
-    'info': {'text': 'Mindestens ein informativer Alarm ist aufgetreten.'},
-    'socialmedia': {'text': 'Es wurde Social-Media-Aktivität erkannt.'}
+    'critical': {'text': 'Au moins une alarme de gravité critique s\'est produite.'},
+    'high': {'text': 'Au moins une alarme de gravité haut s\'est produite.'},
+    'medium': {'text': 'Au moins une alarme de gravité moyen s\'est produite.'},
+    'low': {'text': 'Au moins une alarme de gravité faible s\'est produite.'},
+    'info': {'text': 'Au moins une alarme informative s\'est produite.'},
+    'socialmedia': {'text': 'Une activité sur les réseaux sociaux a été détectée.'}
 }
 
 # Calculate the total weight by summing up the dictionary.
