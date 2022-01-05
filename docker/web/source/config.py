@@ -18,7 +18,7 @@ class Config():
     REMEMBER_COOKIE_HTTPONLY = True
 
     # representation name
-    USER_APP_NAME = "BOX4security"
+    USER_APP_NAME = "CyberHackBox"
     USER_ENABLE_CONFIRM_EMAIL = True
     USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = False
     # Allow logins by username
@@ -70,7 +70,7 @@ class Dashboard():
 
 
 Dashboards = [
-    Dashboard(name='start', url='/kibana/app/kibana#/dashboard/8d13ea50-3de1-11ea-bbd4-bb7e0278945f?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#start', role='Startseite'),
+    Dashboard(name='start', url='/kibana/app/kibana#/dashboard/8d13ea50-3de1-11ea-bbd4-bb7e0278945f?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#start', role='Accueil'),
     Dashboard(name='siem-overview', url='/kibana/app/kibana#/dashboard/90203990-3dd9-11ea-bbd4-bb7e0278945f?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#siem', role='SIEM'),
     Dashboard(name='siem-alerts', url='/kibana/app/kibana#/dashboard/a7bfd050-ce1d-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#siem', role='SIEM'),
     Dashboard(name='siem-asn', url='/kibana/app/kibana#/dashboard/9391fd20-ce4e-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#siem', role='SIEM'),
@@ -79,17 +79,17 @@ Dashboards = [
     Dashboard(name='siem-proto', url='/kibana/app/kibana#/dashboard/f4ad4f80-ce38-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#siem', role='SIEM'),
     Dashboard(name='siem-discover', url='/kibana/app/discover#/?embed=true', parent_id='#siem', role='Config'),
     Dashboard(name='siem-social-media', url='/kibana/app/kibana#/dashboard/bf5a8370-7031-11ea-93fd-e12e440dc7e1?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now%2Fd,to:now%2Fd))', parent_id='#siem', role='SIEM'),
-    Dashboard(name='vuln-overview', url='/kibana/app/kibana#/dashboard/140fb900-6e82-11ea-84ea-3b1a8de87e76?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#vuln', role='Schwachstellen'),
-    Dashboard(name='vuln-progress', url='/kibana/app/kibana#/dashboard/f8712020-cefa-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-90d,to:now))', parent_id='#vuln', role='Schwachstellen'),
-    Dashboard(name='vuln-details', url='/kibana/app/kibana#/dashboard/39c6fc40-6e81-11ea-84ea-3b1a8de87e76?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#vuln', role='Schwachstellen'),
-    Dashboard(name='network-overview', url='/kibana/app/kibana#/dashboard/dc847fd0-3dd9-11ea-bbd4-bb7e0278945f?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#net', role='Netzwerk'),
-    Dashboard(name='network-streams', url='/kibana/app/kibana#/dashboard/e5fbd440-ce2c-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#net', role='Netzwerk'),
-    Dashboard(name='network-asn', url='/kibana/app/kibana#/dashboard/c2b4c450-ce46-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#net', role='Netzwerk'),
+    Dashboard(name='vuln-overview', url='/kibana/app/kibana#/dashboard/140fb900-6e82-11ea-84ea-3b1a8de87e76?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#vuln', role='Vulnérabilités'),
+    Dashboard(name='vuln-progress', url='/kibana/app/kibana#/dashboard/f8712020-cefa-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-90d,to:now))', parent_id='#vuln', role='Vulnérabilités'),
+    Dashboard(name='vuln-details', url='/kibana/app/kibana#/dashboard/39c6fc40-6e81-11ea-84ea-3b1a8de87e76?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#vuln', role='Vulnérabilités'),
+    Dashboard(name='network-overview', url='/kibana/app/kibana#/dashboard/dc847fd0-3dd9-11ea-bbd4-bb7e0278945f?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#net', role='Réseau'),
+    Dashboard(name='network-streams', url='/kibana/app/kibana#/dashboard/e5fbd440-ce2c-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#net', role='Réseau'),
+    Dashboard(name='network-asn', url='/kibana/app/kibana#/dashboard/c2b4c450-ce46-11e9-943f-fdbfa2556276?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-30d,to:now))', parent_id='#net', role='Réseau'),
 ]
 
 # Enable Wazuh Dashboard only, if module is active
 try:
-    if os.getenv('BOX4s_WAZUH') == "true":
+    if os.getenv('CBox_WAZUH') == "true":
         Dashboards.append(Dashboard(name='wazuh', url='/kibana/app/wazuh#?embed=true', parent_id='#siem', role='SIEM'))
 except Exception:
     # BOX4s_WAZUH environment variable not defined. Ignored here.
@@ -98,15 +98,15 @@ except Exception:
 RoleURLs = [
     # role : url
     {'name': 'Super Admin', 'url': '/user'},
-    {'name': 'Filter', 'url': '/filter'},
+    {'name': 'Filtre', 'url': '/filter'},
     {'name': 'Updates', 'url': '/update'},
     {'name': 'User-Management', 'url': '/user'},
     {'name': 'FAQ', 'url': '/faq'},
     {'name': 'Dashboards-Master', 'url': '/start'},
     {'name': 'SIEM', 'url': '/siem-overview'},
-    {'name': 'Schwachstellen', 'url': '/vuln-overview'},
-    {'name': 'Netzwerk', 'url': '/network-overview'},
+    {'name': 'Vulnérabilités', 'url': '/vuln-overview'},
+    {'name': 'Réseau', 'url': '/network-overview'},
     {'name': 'Wiki', 'url': '/docs'},
-    {'name': 'Alerts', 'url': '/alerts'},
-    {'name': 'Config', 'url': '/config'},
+    {'name': 'Alertes', 'url': '/alerts'},
+    {'name': 'Configuration', 'url': '/config'},
 ]

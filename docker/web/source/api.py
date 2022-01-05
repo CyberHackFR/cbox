@@ -56,7 +56,7 @@ def restartContainer(name=None):
 def writeLSRFile():
     """Write all Logstash Rules from DB to correct file."""
     # TODO: check permissions / try error
-    with open('/var/lib/box4s/15_logstash_suppress.conf', 'w') as f_logstash:
+    with open('/var/lib/cbox/15_logstash_suppress.conf', 'w') as f_logstash:
         rules = models.LogstashRule.query.all()
         filled = render_template('15_logstash_suppress.conf.j2', rules=rules)
         f_logstash.write(filled)
@@ -65,7 +65,7 @@ def writeLSRFile():
 def writeBPFFile():
     """Write all Suricata Rules from DB to correct file and restart Suricata."""
     # TODO: check permissions / Try error
-    with open('/var/lib/box4s/suricata_suppress.bpf', 'w') as f_bpf:
+    with open('/var/lib/cbox/suricata_suppress.bpf', 'w') as f_bpf:
         rules = models.BPFRule.query.all()
         filled = render_template('suricata_suppress.bpf.j2', rules=rules)
         f_bpf.write(filled)
@@ -103,16 +103,16 @@ def enableQuickAlert(key, email, smtp={}):
 
 
 def restartBOX4s(sleep=10):
-    """Restart the BOX4s after sleeping for `sleep` seconds (default=10)."""
+    """Restart the CBox after sleeping for `sleep` seconds (default=10)."""
     strSeconds = str(sleep)
     subprocess.Popen(['sleep', strSeconds])
-    runHostCommand('sudo systemctl restart box4security')
+    runHostCommand('sudo systemctl restart cbox')
 
 
 def runHostCommand(cmd=None):
     if cmd:
         cmd += '\n'
-        with open('/var/lib/box4s/web.pipe', 'w') as pipe:
+        with open('/var/lib/cbox/web.pipe', 'w') as pipe:
             pipe.write(quote(cmd))
 
 
@@ -120,27 +120,27 @@ def writeSMTPConfig(config):
     """Write the SMTP config to the corresponding files.
 
     Writes:
-        - /etc/box4s
+        - /etc/cbox
         - /etc/msmtprc
-        - /var/lib/box4s/elastalertsmtp.yaml
+        - /var/lib/cbox/elastalertsmtp.yaml
 
     Expects a Python dictionary that has the keys for config.
     """
-    with open('/etc/box4s/smtp.conf', 'w') as etc_smtp:
+    with open('/etc/cbox/smtp.conf', 'w') as etc_smtp:
         filled = render_template('application/smtp.conf.j2', smtp=config)
         etc_smtp.write(filled)
-    with open('/etc/box4s/msmtprc', 'w') as etc_msmtp:
+    with open('/etc/cbox/msmtprc', 'w') as etc_msmtp:
         filled = render_template('application/msmtprc.j2', smtp=config)
         etc_msmtp.write(filled)
-    with open('/var/lib/box4s/elastalert_smtp.yaml', 'w') as varlib_elastalertsmtp:
+    with open('/var/lib/cbox/elastalert_smtp.yaml', 'w') as varlib_elastalertsmtp:
         filled = render_template('application/elastalert_smtp.yaml.j2', smtp=config)
         varlib_elastalertsmtp.write(filled)
         # Newly set rules with changed smtp config
         try:
-            with open('/var/lib/box4s/alert_mail.conf') as fd:
+            with open('/var/lib/cbox/alert_mail.conf') as fd:
                 alert_mail = fd.read().strip()
         except FileNotFoundError:
-            alert_mail = "box@4sconsult.de"
+            alert_mail = "box@cyberhack.fr"
         try:
             ea = requests.get("http://elastalert:3030/rules").json()
             for key in ea['rules']:
@@ -152,7 +152,7 @@ def writeSMTPConfig(config):
         except Timeout:
             abort(504, message="Alert API Timeout")
         except ConnectionError:
-            abort(503, message="Alert API unreachable")
+            abort(503, message="Alert API Unreachable")
         except Exception:
             abort(502, message="Alert API Failure")
 
@@ -164,7 +164,7 @@ class Repair(Resource):
     def put(self):
         """Execute Repair Script"""
         value = request.json['key']
-        runHostCommand(cmd=f"sudo bash $BOX4s_INSTALL_DIR/scripts/1stLevelRepair/repair_{ value }.sh")
+        runHostCommand(cmd=f"sudo bash $CBOX_INSTALL_DIR/scripts/1stLevelRepair/repair_{ value }.sh")
         return {"message": "accepted"}, 200
 
     @roles_required(['Super Admin'])
@@ -189,7 +189,7 @@ class SnapshotInfo(Resource):
     @roles_required(['Super Admin'])
     def get(self):
         """Gather info for all Snapshots"""
-        snap_folder = "/var/lib/box4s/snapshots"
+        snap_folder = "/var/lib/cbox/snapshots"
         if not os.path.exists(snap_folder):
             os.makedirs(snap_folder)
         files = {}
@@ -204,14 +204,14 @@ class SnapshotInfo(Resource):
     @roles_required(['Super Admin'])
     def post(self):
         """Create a snapshot"""
-        runHostCommand(cmd="sudo bash $BOX4s_INSTALL_DIR/scripts/1stLevelRepair/repair_createSnapshot.sh")
+        runHostCommand(cmd="sudo bash $CBOX_INSTALL_DIR/scripts/1stLevelRepair/repair_createSnapshot.sh")
         return {"message": "accepted"}, 200
 
     @roles_required(['Super Admin'])
     def put(self):
         """Upload a Snapshot"""
         file = request.files['file']
-        snap_folder = "/var/lib/box4s/snapshots"
+        snap_folder = "/var/lib/cbox/snapshots"
         if file.filename == '':
             abort(403)
         if file and allowed_file_snaphsot(file.filename, ['zip']):
@@ -227,7 +227,7 @@ class SnapshotFileHandler(Resource):
     @roles_required(['Super Admin'])
     def get(self, filename):
         """Download a Snapshot"""
-        snap_folder = "/var/lib/box4s/snapshots"
+        snap_folder = "/var/lib/cbox/snapshots"
         if filename and allowed_file_snaphsot(filename, ['zip']):
             return send_from_directory(snap_folder, filename, as_attachment=True)
         else:
@@ -236,13 +236,13 @@ class SnapshotFileHandler(Resource):
     @roles_required(['Super Admin'])
     def post(self, filename):
         """Restore a Snapshot"""
-        runHostCommand(cmd=f"sudo bash $BOX4s_INSTALL_DIR/scripts/1stLevelRepair/repair_snapshot.sh { filename }")
+        runHostCommand(cmd=f"sudo bash $CBOX_INSTALL_DIR/scripts/1stLevelRepair/repair_snapshot.sh { filename }")
         return {"message": "accepted"}, 200
 
     @roles_required(['Super Admin'])
     def delete(self, filename):
         """Delete Snapshot"""
-        snap_folder = "/var/lib/box4s/snapshots"
+        snap_folder = "/var/lib/cbox/snapshots"
         if allowed_file_snaphsot(filename, ['zip']):
             try:
                 os.remove(os.path.join(snap_folder, filename))
@@ -256,7 +256,7 @@ class SnapshotFileHandler(Resource):
 class BPF(Resource):
     """API Resource for a single BPF Rule."""
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def get(self, rule_id):
         """Get a single BPF Rule by id."""
         rule = models.BPFRule.query.get(rule_id)
@@ -265,17 +265,17 @@ class BPF(Resource):
         else:
             abort(404, message="BPF Rule with ID {} not found".format(rule_id))
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def post(self):
         """Deny updating BPF Rule."""
         abort(405, message="Cannot update or post directly to a rule ID.")
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def put(self):
         """Deny updating BPF Rule."""
         abort(405, message="Cannot update or post directly to a rule ID.")
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def delete(self, rule_id):
         """Delete a single BPF Rule by id."""
         rule = models.BPFRule.query.get(rule_id)
@@ -292,18 +292,18 @@ class BPF(Resource):
 class BPFs(Resource):
     """API Resource for a set of BPF Rules."""
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def get(self):
         """Return all BPF Rules."""
         rules = models.BPFRule.query.all()
         return models.BPFs.dump(rules)
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def post(self):
         """Implement a new BPF Rule by redirecting to PUT."""
         return self.put()
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def put(self):
         """Implement a new BPF Rule."""
         d = request.json
@@ -321,7 +321,7 @@ class BPFs(Resource):
         writeBPFFile()
         return models.BPF.dump(newRule)
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def delete(self):
         """Delete all BPF Rules from database."""
         models.BPFRule.query.delete()
@@ -333,7 +333,7 @@ class BPFs(Resource):
 class LSR(Resource):
     """API Resource for a single Logstash Rule."""
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def get(self, rule_id):
         """Get a single Logstash Rule by id."""
         rule = models.LogstashRule.query.get(rule_id)
@@ -342,17 +342,17 @@ class LSR(Resource):
         else:
             abort(404, message="Logstash Rule with ID {} not found".format(rule_id))
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def post(self):
         """Deny updating Logstash Rule."""
         abort(405, message="Cannot update or post directly to a rule ID.")
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def put(self):
         """Deny updating Logstash Rule."""
         abort(405, message="Cannot update or post directly to a rule ID.")
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def delete(self, rule_id):
         """Delete Logstash Rule by id."""
         rule = models.LogstashRule.query.get(rule_id)
@@ -369,18 +369,18 @@ class LSR(Resource):
 class LSRs(Resource):
     """API Resource for a set of Logstash Rules."""
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def get(self):
         """Return all Logstash Rules."""
         rules = models.LogstashRule.query.all()
         return models.LSRs.dump(rules)
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def post(self):
         """Implement new Logstash Rule by redirecting to PUT."""
         return self.put()
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def put(self):
         """Implement new Logstash Rule."""
         d = request.json
@@ -400,7 +400,7 @@ class LSRs(Resource):
         writeLSRFile()
         return models.LSR.dump(newRule)
 
-    @roles_required(['Super Admin', 'Filter'])
+    @roles_required(['Super Admin', 'Filtre'])
     def delete(self):
         """Delete all Logstash Rules from database."""
         models.LogstashRule.query.delete()
@@ -424,10 +424,10 @@ class Version(Resource):
         CURRVER = os.getenv('VERSION')
         if request.headers.get('x-forwarded-for') == '172.20.8.1':
             # request from docker host, allow
-            return {'version': CURRVER, 'env': os.getenv('BOX4s_ENV', 'production')}
+            return {'version': CURRVER, 'env': os.getenv('CBOX_ENV', 'production')}
         elif current_user.is_authenticated and current_user.has_role('Updates'):
             # request from allowed role
-            return {'version': CURRVER, 'env': os.getenv('BOX4s_ENV', 'production')}
+            return {'version': CURRVER, 'env': os.getenv('CBOX_ENV', 'production')}
         else:
             abort(403, message="Forbidden.")
 
@@ -443,7 +443,7 @@ class AvailableReleases(Resource):
             abort(403, message="Forbidden.")
 
         try:
-            git = requests.get('https://api.github.com/repos/4sConsult/box4security/releases',
+            git = requests.get('https://api.github.com/repos/CyberHackfr/cbox/releases',
                                headers={'Accept': 'application/vnd.github.v3+json'}).json()
         except Timeout:
             abort(504, message="GitHub API Timeout")
@@ -473,7 +473,7 @@ class LaunchUpdate(Resource):
     def post(self):
         """Launch update.sh."""
         # targetVersion = self.args['target']
-        runHostCommand(cmd="sudo $BOX4s_INSTALL_DIR/scripts/Automation/update.sh")
+        runHostCommand(cmd="sudo $CBOX_INSTALL_DIR/scripts/Automation/update.sh")
         return {"message": "accepted"}, 200
 
 
@@ -483,7 +483,7 @@ class UpdateLog(Resource):
     @roles_required(['Super Admin', 'Updates'])
     def get(self):
         """Return last 15 lines of updatelog file."""
-        with open('/var/log/box4s/update.log', 'rb') as f:
+        with open('/var/log/cbox/update.log', 'rb') as f:
             lastLines = tail(f, 15).decode('utf-8').splitlines()
             return {'lines': lastLines}, 200
 
@@ -501,7 +501,7 @@ class UpdateStatus(Resource):
     @roles_required(['Super Admin', 'Updates'])
     def get(self):
         """Get update status."""
-        with open('/var/lib/box4s/.update.state', 'r') as f:
+        with open('/var/lib/cbox/.update.state', 'r') as f:
             # Remove whitespaces and newlines from line
             status = f.readline().strip().rstrip()
             return {'status': status}, 200
@@ -516,7 +516,7 @@ class UpdateStatus(Resource):
         if not (current_user.is_authenticated and current_user.has_role('Updates')) and not request.headers.get('x-forwarded-for') == '172.20.8.1':
             abort(403, message="Forbidden.")
 
-        with open('/var/lib/box4s/.update.state', 'w') as f:
+        with open('/var/lib/cbox/.update.state', 'w') as f:
             f.write(self.args['status'])
             return {}, 200
 
@@ -526,7 +526,7 @@ class UpdateStatus(Resource):
         """
         if not (current_user.is_authenticated and current_user.has_role('Updates')) and not request.headers.get('x-forwarded-for') == '172.20.8.1':
             abort(403, message="Forbidden.")
-        f = open('/var/lib/box4s/.update.state', 'w')
+        f = open('/var/lib/cbox/.update.state', 'w')
         f.close()
         return {}, 205
 
@@ -622,7 +622,7 @@ class Alerts(Resource):
 
 
 class AlertsQuick(Resource):
-    """API representation of BOX4s Quick alert rules."""
+    """API representation of CBOX Quick alert rules."""
 
     def __init__(self):
         """Register Parser and argument for endpoint."""
@@ -649,7 +649,7 @@ class AlertsQuick(Resource):
 
     @roles_required(['Super Admin', 'Alerts'])
     def put(self):
-        """Enable BOX4s Quick Alert Rule.
+        """Enable CBOX Quick Alert Rule.
 
         Accepts key from whitelist array.
         Denies with 400 if key not from the whitelist array.
@@ -666,7 +666,7 @@ class AlertsQuick(Resource):
 
     @roles_required(['Super Admin', 'Alerts'])
     def delete(self):
-        """Disable BOX4s Quick Alert Rule.
+        """Disable CBOX Quick Alert Rule.
 
         Accepts key from ['ids', 'vuln', 'netuse'].
         Denies with 400 if key not from the whitelist array.
@@ -681,7 +681,7 @@ class AlertsQuick(Resource):
 
 
 class AlertMailer(Resource):
-    """BOX4s Alert Mailer Resource."""
+    """CBOX Alert Mailer Resource."""
 
     def __init__(self):
         """Register Parser and argument for endpoint."""
@@ -695,7 +695,7 @@ class AlertMailer(Resource):
         Missing: Returns 404 if no email set.
         """
         try:
-            with open('/var/lib/box4s/alert_mail.conf') as fd:
+            with open('/var/lib/cbox/alert_mail.conf') as fd:
                 alert_mail = fd.read()
                 if alert_mail:
                     return {'email': alert_mail}, 200
@@ -716,7 +716,7 @@ class AlertMailer(Resource):
             self.args = self.parser.parse_args()
         except Exception:
             abort(400, message="Bad Request. Failed parsing arguments.")
-        with open('/var/lib/box4s/alert_mail.conf', 'w') as fd:
+        with open('/var/lib/cbox/alert_mail.conf', 'w') as fd:
             fd.write(self.args['email'])
 
         return {}, 202
@@ -732,13 +732,13 @@ class AlertMailer(Resource):
 
         Return 204 on success.
         """
-        fd = open('/var/lib/box4s/alert_mail.conf', 'w')
+        fd = open('/var/lib/cbox/alert_mail.conf', 'w')
         fd.close()
         return {}, 204
 
 
 class APIUser(Resource):
-    """BOX4s User Resource."""
+    """CBOX User Resource."""
 
     method_decorators = [login_required]
 
@@ -841,7 +841,7 @@ class APIUser(Resource):
 
 
 class APIUserLock(Resource):
-    """BOX4s User Lock Resource."""
+    """CBOX User Lock Resource."""
 
     @roles_required(['Super Admin', 'User-Management'])
     def post(self, user_id):
@@ -1000,11 +1000,11 @@ class APIModules(Resource):
     """Endpoint to work with modules."""
     def get(self):
         """Get all modules and their state.
-        Example: [{"name": "BOX4s_WAZUH", "enabled": "false"}, {"name": "BOX4s_INCMAN", "enabled": "false"}]
+        Example: [{"name": "CBox_WAZUH", "enabled": "false"}, {"name": "CBox_INCMAN", "enabled": "false"}]
         """
         modules = []
         try:
-            with open('/etc/box4s/modules.conf', 'r') as fm:
+            with open('/etc/cbox/modules.conf', 'r') as fm:
                 for line in fm:
                     if not line.startswith('#'):
                         # not a comment
@@ -1025,15 +1025,15 @@ class APIWazuhAgentPass(Resource):
 
         Always abort if Wazuh module not enabled.
         """
-        if not os.getenv('BOX4s_WAZUH') == 'true':
-            abort(403, message="BOX4security is not configured to use Wazuh.")
+        if not os.getenv('CBox_WAZUH') == 'true':
+            abort(403, message="CBox is not configured to use Wazuh.")
         self.parser = reqparse.RequestParser()
 
     @roles_required(['Super Admin', 'Config'])
     def get(self):
         """GET the current wazuh agent password."""
         try:
-            with open('/var/lib/box4s/wazuh-authd.pass', 'r') as f:
+            with open('/var/lib/cbox/wazuh-authd.pass', 'r') as f:
                 password = f.read().strip()
             return {'password': password}
         except Exception:
@@ -1044,7 +1044,7 @@ class APIWazuhAgentPass(Resource):
         """Generate, set and return a new, random wazuh agent password."""
         password = helpers.generate_password()
         try:
-            with open('/var/lib/box4s/wazuh-authd.pass', 'w') as f:
+            with open('/var/lib/cbox/wazuh-authd.pass', 'w') as f:
                 f.write(password)
         except Exception:
             abort(500, message="Failed to write the Wazuh password file.")
@@ -1061,7 +1061,7 @@ class APIWazuhAgentPass(Resource):
         self.args = self.parser.parse_args()
         password = self.args['password']
         try:
-            with open('/var/lib/box4s/wazuh-authd.pass', 'w') as f:
+            with open('/var/lib/cbox/wazuh-authd.pass', 'w') as f:
                 f.write(password)
         except Exception:
             abort(500, message="Failed to write the Wazuh password file.")
@@ -1294,7 +1294,7 @@ class CertificateResource(Resource):
         Private Key is NOT sent!
         """
         try:
-            return send_file('/etc/nginx/certs/box4security.cert.pem', as_attachment=True)
+            return send_file('/etc/nginx/certs/cbox.cert.pem', as_attachment=True)
         except Exception:
             abort(500, message="Failed sending the certificate.")
 
@@ -1311,7 +1311,7 @@ class CertificateResource(Resource):
             abort(400, message="Request does not contain two files.")
         validFiles = {'cert': None, 'key': None}
         for file in files:
-            tempFile, tempFileName = tempfile.mkstemp(prefix='box4s_')
+            tempFile, tempFileName = tempfile.mkstemp(prefix='cbox_')
             os.close(tempFile)
             file.save(tempFileName)
             try:
@@ -1337,9 +1337,9 @@ class CertificateResource(Resource):
         if validFiles['cert'] and validFiles['key']:
             for f in validFiles.values():
                 f.seek(0)
-            validFiles['cert'].save('/etc/nginx/certs/box4security.cert.pem')
-            validFiles['key'].save('/etc/nginx/certs/box4security.key.pem')
-            # Restart BOX4s to apply changes.
+            validFiles['cert'].save('/etc/nginx/certs/cbox.cert.pem')
+            validFiles['key'].save('/etc/nginx/certs/cbox.key.pem')
+            # Restart CBOX to apply changes.
             restartBOX4s(sleep=10)
             return {'message': 'Successfully updated key and certificate.'}, 200
         else:

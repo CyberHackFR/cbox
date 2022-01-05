@@ -22,14 +22,14 @@ def upgrade():
     op.bulk_insert(Role.__table__,
                    [
                        {'id': 1, 'name': 'Super Admin', 'description': 'Super Admin'},
-                       {'id': 2, 'name': 'Filter', 'description': 'Sehen und Anlegen von Filtern'},
-                       {'id': 3, 'name': 'Updates', 'description': 'Ansehen und Starten von Updates'},
-                       {'id': 4, 'name': 'User-Management', 'description': 'Bearbeiten und Anlegen von Benutzern'},
-                       {'id': 5, 'name': 'FAQ', 'description': 'Ansicht FAQ und Benutzung 4sConsult Kontaktformular'},
-                       {'id': 6, 'name': 'Dashboards-Master', 'description': 'Freigabe für alle Dashboards'},
-                       {'id': 7, 'name': 'SIEM', 'description': 'Freigabe für SIEM-Dashboards'},
-                       {'id': 8, 'name': 'Schwachstellen', 'description': 'Freigabe für Schwachstellen-Dashboards'},
-                       {'id': 9, 'name': 'Netzwerk', 'description': 'Freigabe für Netzwerk-Dashboards'},
+                       {'id': 2, 'name': 'Filtre', 'description': 'Affichage et création de filtres'},
+                       {'id': 3, 'name': 'Updates', 'description': 'Afficher et démarrer les mises à jour'},
+                       {'id': 4, 'name': 'User-Management', 'description': 'Modification et création d\'utilisateurs'},
+                       {'id': 5, 'name': 'FAQ', 'description': 'Consulter la FAQ et utiliser le formulaire de contact CyberHack'},
+                       {'id': 6, 'name': 'Dashboards-Master', 'description': 'Gestion du tableau de bord'},
+                       {'id': 7, 'name': 'SIEM', 'description': 'Tableau de bord du SIEM'},
+                       {'id': 8, 'name': 'Vulnérabilités', 'description': 'Tableaux de bord de vulnérabilité'},
+                       {'id': 9, 'name': 'Réseau', 'description': 'Tableaux de bord du réseau'},
                    ])
     # ### end Alembic commands ###
 

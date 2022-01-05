@@ -21,7 +21,7 @@ def upgrade():
     """Upgrade to migration."""
     op.bulk_insert(Role.__table__,
                    [
-                       {'id': 11, 'name': 'Wiki', 'description': 'Freigabe für die Dokumentation'},
+                       {'id': 11, 'name': 'Wiki', 'description': 'Système wiki de CBox'},
                    ])
 
 

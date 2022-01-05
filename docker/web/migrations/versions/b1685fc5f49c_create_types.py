@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     """Upgrade to migration."""
     op.bulk_insert(SystemType.__table__, [
-        {'id': 1, 'name': 'BOX4security'},
+        {'id': 1, 'name': 'Cbox'},
         {'id': 2, 'name': 'DNS-Server'},
         {'id': 3, 'name': 'Gateway'},
         {'id': 4, 'name': 'Firewall'},
@@ -28,27 +28,27 @@ def upgrade():
     ])
     op.bulk_insert(NetworkType.__table__, [
         {'name': 'Client'},
-        {'name': 'Server'},
-        {'name': 'Gast'},
+        {'name': 'Serveur'},
+        {'name': 'Invité'},
     ])
     op.bulk_insert(ScanCategory.__table__, [
-        {'id': 1, 'name': 'Keine Restriktionen bei den Scans'},
-        {'id': 2, 'name': 'Scans ausschließlich zu Randzeiten oder am Wochenende'},
-        {'id': 3, 'name': 'Scans ausschließlich bei Einsatzbereitschaft von 4sConsult und Präsenz der Netzwerkadministration'},
+        {'id': 1, 'name': 'Aucune restriction sur les scan'},
+        {'id': 2, 'name': 'Scanne uniquement pendant les heures creuses ou le week-end'},
+        {'id': 3, 'name': 'Scanne uniquement lorsque CyberHack est prêt et que l\'administration réseau est présente'},
     ])
 
 
 def downgrade():
     """Downgrade to migration."""
-    op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="BOX4security"')
+    op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="Cbox"')
     op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="DNS-Server"')
     op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="Gateway"')
     op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="Firewall"')
     op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="IoT"')
     op.execute(f'DELETE FROM "{SystemType.__table__}" WHERE name="Industrielle IT"')
     op.execute(f'DELETE FROM "{NetworkType.__table}" WHERE name="Client"')
-    op.execute(f'DELETE FROM "{NetworkType.__table}" WHERE name="Server"')
-    op.execute(f'DELETE FROM "{NetworkType.__table}" WHERE name="Gast"')
+    op.execute(f'DELETE FROM "{NetworkType.__table}" WHERE name="Serveur"')
+    op.execute(f'DELETE FROM "{NetworkType.__table}" WHERE name="Invité"')
 
     op.execute(f'DELETE FROM "{ScanCategory.__table}" WHERE id="1"')
     op.execute(f'DELETE FROM "{ScanCategory.__table}" WHERE id="2"')

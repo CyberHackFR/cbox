@@ -8,8 +8,8 @@ class User(db.Model, UserMixin):
     """User class to handle authentication and authorization.
 
     active: can login e.g. not banned
-    email_confirmed_at: Zeitstempel, an dem die E-Mail bestätigt wurde
-    roles: Liste der, dem User zugeorndeten Regeln
+    email_confirmed_at: Time stamp at which the email was confirmed
+    roles: List of the rules assigned to the user
     """
 
     __tablename__ = 'user'

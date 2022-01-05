@@ -21,7 +21,7 @@ def upgrade():
     """Upgrade to migration."""
     op.bulk_insert(Role.__table__,
                    [
-                       {'id': 13, 'name': 'Config', 'description': 'Einsicht und Bearbeiten der BOX4s-Konfiguration'},
+                       {'id': 13, 'name': 'Configuration', 'description': 'Affichage et modification de la configuration des CBox'},
                    ])
 
 

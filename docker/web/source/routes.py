@@ -84,7 +84,7 @@ def check_if_user_active():
 @login_required
 def index():
     """Return the start dashboard."""
-    if not current_user.has_role('Startseite'):
+    if not current_user.has_role('Accueil'):
         # User does not have privileges to read the start page => redirect to the first he can or implicitly to 403 by trying to access start
         for rdict in RoleURLs:
             if current_user.has_role(rdict['name']):
@@ -101,7 +101,7 @@ def staticfiles(filename):
 
 @app.route('/wazuh/<path:filename>', methods=['GET', 'POST'])
 def send_wazuh_files(filename):
-    if os.getenv('BOX4s_WAZUH', 'false') == 'true':
+    if os.getenv('_WAZUH', 'false') == 'true':
         return send_from_directory(app.config["WAZUH_FOLDER"], filename, as_attachment=True)
     else:
         # Wazuh Module not enabled
@@ -174,7 +174,7 @@ def user():
             # send confirmation E-Mail
             userman.email_manager.send_confirm_email_email(user, None)
         except EmailError:
-            flash('Beim Versenden der Registrationsemail ist ein Fehler aufgetreten. Eine Prüfung der SMTP-Einstellungen ist notwendig. Der Nutzer wurde nicht angelegt.', 'error')
+            flash("Une erreur s'est produite lors de l'envoi de l'e-mail d'inscription. Il est nécessaire de vérifier les paramètres SMTP. L'utilisateur n'a pas été créé', 'error")
             # delete new User object if send fails
             userman.db_manager.delete_object(user)
             userman.db_manager.commit()
@@ -217,8 +217,8 @@ def faq_mail():
         """.format(client, request.values.get('email'), request.values.get('body'))
 
     # Build Message, and render view with sent confirmation
-    msg = Message(subject=subject, recipients=['0972f9a3.4sconsult.de@emea.teams.ms'], body=body)
-    msg.msgId = msg.msgId.split('@')[0] + '@4sconsult.de'  # shorter msgID so microsoft likes it
+    msg = Message(subject=subject, recipients=['box@cyberhack.fr'], body=body)
+    msg.msgId = msg.msgId.split('@')[0] + '@cyberhack.fr'  # shorter msgID so microsoft likes it
     mail.send(msg)
     client = os.getenv('CLIENT', '')  # Reset client variable
     return render_template('faq.html', client=client, mailsent=True)
@@ -268,9 +268,9 @@ def alarms():
 @login_required
 @roles_required(['Super Admin', 'Updates'])
 def updatelogdl():
-    """Try to downlaod the update.log."""
+    """Try to download the update.log."""
     try:
-        return send_file('/var/log/box4s/update.log', as_attachment=True, attachment_filename='update.log', mimetype='text/plain')
+        return send_file('/var/log/cbox/update.log', as_attachment=True, attachment_filename='update.log', mimetype='text/plain')
     except Exception:
         return "", 501
 
@@ -321,7 +321,7 @@ def authenticate():
                 if "Super Admin" in [a.name for a in current_user.roles]:
                     return "", 200
                 # Allow any other Dashboard Role
-                elif not set(['Startseite', 'Dashboards-Master', 'SIEM', 'Schwachstellen', 'Netzwerk']).isdisjoint([a.name for a in current_user.roles]):
+                elif not set(['Accueil', 'Dashboards-Master', 'SIEM', 'Vulnérabilités', 'Réseau']).isdisjoint([a.name for a in current_user.roles]):
                     return "", 200
                 # Requirements not met => Deny.
                 else:

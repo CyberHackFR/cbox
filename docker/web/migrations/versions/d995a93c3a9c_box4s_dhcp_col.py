@@ -18,9 +18,9 @@ depends_on = None
 
 def upgrade():
     """Upgrade to migration."""
-    op.add_column('box4security', sa.Column('dhcp_enabled', sa.Boolean(), nullable=True))
+    op.add_column('cbox', sa.Column('dhcp_enabled', sa.Boolean(), nullable=True))
 
 
 def downgrade():
     """Downgrade to migration."""
-    op.drop_column('box4security', 'dhcp_enabled')
+    op.drop_column('cbox', 'dhcp_enabled')
