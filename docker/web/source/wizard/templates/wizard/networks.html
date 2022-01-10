@@ -6,20 +6,20 @@
                 <div class="ui one column">
                     <div class="ui success message">
                         <div class="header">
-                            Einrichtung der Firmennetze
+                            Création de réseaux
                         </div>
                         <p>
-                            Geben Sie in diesem Schritt die Netze Ihrer Umgebung an. <br>
-                            Tragen Sie dazu bitte die Netzwerke mittels CIDR-Notation oder per Netzadresse und Subnetzmaske ein. <br>
-                            Tragen Sie bitte <b>nur</b> die Netzwerke ein, die von der BOX4security mit Schwachstellenscans und/oder Netzanalyse betrachtet werden sollen. <br>
-                            Sie können zudem optional eine Klassifikation des Netzwerkes angeben und Netze von Schwachstellenscans oder der Untersuchung auf alarmieren Traffic ausnehmen.
+                            Dans cette étape, spécifiez les réseaux. <br>
+                            Veuillez saisir les réseaux en utilisant la notation CIDR ou par adresse réseau et masque de sous-réseau. <br>
+                            Veuillez saisir <b> uniquement </b> les réseaux qui doivent être pris en compte par CBox avec des scans de vulnérabilité et/ou une scan de réseau. <br>
+                            Vous pouvez exclure les réseaux des analyses de vulnérabilité ou de monitoring du trafic.
                         </p>
                     </div>
                 </div>
                 <div class="ui one column">
                     <p>
-                        Die Schwachstellenscans <i>können</i> zu den Zeiten der eingetragenen Termine eine Auslastung des Netzwerkes verursachen. Die Scans sollten nach Möglichkeit also nicht zur gleichen Zeit durchgeführt werden, um erhöhter Netzwerk-Latenz entgegenzuwirken.
-                        Seien Sie sich darüber bewusst, dass automatisierte Scans zu einer temporären Beeinträchtigung oder Ausfall der Systeme führen können.
+                        Les scans de vulnérabilités <i> peuvent provoquer </i> utilisation du réseau aux heures des dates saisies. Si possible, les scans ne doivent pas être effectuées en même temps afin de contrer l'augmentation de la latence du réseau.
+                        Sachez que les analyses automatisées peuvent entraîner une altération ou une défaillance temporaire des systèmes.
                     </p>
                 </div>
                 <div class="ui one column">
@@ -27,15 +27,15 @@
                     <table id="tbl-networks" class="ui celled structured table">
                         <thead>
                             <tr>
-                                <th rowspan="2">Bezeichner</th>
-                                <th rowspan="2">Netzadresse-Adresse in CIDR</th>
+                                <th rowspan="2">Identifiant</th>
+                                <th rowspan="2">Réseau dans CIDR</th>
                                 <th rowspan="2">VLAN-Tag</th>
                                 <th rowspan="2">Typ</th>
-                                <th colspan="3">Schwachstellenscan</th>
-                                <th rowspan="2">Aktion</th>
+                                <th colspan="3">Scans de vulnérabilité</th>
+                                <th rowspan="2">Action</th>
                             </tr>
                             <tr>
-                                <th>Kategorie <div class="ui icon label circular foursgrey-bg" data-html="
+                                <th>Catégorie <div class="ui icon label circular foursgrey-bg" data-html="
                                     <div class='content'>
                                         <div class='ui list'>
                                             {% for c in scan_categories %}
@@ -46,14 +46,14 @@
                                         </div>
                                     </div>   
                                     " data-position="bottom center"><i style="margin:0em;" class="help icon"></i></div></th>
-                                <th>Wochentag</th>
-                                <th>Startzeit</th>
+                                <th>Jour</th>
+                                <th>Heure</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for n in networks %}
                             <tr>
-                                <td data-label="Bezeichner">{{n.name}}</td>
+                                <td data-label="Identifiant">{{n.name}}</td>
                                 <td data-label="IP-Adresse/CIDR">{{n.ip_address}}/{{n.cidr}}</td>
                                 <td data-label="VLAN-Tag">{{n.vlan}}</td>
                                 <td class="collapsing" data-label="Typ">
@@ -77,12 +77,12 @@
                                     <div class="ui basic label">{{ n.types[0].name }}</div>
                                 {% endif %}
                                 </td>
-                                <td data-label="Scan-Kategorie">Kat. {{n.scan_category.id}}</td>
-                                <td data-label="Scan-Wochentag">{{n.scan_weekday}}</td>
-                                <td data-label="Scan-Zeit">{{n.scan_time}}</td>
-                                <td class="collapsing" data-label="Aktion">
-                                    <a data-network-id="{{ n.id }}" data-tooltip="Netz bearbeiten" data-position="bottom center" data-action="edit" class="ui tiny icon button foursgrey-bg"><i class="edit icon"></i></a>
-                                    <a data-network-id="{{ n.id }}" data-tooltip="Netz löschen" data-position="bottom center" data-action="delete" class="ui icon tiny red button"><i class="trash alternate outline icon"></i></a>
+                                <td data-label="Scan-Catégorie">Cat. {{n.scan_category.id}}</td>
+                                <td data-label="Scan-Jour">{{n.scan_weekday}}</td>
+                                <td data-label="Scan-Heure">{{n.scan_time}}</td>
+                                <td class="collapsing" data-label="Action">
+                                    <a data-network-id="{{ n.id }}" data-tooltip="Modifier le réseau" data-position="bottom center" data-action="edit" class="ui tiny icon button foursgrey-bg"><i class="edit icon"></i></a>
+                                    <a data-network-id="{{ n.id }}" data-tooltip="Supprimer le réseau" data-position="bottom center" data-action="delete" class="ui icon tiny red button"><i class="trash alternate outline icon"></i></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -92,7 +92,7 @@
                       <div class="ui placeholder segment">
                         <div class="ui icon header">
                             <i class="exclamation circle icon"></i>
-                            Es wurden noch keine Netze hinterlegt.
+                            Aucun réseau ajouté
                         </div>
                       </div>
                       {% endif %}
@@ -100,17 +100,17 @@
                 <div class="ui one column">
                     <div class="ui raised segment">
                         <h3 class="ui header">
-                            Jetzt Netz hinzufügen!
+                            Ajoutez un réseau maintenant!
                         </h3>
                         <div class="active content">
                             <form class="ui large form" action="{{ url_for('wizard.networks') }}" method="POST" role="form">
                                 {{ formNetwork.hidden_tag() }}
                                 <div class="fields">
                                     <div class="six wide field">
-                                        <label>Netz-Bezeichner</label>
+                                        <label>Identifiant-Réseau</label>
                                         <div class="ui left icon input">
                                         <i class="map sig icon"></i>
-                                        <input type="text" id="{{ formNetwork.name.id }}" required="" name="{{ formNetwork.name.name }}" placeholder="Netz-Bezeichner">
+                                        <input type="text" id="{{ formNetwork.name.id }}" required="" name="{{ formNetwork.name.name }}" placeholder="Identifiant-Réseau">
                                         </div>
                                     </div>
                                     {% if formNetwork.name.errors %}
@@ -119,8 +119,8 @@
                                         {% endfor %}
                                     {% endif %}
                                     <div class="five wide field">
-                                        <label>Netz-Adresse</label>
-                                        <input type="text" id="{{ formNetwork.ip_address.id }}" name="{{ formNetwork.ip_address.name }}" placeholder="Netz-Adresse (z.B. 192.168.1.0)">
+                                        <label>Adresse-Réseau</label>
+                                        <input type="text" id="{{ formNetwork.ip_address.id }}" name="{{ formNetwork.ip_address.name }}" placeholder="Adresse-Réseau (par ex. 192.168.1.0)">
                                     </div>
                                     {% if formNetwork.ip_address.errors %}
                                         {% for e in formNetwork.ip_address.errors %}
@@ -154,9 +154,9 @@
                                 </div>
                                 <div class="fields">
                                     <div class="five wide field">
-                                        <label>Netz-Typ</label>
+                                        <label>Type-Réseau</label>
                                         <select name="{{formNetwork.types.name}}" multiple="" class="ui dropdown">
-                                        <option value="">Netz-Typ</option>
+                                        <option value="">Type-Réseau</option>
                                         {% for value in formNetwork.types.choices %}
                                             <option value="{{value[0]}}">{{value[1]}}</option>
                                         {% endfor %}
@@ -174,16 +174,16 @@
                                         </a> 
                                     </div>
                                     <div class="four wide field">
-                                        <label>Schwachstellenscan an Wochentag</label>
+                                        <label>Scan des vulnérabilités en semaine</label>
                                         <select id="{{ formNetwork.scan_weekday.id }}" name="{{formNetwork.scan_weekday.name}}" class="ui dropdown">
-                                            <option value="">Wochentag</option>
-                                            <option value="montags">montags</option>
-                                            <option value="dienstags">dienstags</option>
-                                            <option value="mittwochs">mittwochs</option>
-                                            <option value="donnerstags">donnerstags</option>
-                                            <option value="freitags">freitags</option>
-                                            <option value="samstags">samstags</option>
-                                            <option value="sonntags">sonntags</option>
+                                            <option value="">Jour</option>
+                                            <option value="lundi">lundi</option>
+                                            <option value="mardis">mardis</option>
+                                            <option value="mercredis">mercredis</option>
+                                            <option value="jeudis">jeudis</option>
+                                            <option value="vendredi">vendredi</option>
+                                            <option value="samedis">samedis</option>
+                                            <option value="dimanche">dimanche</option>
                                         </select>
                                     </div>
                                     {% if formNetwork.scan_weekday.errors %}
@@ -192,7 +192,7 @@
                                         {% endfor %}
                                     {% endif %}
                                     <div class="four wide field">
-                                        <label>Schwachstellenscan zu Uhrzeit</label>
+                                        <label>Heure de scan</label>
                                         <div class="ui input">
                                         <input type="time" id="{{ formNetwork.scan_time.id }}" name="{{ formNetwork.scan_time.name }}" value="09:00">
                                         </div>
@@ -204,7 +204,7 @@
                                     {% endif %}
                                     <div class="two wide field">
                                         <label>
-                                            Kategorie <div style="margin-left:1em;" class="ui icon label circular foursgrey-bg" data-html="
+                                            Catégorie <div style="margin-left:1em;" class="ui icon label circular foursgrey-bg" data-html="
                                             <div class='content'>
                                                 <div class='ui list'>
                                                     {% for c in scan_categories %}
@@ -229,13 +229,13 @@
                                         {% endfor %}
                                     {% endif %}
                                 </div>
-                                <button class="ui fluid large primary submit button" type="submit" name="button">Anlegen</button>
+                                <button class="ui fluid large primary submit button" type="submit" name="button">Sauvegarder</button>
                             </form>
                         </div>
                     </div>
                 </div>
         <div class="ui one column">
-            <a href="{{ url_for('wizard.systems') }}" class="ui large foursgrey-bg button">Weiter</a>
+            <a href="{{ url_for('wizard.systems') }}" class="ui large foursgrey-bg button">Continuer</a>
         </div>
         </div>
             </div>
@@ -245,15 +245,15 @@
 {% block modal %}
 <div id="modal-edit" class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">Netz bearbeiten</div>
+    <div class="header">Modifier le réseau</div>
     <div class="content">
         <form class="ui form" action="{{ url_for('wizard.networks') }}" method="POST" role="form">
             <div class="fields">
                 <div class="sixteen wide field">
-                    <label>Netz-Bezeichner</label>
+                    <label>Identifiant-Réseau</label>
                     <div class="ui left icon input">
                     <i class="map sig icon"></i>
-                    <input type="text" id="edit-{{ formNetwork.name.id }}" required="" name="{{ formNetwork.name.name }}" placeholder="Netz-Bezeichner">
+                    <input type="text" id="edit-{{ formNetwork.name.id }}" required="" name="{{ formNetwork.name.name }}" placeholder="Identifiant-Réseau">
                     </div>
                 </div>
                 {% if formNetwork.name.errors %}
@@ -264,8 +264,8 @@
             </div>
             <div class="fields">
                     <div class="ten wide field">
-                        <label>Netz-Adresse</label>
-                        <input type="text" id="edit-{{ formNetwork.ip_address.id }}" name="{{ formNetwork.ip_address.name }}" placeholder="Netz-Adresse (z.B. 192.168.1.0)">
+                        <label>Adresse-Réseau</label>
+                        <input type="text" id="edit-{{ formNetwork.ip_address.id }}" name="{{ formNetwork.ip_address.name }}" placeholder="Adresse-Réseau (par ex. 192.168.1.0)">
                     </div>
                     {% if formNetwork.ip_address.errors %}
                         {% for e in formNetwork.ip_address.errors %}
@@ -288,9 +288,9 @@
             </div>
             <div class="fields">
                 <div class="ten wide field">
-                    <label>Netz-Typ</label>
+                    <label>Type-Réseau</label>
                     <select id="edit-{{ formNetwork.types.id }}" name="{{formNetwork.types.name}}" multiple="" class="ui dropdown">
-                    <option value="">Netz-Typ</option>
+                    <option value="">Type-Réseau</option>
                     {% for value in formNetwork.types.choices %}
                         <option value="{{value[0]}}">{{value[1]}}</option>
                     {% endfor %}
@@ -314,11 +314,11 @@
                 {% endif %}
             </div>
             <hr>
-            <h4>Schwachstellenscan</h4>
+            <h4>Scans de vulnérabilité</h4>
             <div class="fields">
                 <div class="four field">
                     <label>
-                        Kategorie <div style="margin-left:1em;" class="ui icon label circular foursgrey-bg" data-html="
+                        Catégorie <div style="margin-left:1em;" class="ui icon label circular foursgrey-bg" data-html="
                         <div class='content'>
                             <div class='ui list'>
                                 {% for c in scan_categories %}
@@ -343,16 +343,16 @@
                     {% endfor %}
                 {% endif %}
                 <div class="six field">
-                    <label>Wochentag</label>
+                    <label>Jour</label>
                     <select id="edit-{{ formNetwork.scan_weekday.id }}" name="{{formNetwork.scan_weekday.name}}" class="ui dropdown">
-                        <option value="">Wochentag</option>
-                        <option value="montags">montags</option>
-                        <option value="dienstags">dienstags</option>
-                        <option value="mittwochs">mittwochs</option>
-                        <option value="donnerstags">donnerstags</option>
-                        <option value="freitags">freitags</option>
-                        <option value="samstags">samstags</option>
-                        <option value="sonntags">sonntags</option>
+                        <option value="">Jour</option>
+                        <option value="lundi">lundi</option>
+                        <option value="mardis">mardis</option>
+                        <option value="mercredis">mercredis</option>
+                        <option value="jeudis">jeudis</option>
+                        <option value="vendredi">vendredi</option>
+                        <option value="samedis">samedis</option>
+                        <option value="dimanche">dimanche</option>
                     </select>
                 </div>
                 {% if formNetwork.scan_weekday.errors %}
@@ -361,7 +361,7 @@
                     {% endfor %}
                 {% endif %}
                 <div class="six field">
-                    <label>Uhrzeit</label>
+                    <label>Heure</label>
                     <div class="ui input">
                     <input type="time" id="edit-{{ formNetwork.scan_time.id }}" name="{{ formNetwork.scan_time.name }}" value="09:00">
                     </div>
@@ -372,7 +372,7 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <button id="edit-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Speichern</button>
+            <button id="edit-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Enregistrer</button>
         </form>
     </div>
 </div>
@@ -387,14 +387,14 @@ $('.ui.label.foursgrey-bg').popup();
 $(`#tbl-networks tbody tr td a` ).on('click', (e) => {
     switch ($(e.delegateTarget).data('action')) {
       case 'delete':
-        if (confirm(`Soll dieses Netz wirklich unwiderruflich GELÖSCHT werden?`)) {
+        if (confirm(`Ce réseau doit-il vraiment être supprimé de manière irrévocable?`)) {
           fetch(`/api/networks/${$(e.delegateTarget).data('network-id')}`, {method: 'DELETE'})
           .then((response) => {
             if(response.ok){
               $(e.delegateTarget).closest('tr').remove();
             }
             else {
-              errormsg = "Sie dürfen diese Aktion nicht ausführen.";
+              errormsg = "Vous n'êtes pas autorisé à effectuer cette action.";
               row = `<div class="ui red message">${errormsg}</div>`;
               $(`#errormsg`).before(row);
             }
@@ -446,10 +446,10 @@ $(`#edit-submit`).on('click', (e) => {
         if(!response.ok){
           var errormsg="";
           switch (response.status) {
-            case 403: errormsg = "Sie dürfen diese Aktion nicht ausführen."; break;
-            case 404: errormsg = "Das zu bearbeitende Netz wurde nicht gefunden. Keine Änderungen wurden gespeichert."; break;
-            case 400: errormsg = "Die gestellte Anfrage enthielt für die Verarbeitung unverständliche Parameter."; break;
-            case 500: errormsg = "Die Änderungen am Netz konnten nicht in der Datenbank gespeichert werden."; break;
+            case 403: errormsg = "Vous n'êtes pas autorisé à effectuer cette action."; break;
+            case 404: errormsg = "Le réseau à traiter n'a pas été trouvé. Aucune modification n'a été enregistrée."; break;
+            case 400: errormsg = "La demande contenait des paramètres incompréhensibles pour le traitement."; break;
+            case 500: errormsg = "Les modifications apportées au réseau n'ont pas pu être enregistrées dans la base de données."; break;
           };
           row = `<div class="ui red message">${errormsg}</div>`;
           $(`#edit-submit`).before(row);

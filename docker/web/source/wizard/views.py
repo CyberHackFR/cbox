@@ -49,10 +49,10 @@ def box4s():
     formBOX4s = BOX4sForm(request.form)
     formBOX4s.network_id.choices = [(n.id, f"{n.name} ({n.ip_address}/{n.cidr})") for n in Network.query.order_by('id')]
     formBOX4s.dns_id.choices = [(s.id, f"{s.name} ({s.ip_address})") for s in System.query.order_by('id').filter(System.types.any(name='DNS-Server'))]
-    formBOX4s.dns_id.choices += [(-1, "Andere..")]
+    formBOX4s.dns_id.choices += [(-1, "Autre..")]
     formBOX4s.gateway_id.choices = [(s.id, f"{s.name} ({s.ip_address})") for s in System.query.order_by('id').filter(System.types.any(name='Gateway'))]
-    formBOX4s.gateway_id.choices += [(-1, "Andere..")]
-    systemTypes = SystemType.query.filter(SystemType.name != 'BOX4security').order_by(SystemType.id.asc()).all()
+    formBOX4s.gateway_id.choices += [(-1, "Autre..")]
+    systemTypes = SystemType.query.filter(SystemType.name != 'CBox').order_by(SystemType.id.asc()).all()
     BOX4s = BOX4security.query.order_by(BOX4security.id.asc()).first()
     if request.method == 'POST':
         if formBOX4s.validate():
@@ -60,19 +60,19 @@ def box4s():
                 # BOX4s does not exist => create anew.
                 BOX4s = BOX4security()
             formBOX4s.populate_obj(BOX4s)  # Copies matching attributes from form onto box4s
-            BOX4s.name = "BOX4security"
+            BOX4s.name = "CBox"
             BOX4s.ids_enabled = False
             BOX4s.scan_enabled = False
-            BOX4s.types = [SystemType.query.filter(SystemType.name == 'BOX4security').first()]
+            BOX4s.types = [SystemType.query.filter(SystemType.name == 'CBox').first()]
             BOX4s.dns = System.query.get(BOX4s.dns_id)
             BOX4s.gateway = System.query.get(BOX4s.gateway_id)
             try:
                 db.session.add(BOX4s)
                 db.session.commit()
             except SQLAlchemyError:
-                flash('Die Konfiguration konnte nicht gespeichert werden.', category="error")
+                flash('La configuration n\'a pas pu être enregistrée.', category="error")
             else:
-                flash('Die Konfiguration wurde entgegengenommen.', category="success")
+                flash('La configuration a été reçue.', category="success")
             return redirect(url_for('wizard.box4s'))
     return render_template('wizard/box4s.html', formBOX4s=formBOX4s, box4s=BOX4s, systemTypes=systemTypes)
 
@@ -81,7 +81,7 @@ def box4s():
 def systems():
     formSystem = SystemForm(request.form)
     formSystem.network_id.choices = [(n.id, f"{n.name} ({n.ip_address}/{n.cidr})") for n in Network.query.order_by('id')]
-    formSystem.types.choices = [(t.id, t.name) for t in SystemType.query.order_by('id').filter(SystemType.name != 'BOX4security')]
+    formSystem.types.choices = [(t.id, t.name) for t in SystemType.query.order_by('id').filter(SystemType.name != 'CBox')]
     if request.method == 'POST':
         if formSystem.validate():
             newSystem = System()
@@ -120,7 +120,7 @@ def apply():
     BOX4s = BOX4security.query.order_by(BOX4security.id.asc()).first()
 
     # Step 1: Set DNS in resolv.personal
-    with open('/var/lib/box4s/resolv.personal', 'w') as fd_resolv:
+    with open('/var/lib/cbox/resolv.personal', 'w') as fd_resolv:
         fd_resolv.write(f'nameserver {BOX4s.dns.ip_address}\n')
     fd_resolv.close()
 
@@ -130,7 +130,7 @@ def apply():
         with open(tmp, 'w') as fd_tmp:
             for line in fd_env:
                 if "CLIENT=" in line:
-                    line = "CLIENT={kunde}\n".format(kunde='NEWCLIENT')
+                    line = "CLIENT={client}\n".format(client='NEWCLIENT')
                 elif "INT_IP=" in line:
                     line = f"INT_IP={BOX4s.ip_address}\n"
                 fd_tmp.write(line)
@@ -153,23 +153,23 @@ def apply():
     templateSystems = render_template('logstash/system.jinja2', systems=systems)
 
     # Render the final template from smaller templates.
-    templateBOX4sSpecial = render_template('logstash/BOX4s-special.conf.jinja2', templateDrop=templateDrop, templateNetworks=templateNetworks, templateSystems=templateSystems)
+    templateBOX4sSpecial = render_template('logstash/CBox-special.conf.jinja2', templateDrop=templateDrop, templateNetworks=templateNetworks, templateSystems=templateSystems)
 
     # Write the replaced text to the original file, replacing it.
-    with open('/etc/box4s/logstash/BOX4s-special.conf', 'w', encoding='utf-8') as fd_4sspecial:
+    with open('/etc/cbox/logstash/CBox-special.conf', 'w', encoding='utf-8') as fd_4sspecial:
         fd_4sspecial.write(templateBOX4sSpecial)
 
     # Step 5: Apply INT_IP to Logstash Default.
     with open('/etc/default/logstash', 'r', encoding='utf-8') as fd_deflogstash:
         content = fd_deflogstash.read()
         content = re.sub(r'(INT_IP=)([0-9\.]+)()', r'\g<1>{}'.format(BOX4s.ip_address), content)
-        content = re.sub(r'(KUNDE=)(\w+)()', r'\g<1>{}'.format("NEWKUNDE"), content)
+        content = re.sub(r'(CLIENT=)(\w+)()', r'\g<1>{}'.format("NEWCLIENT"), content)
     with open('/etc/default/logstash', 'w', encoding='utf-8') as fd_deflogstash:
         fd_deflogstash.write(content)
 
-    # Step 6: Set network configuration for BOX4security.
+    # Step 6: Set network configuration for CBox.
     templateNetplan = render_template('logstash/netplan.yaml.jinja2', BOX4s=BOX4s)
-    with open('/etc/_netplan/10-BOX4security.yaml', 'w', encoding='utf-8') as fd_netplan:
+    with open('/etc/_netplan/10-cbox.yaml', 'w', encoding='utf-8') as fd_netplan:
         fd_netplan.write(templateNetplan)
 
     # Step 7: Set the completed state.

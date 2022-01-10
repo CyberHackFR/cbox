@@ -5,20 +5,20 @@
     <div class="ui segment">
         <div class="ui success message">
             <div class="header">
-            Konfiguration der BOX4security
+                Configuration de CBox
             </div>
             <p>
-                Nehmen Sie hier wichtige Einstellungen zur Konnektivität der BOX4security vor. <br>
-                Die Änderungen werden nach Abschluss der Einrichtung in Schritt 6 übernommen.
+                Effectuez les réglages importants pour la connectivité de CBox ici.<br>
+                Les modifications prendront effet à l'étape 6 une fois la configuration terminée.
             </p>
         </div>
         <form class="ui form" action="" method="POST" role="form">
             {{ formBOX4s.hidden_tag() }}
-            <h3 class="ui dividing header">Netzkonfiguration BOX4security</h3>
+            <h3 class="ui dividing header">Configuration réseau CBox</h3>
             <div class="centered inline field">
                 <div class="ui toggle checkbox">
                     <input id="{{ formBOX4s.dhcp_enabled.id }}" name="{{ formBOX4s.dhcp_enabled.name }}" type="checkbox" class="hidden">
-                    <label>DHCP verwenden</label>
+                    <label>DHCP utiliser</label>
                 </div>
             </div>
             {% if formBOX4s.dhcp_enabled.errors %}
@@ -26,12 +26,12 @@
                 <p class="ui orange message">{{ e }}</p>
                 {% endfor %}
             {% endif %}
-            <h5 class="ui dividing header"> - oder -</h5>
+            <h5 class="ui dividing header"> - ou -</h5>
             <div class="two fields">
                 <div class="field">
-                    <label>Netzzugehörigkeit BOX4security</label>
+                    <label>Affiliation au réseau CBox</label>
                     <select id="{{formBOX4s.network_id.id}}" name="{{formBOX4s.network_id.name}}" required="" class="ui dropdown">
-                    <option value="">Netz</option>
+                    <option value="">Réseau</option>
                     {% for value in formBOX4s.network_id.choices %}
                         <option value="{{value[0]}}">{{value[1]}}</option>
                     {% endfor %}
@@ -43,8 +43,8 @@
                     {% endfor %}
                 {% endif %}
                 <div class="field">
-                    <label>IP-Adresse BOX4security</label>
-                    <input type="text" id="{{ formBOX4s.ip_address.id }}" name="{{ formBOX4s.ip_address.name }}" placeholder="IP-Adresse (z.B. 192.168.1.0)">
+                    <label>IP-Adresse CBox</label>
+                    <input type="text" id="{{ formBOX4s.ip_address.id }}" name="{{ formBOX4s.ip_address.name }}" placeholder="IP-Adresse (par ex. 192.168.1.0)">
                 </div>
                 {% if formBOX4s.ip_address.errors %}
                     {% for e in formBOX4s.ip_address.errors %}
@@ -54,7 +54,7 @@
             </div>
             <div class="two fields">
                 <div class="field">
-                    <label>DNS-Server BOX4security</label>
+                    <label>DNS-Server CBox</label>
                     <select id="{{formBOX4s.dns_id.id}}" name="{{formBOX4s.dns_id.name}}" required="" class="ui dropdown">
                     <option value="">DNS-Server</option>
                     {% for value in formBOX4s.dns_id.choices %}
@@ -68,7 +68,7 @@
                     {% endfor %}
                 {% endif %}
                 <div class="field">
-                    <label>Gateway BOX4security</label>
+                    <label>Gateway CBox</label>
                     <select id="{{formBOX4s.gateway_id.id}}" name="{{formBOX4s.gateway_id.name}}" required="" class="ui dropdown">
                     <option value="">Gateway</option>
                     {% for value in formBOX4s.gateway_id.choices %}
@@ -82,12 +82,12 @@
                     {% endif %}
                 </div>
             </div>
-            <button type="submit" class="ui large foursgrey-bg button">Eingaben speichern</button>
+            <button type="submit" class="ui large foursgrey-bg button">Sauvegarder</button>
         </form>
     </div>
     </div>
     <div class="ui one column">
-        <a href="{{ url_for('wizard.smtp') }}" class="ui large foursgrey-bg button">Weiter</a>
+        <a href="{{ url_for('wizard.smtp') }}" class="ui large foursgrey-bg button">Continuer</a>
     </div>
 {% endblock %}
 {% block scripts %}
@@ -152,9 +152,9 @@ $('#step-box4s').addClass('active');
             if(!response.ok) {
                 var errormsg = "";
                 switch(response.status) {
-                    case 400: errormsg = "Die gestellte Anfrage enthielt für die Verarbeitung unverständliche Parameter."; break;
-                    case 500: errormsg = "Das System konnte nicht in der Datenbank gespeichert werden."; break;
-                    case 503: errormsg = "Der Einrichtungswizard steht nicht länger zur Verfügung."; break;
+                    case 400: errormsg = "La demande contenait des paramètres incompréhensibles pour le traitement."; break;
+                    case 500: errormsg = "Le système n'a pas pu être enregistré dans la base de données."; break;
+                    case 503: errormsg = "L'assistant de configuration n'est plus disponible."; break;
                 };
                 row = `<div class="ui red message">${errormsg}</div>`;
                 $(`#edit-submit`).before(row);
@@ -226,23 +226,23 @@ $('#{{formBOX4s.dhcp_enabled.id}}').parent('.ui.checkbox').checkbox("set checked
 {% block modal %}
 <div id="modal-add-other" class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">Andere..</div>
+    <div class="header">Autre ..</div>
     <div class="content">
         <form class="ui equal width small form" action="" method="POST" role="form">
             <div class="fields">
                 <div class="sixteen wide field">
-                    <label>System-Bezeichner</label>
+                    <label>Identifiant-Système</label>
                     <div class="ui left icon input">
                     <i class="map sig icon"></i>
-                    <input type="text" id="add-other-name" required="" name="add-other-name" placeholder="System-Bezeichner">
+                    <input type="text" id="add-other-name" required="" name="add-other-name" placeholder="Identifiant-Système">
                     </div>
                 </div>
             </div>
             <div class="fields">
                 <div class="field">
-                    <label>Netzzugehörigkeit (optional)</label>
+                    <label>Affiliation au réseau (optional)</label>
                     <select id="add-other-network_id" name="add-other-network_id" class="ui dropdown">
-                    <option value="">Netz</option>
+                    <option value="">Réseau</option>
                     {% for value in formBOX4s.network_id.choices %}
                         <option value="{{value[0]}}">{{value[1]}}</option>
                     {% endfor %}
@@ -252,38 +252,38 @@ $('#{{formBOX4s.dhcp_enabled.id}}').parent('.ui.checkbox').checkbox("set checked
             <div class="fields">
                 <div class="field">
                     <label>IP-Adresse</label>
-                    <input type="text" id="add-other-ip_address" name="add-other-ip_address" placeholder="IP-Adresse (z.B. 192.168.1.1)">
+                    <input type="text" id="add-other-ip_address" name="add-other-ip_address" placeholder="IP-Adresse (par ex. 192.168.1.1)">
                 </div>
             </div>
             <div class="fields">
                 <div class="ten wide field">
-                    <label>System-Typ</label>
+                    <label>Type-Système</label>
                     <select id="add-other-types" name="add-other-types" multiple="" class="ui dropdown">
-                    <option value="">System-Typ</option>
+                    <option value="">Type-Système</option>
                     {% for t in systemTypes %}
                         <option value="{{t.id}}">{{t.name}}</option>
                     {% endfor %}
                     </select>
                 </div>
             </div>
-            <h4 class="ui dividing header">BOX4security-Optionen</h4>
+            <h4 class="ui dividing header">Options-CBox</h4>
             <div class="fields">
                 <div class="fields">
                     <div class="inline field">
                         <div class="ui checkbox">
                           <input id="add-other-scan_enabled" name="add-other-scan_enabled" type="checkbox" class="hidden">
-                          <label>Schwachstellenscans für dieses System durchführen</label>
+                          <label>Effectuer des scan de vulnérabilité pour ce système</label>
                         </div>
                     </div>
                     <div class="inline field">
                         <div class="ui checked checkbox">
                           <input id="add-other-ids_enabled" name="add-other-ids_enabled" checked="" type="checkbox" class="hidden">
-                          <label>Traffic-Analyse für dieses System durchführen (empfohlen)</label>
+                          <label>Traffic-Analyse effectuer pour ce système (conseillé)</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <button id="add-other-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Hinzufügen</button>
+            <button id="add-other-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Ajouter</button>
         </form>
     </div>
 </div>

@@ -3,20 +3,20 @@
     <div class="one column">
         <div class="ui success message">
             <div class="header">
-            Angabe und Klassifikation von Systemen
+                Spécification des systèmes
             </div>
             <p>
-                Sie haben hier optional die Möglichkeit Systeme in Ihren angegeben Netzen zu hinterlegen. 
-                Tragen Sie dazu bitte die IP-Adresse des Systems sowie eine Beschreibung ein. 
-                Die Klassifikation hilft der bei der Darstellung von Alarmen sowie der Security-Analyse. 
-                Ebenso können Sie hier Systeme gezielt von Schwachstellenscans oder der Traffic-Analyse ausnehmen.
+                Ici, vous avez la possibilité de stocker des systèmes dans vos réseaux spécifiés.
+                Veuillez saisir l'adresse IP du système et une description.
+                La classification aide à l'affichage des alarmes et à l'analyse de la sécurité.
+                Vous pouvez également exclure spécifiquement les systèmes des analyses de vulnérabilité ou de l'analyse du trafic ici.
             </p>
         </div>
     </div>
     <div class="ui one column">
         <p>
-            Die Schwachstellenscans <i>können</i> zu den Zeiten der eingetragenen Termine eine Auslastung des Netzwerkes verursachen. Die Scans sollten nach Möglichkeit also nicht zur gleichen Zeit durchgeführt werden, um erhöhter Netzwerk-Latenz entgegenzuwirken.
-            Seien Sie sich darüber bewusst, dass automatisierte Scans zu einer temporären Beeinträchtigung oder Ausfall der Systeme führen können.
+            Les scans de vulnérabilités <i>peuvent</i> provoquer une utilisation du réseau aux heures des dates saisies. Si possible, les analyses ne doivent pas être effectuées en même temps afin de contrer l'augmentation de la latence du réseau.
+            Sachez que les analyses automatisées peuvent entraîner une altération ou une défaillance temporaire des systèmes.
         </p>
     </div>
     <div class="ui one column">
@@ -24,24 +24,24 @@
         <table id="tbl-systems" class="ui celled structured table">
             <thead>
                 <tr>
-                    <th rowspan="2">Bezeichner</th>
-                    <th rowspan="2">Netz</th>
+                    <th rowspan="2">Identifiant</th>
+                    <th rowspan="2">Réseau</th>
                     <th rowspan="2">IP-Adresse</th>
                     <th rowspan="2">Typ</th>
                     <!-- <th rowspan="2">Ort</th> -->
-                    <th colspan="2">BOX4security-Option</th>
-                    <th rowspan="2">Aktion</th>
+                    <th colspan="2">CBox-Option</th>
+                    <th rowspan="2">Action</th>
                 </tr>
                 <tr>
-                    <th>Schwachstellenscans</th>
-                    <th>Traffic-Analyse</th>
+                    <th>Scans de vulnérabilité</th>
+                    <th>Analyse-Trafic</th>
                 </tr>
             </thead>
             <tbody>
                 {% for s in systems %}
                 <tr>
-                    <td data-label="Bezeichner">{{s.name}}</td>
-                    <td data-label="Netz">{{s.network.name}}</td>
+                    <td data-label="Identifiant">{{s.name}}</td>
+                    <td data-label="Réseau">{{s.network.name}}</td>
                     <td data-label="IP-Adresse">{{s.ip_address}}</td>
                     <td class="collapsing" data-label="Typ">
                         {% if s.types|length > 1 %}
@@ -65,11 +65,11 @@
                     {% endif %}
                     </td>
                     <!-- <td data-label="Ort">{{s.location}}</td> -->
-                    <td data-label="Schwachstellenscans"><i class="ui icon {% if s.scan_enabled %}green check{% else %} red x {% endif %}"></i></td>
-                    <td data-label="Traffic-Analyse"><i class="ui icon {% if s.ids_enabled %}green check{% else %} red x {% endif %}"></i></td>
-                    <td class="collapsing" data-label="Aktion">
-                        <a data-system-id="{{ s.id }}" data-tooltip="System bearbeiten" data-position="bottom center" data-action="edit" class="ui tiny icon button foursgrey-bg"><i class="edit icon"></i></a>
-                        <a data-system-id="{{ s.id }}" data-tooltip="System löschen" data-position="bottom center" data-action="delete" class="ui icon tiny red button"><i class="trash alternate outline icon"></i></a>
+                    <td data-label="Scans de vulnérabilité"><i class="ui icon {% if s.scan_enabled %}green check{% else %} red x {% endif %}"></i></td>
+                    <td data-label="Analyse-Trafic"><i class="ui icon {% if s.ids_enabled %}green check{% else %} red x {% endif %}"></i></td>
+                    <td class="collapsing" data-label="Action">
+                        <a data-system-id="{{ s.id }}" data-tooltip="Modifier le système" data-position="bottom center" data-action="edit" class="ui tiny icon button foursgrey-bg"><i class="edit icon"></i></a>
+                        <a data-system-id="{{ s.id }}" data-tooltip="Supprimer le système" data-position="bottom center" data-action="delete" class="ui icon tiny red button"><i class="trash alternate outline icon"></i></a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -79,8 +79,8 @@
           <div class="ui placeholder segment">
             <div class="ui icon header">
                 <i class="exclamation circle icon"></i>
-                Es wurden noch keine Systeme hinterlegt. 
-                Zum Fortfahren müssen Sie mindestens einen DNS-Server sowie Gateway anlegen.
+                Les systèmes n'ont pas encore été créés.
+                Vous devez créer au moins un serveur DNS et une passerelle pour continuer.
             </div>
           </div>
           {% endif %}
@@ -88,17 +88,17 @@
     <div class="ui one column">
         <div class="ui raised segment">
             <h3 class="ui header">
-                Jetzt System hinzufügen!
+                Ajoutez maintenant!
             </h3>
             <div class="active content">
                 <form class="ui equal width large form" action="{{ url_for('wizard.systems') }}" method="POST" role="form">
                     {{ formSystem.hidden_tag() }}
                     <div class="fields">
                         <div class="field">
-                            <label>System-Bezeichner</label>
+                            <label>Identifiant-Système</label>
                             <div class="ui left icon input">
                             <i class="map sign icon"></i>
-                            <input type="text" id="{{ formSystem.name.id }}" required="" name="{{ formSystem.name.name }}" placeholder="System-Bezeichner">
+                            <input type="text" id="{{ formSystem.name.id }}" required="" name="{{ formSystem.name.name }}" placeholder="Identifiant-Système">
                             </div>
                         </div>
                         {% if formSystem.name.errors %}
@@ -107,9 +107,9 @@
                             {% endfor %}
                         {% endif %}
                         <div class="field">
-                            <label>Netzzugehörigkeit</label>
+                            <label>Affiliation au réseau</label>
                             <select name="{{formSystem.network_id.name}}" required="" class="ui dropdown">
-                            <option value="">Netz</option>
+                            <option value="">Réseau</option>
                             {% for value in formSystem.network_id.choices %}
                                 <option value="{{value[0]}}">{{value[1]}}</option>
                             {% endfor %}
@@ -124,7 +124,7 @@
                     <div class="fields">
                         <div class="five wide field">
                             <label>IP-Adresse</label>
-                            <input type="text" id="{{ formSystem.ip_address.id }}" name="{{ formSystem.ip_address.name }}" placeholder="IP-Adresse (z.B. 192.168.1.1)">
+                            <input type="text" id="{{ formSystem.ip_address.id }}" name="{{ formSystem.ip_address.name }}" placeholder="IP-Adresse (par ex. 192.168.1.1)">
                         </div>
                         {% if formSystem.ip_address.errors %}
                             {% for e in formSystem.ip_address.errors %}
@@ -132,9 +132,9 @@
                             {% endfor %}
                         {% endif %}
                         <div class="five wide field">
-                            <label>System-Typ</label>
+                            <label>Type-Système</label>
                             <select name="{{formSystem.types.name}}" multiple="" class="ui dropdown">
-                            <option value="">System-Typ</option>
+                            <option value="">Type-Système</option>
                             {% for value in formSystem.types.choices %}
                                 <option value="{{value[0]}}">{{value[1]}}</option>
                             {% endfor %}
@@ -146,12 +146,12 @@
                             {% endfor %}
                         {% endif %}
                     </div>
-                    <h4 class="ui dividing header">BOX4security-Optionen</h4>
+                    <h4 class="ui dividing header">Options-CBox</h4>
                     <div class="fields">
                         <div class="inline field">
                             <div class="ui checked checkbox">
                               <input id="{{ formSystem.scan_enabled.id }}" name="{{ formSystem.scan_enabled.name }}" type="checkbox" checked="" class="hidden">
-                              <label>Schwachstellenscans für dieses System durchführen</label>
+                              <label>Effectuer des scan de vulnérabilité pour ce système</label>
                             </div>
                         </div>
                         {% if formSystem.scan_enabled.errors %}
@@ -162,7 +162,7 @@
                         <div class="inline field">
                             <div class="ui checked checkbox">
                               <input id="{{ formSystem.ids_enabled.id }}" name="{{ formSystem.ids_enabled.name }}" type="checkbox" checked="" class="hidden">
-                              <label>Traffic-Analyse für dieses System durchführen</label>
+                              <label>Traffic-Analyse effectuer pour ce système</label>
                             </div>
                         </div>
                         {% if formSystem.ids_enabled.errors %}
@@ -171,27 +171,27 @@
                             {% endfor %}
                         {% endif %}
                     </div>
-                    <button class="ui fluid large primary submit button" type="submit" name="button">Anlegen</button>
+                    <button class="ui fluid large primary submit button" type="submit" name="button">Sauvegarder</button>
                 </form>
             </div>
         </div>
     </div>
     <div class="ui one column">
-        <a href="{{ url_for('wizard.box4s') }}" class="ui large foursgrey-bg button">Weiter</a>
+        <a href="{{ url_for('wizard.box4s') }}" class="ui large foursgrey-bg button">Continuer</a>
     </div>
 {% endblock %}
 {% block modal %}
 <div id="modal-edit" class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">System bearbeiten</div>
+    <div class="header">Modifier le système</div>
     <div class="content">
         <form class="ui equal width small form" action="{{ url_for('wizard.systems') }}" method="POST" role="form">
             <div class="fields">
                 <div class="sixteen wide field">
-                    <label>System-Bezeichner</label>
+                    <label>Identifiant-Système</label>
                     <div class="ui left icon input">
                     <i class="map sig icon"></i>
-                    <input type="text" id="edit-{{ formSystem.name.id }}" required="" name="{{ formSystem.name.name }}" placeholder="System-Bezeichner">
+                    <input type="text" id="edit-{{ formSystem.name.id }}" required="" name="{{ formSystem.name.name }}" placeholder="Identifiant-Système">
                     </div>
                 </div>
                 {% if formSystem.name.errors %}
@@ -202,9 +202,9 @@
             </div>
             <div class="fields">
                 <div class="field">
-                    <label>Netzzugehörigkeit</label>
+                    <label>Affiliation au réseau</label>
                     <select id="edit-{{formSystem.network_id.name}}" name="{{formSystem.network_id.name}}" required="" class="ui dropdown">
-                    <option value="">Netz</option>
+                    <option value="">Réseau</option>
                     {% for value in formSystem.network_id.choices %}
                         <option value="{{value[0]}}">{{value[1]}}</option>
                     {% endfor %}
@@ -219,7 +219,7 @@
             <div class="fields">
                 <div class="field">
                     <label>IP-Adresse</label>
-                    <input type="text" id="edit-{{ formSystem.ip_address.id }}" name="{{ formSystem.ip_address.name }}" placeholder="IP-Adresse (z.B. 192.168.1.1)">
+                    <input type="text" id="edit-{{ formSystem.ip_address.id }}" name="{{ formSystem.ip_address.name }}" placeholder="IP-Adresse (par ex. 192.168.1.1)">
                 </div>
                 {% if formSystem.ip_address.errors %}
                     {% for e in formSystem.ip_address.errors %}
@@ -229,9 +229,9 @@
             </div>
             <div class="fields">
                 <div class="ten wide field">
-                    <label>System-Typ</label>
+                    <label>Type-Système</label>
                     <select id="edit-{{ formSystem.types.id }}" name="{{formSystem.types.name}}" multiple="" class="ui dropdown">
-                    <option value="">System-Typ</option>
+                    <option value="">Type-Système</option>
                     {% for value in formSystem.types.choices %}
                         <option value="{{value[0]}}">{{value[1]}}</option>
                     {% endfor %}
@@ -243,13 +243,13 @@
                     {% endfor %}
                 {% endif %}
             </div>
-            <h4 class="ui dividing header">BOX4security-Optionen</h4>
+            <h4 class="ui dividing header">Options-CBox</h4>
             <div class="fields">
                 <div class="fields">
                     <div class="inline field">
                         <div class="ui checkbox">
                           <input id="edit-{{ formSystem.scan_enabled.id }}" name="{{ formSystem.scan_enabled.name }}" type="checkbox" class="hidden">
-                          <label>Schwachstellenscans für dieses System durchführen</label>
+                          <label>Effectuer des scan de vulnérabilité pour ce système</label>
                         </div>
                     </div>
                     {% if formSystem.scan_enabled.errors %}
@@ -260,7 +260,7 @@
                     <div class="inline field">
                         <div class="ui checkbox">
                           <input id="edit-{{ formSystem.ids_enabled.id }}" name="{{ formSystem.ids_enabled.name }}" type="checkbox" class="hidden">
-                          <label>Traffic-Analyse für dieses System durchführen</label>
+                          <label>Traffic-Analyse effectuer pour ce système</label>
                         </div>
                     </div>
                     {% if formSystem.ids_enabled.errors %}
@@ -270,7 +270,7 @@
                     {% endif %}
                 </div>
             </div>
-            <button id="edit-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Speichern</button>
+            <button id="edit-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Enregistrer</button>
         </form>
     </div>
 </div>
@@ -285,14 +285,14 @@ $('.ui.label.foursgrey-bg').popup();
     $(`#tbl-systems tbody tr td a` ).on('click', (e) => {
         switch ($(e.delegateTarget).data('action')) {
           case 'delete':
-            if (confirm(`Soll dieses System wirklich unwiderruflich GELÖSCHT werden?`)) {
+            if (confirm(`Êtes-vous sûr de vouloir SUPPRIMER définitivement ce système?`)) {
               fetch(`/api/systems/${$(e.delegateTarget).data('system-id')}`, {method: 'DELETE'})
               .then((response) => {
                 if(response.ok){
                   $(e.delegateTarget).closest('tr').remove();
                 }
                 else {
-                  errormsg = "Sie dürfen diese Aktion nicht ausführen.";
+                  errormsg = "Vous n'êtes pas autorisé à effectuer cette action.";
                   row = `<div class="ui red message">${errormsg}</div>`;
                   $(`#errormsg`).before(row);
                 }
@@ -349,10 +349,10 @@ $('.ui.label.foursgrey-bg').popup();
             if(!response.ok){
               var errormsg="";
               switch (response.status) {
-                case 403: errormsg = "Sie dürfen diese Aktion nicht ausführen."; break;
-                case 404: errormsg = "Das zu bearbeitende System wurde nicht gefunden. Keine Änderungen wurden gespeichert."; break;
-                case 400: errormsg = "Die gestellte Anfrage enthielt für die Verarbeitung unverständliche Parameter."; break;
-                case 500: errormsg = "Die Änderungen am System konnten nicht in der Datenbank gespeichert werden."; break;
+                case 403: errormsg = "Vous n'êtes pas autorisé à effectuer cette action."; break;
+                case 404: errormsg = "Le système à traiter n'a pas été trouvé. Aucune modification n'a été enregistrée."; break;
+                case 400: errormsg = "La demande contenait des paramètres incompréhensibles pour le traitement."; break;
+                case 500: errormsg = "Les modifications apportées au système n'ont pas pu être enregistrées dans la base de données."; break;
               };
               row = `<div class="ui red message">${errormsg}</div>`;
               $(`#edit-submit`).before(row);

@@ -9,11 +9,11 @@ class NetworkForm(ModelForm, FlaskForm):
     class Meta:
         model = Network
     types = SelectMultipleField(
-        'Netz-Typ',
+        'Type-Réseau',
         coerce=int
     )
     scancategory_id = SelectField(
-        'Scan-Kategorie',
+        'Scan-Catégorie',
         coerce=int
     )
 
@@ -29,11 +29,11 @@ class SystemForm(ModelForm, FlaskForm):
     class Meta:
         model = System
     types = SelectMultipleField(
-        'System-Typ',
+        'Type-Système',
         coerce=int
     )
     network_id = SelectField(
-        'Netz',
+        'Réseau',
         coerce=int
     )
 
@@ -51,7 +51,7 @@ class BOX4sForm(ModelForm, FlaskForm):
         coerce=int
     )
     network_id = SelectField(
-        'Netz',
+        'Réseau',
         coerce=int
     )
 
