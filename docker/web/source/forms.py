@@ -20,6 +20,6 @@ class AddUserForm(ModelForm, FlaskForm):
     last_name = TextField(validators=[])
     email_copy = BooleanField()
     roles = SelectMultipleField(
-        'Rollen',
+        'Roles',
         coerce=int
     )

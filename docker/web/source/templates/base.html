@@ -5,17 +5,17 @@
     {% block head %}
     <link rel="stylesheet" href="/static/external/semantic.min.css">
     <link rel="stylesheet" type="text/css" href="/static/box4s.css">
-    <title>BOX4Security</title>
+    <title>CBox</title>
     {% endblock %}
   </head>
   <body>
     {% if current_user.is_authenticated %}
       <div class="ui tabular menu">
-        {% if current_user.has_role('Startseite') %}
+        {% if current_user.has_role('Accueil') %}
           <div class="item active" id="start">
             <a class="item" id="startitem" href="/start">
               <i class="home icon"></i>
-              Startseite
+              Accueil
             </a>
           </div>
         {% endif %}
@@ -25,40 +25,40 @@
               <i class="globe icon" id="securitymenu"></i> SIEM
       	       <i class="dropdown icon"></i>
                <div class="menu">
-                 <a class="item" href="/siem-overview">Übersicht</a>
-                 <a class="item" href="/siem-alerts">Alarme</a>
+                 <a class="item" href="/siem-overview">Aperçu</a>
+                 <a class="item" href="/siem-alerts">Alarmes</a>
                  <a class="item" href="/siem-asn">ASN</a>
                  <a class="item" href="/siem-http">HTTP</a>
                  <a class="item" href="/siem-dns">DNS</a>
-                 <a class="item" href="/siem-proto">Protokolle & Dienste</a>
-                 <a class="item" href="/siem-social-media">Social Media</a>
-                 {% if ('false' | custom_getenv('BOX4s_WAZUH')) == 'true' %}<a class="item" href="/wazuh">Endgeräte</a>{% endif %}
+                 <a class="item" href="/siem-proto">Protocoles & Services</a>
+                 <a class="item" href="/siem-social-media">Média Social</a>
+                 {% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}<a class="item" href="/wazuh">Hôtes</a>{% endif %}
                  <a class="item" href="/intelligence">Intelligence</a>
-                 {% if current_user.has_role('Config') %}<a class="item" href="/siem-discover">Discover</a>{% endif %}
+                 {% if current_user.has_role('Config') %}<a class="item" href="/siem-discover">Découvrir</a>{% endif %}
                </div>
              </div>
            </div>
          {% endif %}
-         {% if current_user.has_role('Schwachstellen') or current_user.has_role('Dashboards-Master') %}
+         {% if current_user.has_role('Vulnérabilité') or current_user.has_role('Dashboards-Master') %}
            <div class="item" id="vuln">
       	      <div class="ui dropdown pointing link item">
-      	         <i class="bug icon"></i> Schwachstellen
+      	         <i class="bug icon"></i> Vulnérabilité
       	          <i class="dropdown icon"></i>
                   <div class="menu">
-      	             <a class="item" href="/vuln-overview"> Übersicht </a>
-      	             <a class="item" href="/vuln-progress"> Verlauf </a>
-      	             <a class="item" href="/vuln-details"> Details </a>
+      	             <a class="item" href="/vuln-overview"> Aperçu </a>
+      	             <a class="item" href="/vuln-progress"> Parcours </a>
+      	             <a class="item" href="/vuln-details"> Détails </a>
                   </div>
               </div>
           </div>
         {% endif %}
-        {% if current_user.has_role('Netzwerk') or current_user.has_role('Dashboards-Master') %}
+        {% if current_user.has_role('Réseau') or current_user.has_role('Dashboards-Master') %}
           <div class="item" id="net">
       	     <div class="ui dropdown pointing link item">
-               <i class="sitemap icon"></i> Netzwerk <i class="dropdown icon"></i>
+               <i class="sitemap icon"></i> Réseau <i class="dropdown icon"></i>
                <div class="menu">
-                 <a class="item" href="/network-overview">Übersicht</a>
-      	         <a class="item" href="/network-streams">Datenflüsse</a>
+                 <a class="item" href="/network-overview">Aperçu</a>
+      	         <a class="item" href="/network-streams">Flux de données</a>
       	         <a class="item" href="/network-asn">GeoIP & ASN</a>
       	       </div>
              </div>
@@ -74,25 +74,25 @@
                  <a class="item" href="/faq">FAQ</a>
                  {% endif %}
                  {% if current_user.has_role('User-Management') %}
-                 <a class="item" href="/user">Benutzer</a>
+                 <a class="item" href="/user">Utilisateur</a>
                  {% endif %}
                  {% if current_user.has_role('Config') %}
-                 <a class="item" href="/config">Konfiguration</a>
+                 <a class="item" href="/config">Configuration</a>
                  {% endif %}
                  {% if current_user.has_role('Filter') %}
-                 <a class="item" href="/filter">Filter</a>
+                 <a class="item" href="/filter">Filtre</a>
                  {% endif %}
                  {% if current_user.has_role('Alerts') %}
-                 <a class="item" href="/alerts">Alarme</a>
+                 <a class="item" href="/alerts">Alarmes</a>
                  {% endif %}
                  {% if current_user.has_role('Updates') %}
-                 <a class="item" href="/update" id="upd">Updates  </a>
+                 <a class="item" href="/update" id="upd">Mises à jour</a>
                  {% endif %}
                  {% if current_user.has_role('Super Admin') %}
-                 <a class="item" href="/repair">Reparieren</a>
+                 <a class="item" href="/repair">Réparation</a>
                  {% endif %}
                  {% if current_user.has_role('Super Admin') %}
-                 <a class="item" href="/system">System</a>
+                 <a class="item" href="/system">Système</a>
                  {% endif %}
                </div>
              </div>
@@ -102,7 +102,7 @@
            <div class="item active" id="documentation">
             <a class="item" id="docuitem" href="/docs">
               <i class="book icon"></i>
-              Dokumentation
+              Documentation
             </a>
           </div>
         {% endif %}
@@ -114,15 +114,15 @@
                <i class="user icon"></i>{%if current_user.last_name %}{{ current_user.first_name }} {{current_user.last_name}} {% else %} {{ current_user.email }} {% endif %}
                <i class="dropdown icon"></i>
                <div class="menu">
-                 <a class="item" href="{{url_for('user.logout')}}">Logout</a>
-                 <a class="item" href="{{url_for('user.change_password')}}">Passwort ändern</a>
+                 <a class="item" href="{{url_for('user.logout')}}">Se déconnecter</a>
+                 <a class="item" href="{{url_for('user.change_password')}}">Changer le mot de passe</a>
                </div>
              </div>
            </div>
            {% else %}
-           <a class="item" id="user" href="//{{request.host}}/user/sign-in"><i class="user icon"></i>Login</a>
+           <a class="item" id="user" href="//{{request.host}}/user/sign-in"><i class="user icon"></i>Connexion</a>
            {% endif %}
-            <a class="item"id="4smenu" href="https://www.4sconsult.de/" target="__blank"><img class="ui small image" src="/static/Box4S_Logo.png"></a>
+            <a class="item"id="4smenu" href="https://www.cyberhack.fr/" target="__blank"><img class="ui small image" src="/static/CBox_Logo.png"></a>
          </div>
        </div>
      {% endif %}

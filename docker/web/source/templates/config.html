@@ -11,39 +11,39 @@
             {% endif %}
         {%- endwith %}
     {% endblock %}
-    <h1 class="ui header">BOX4security - Konfiguration</h1>
+    <h1 class="ui header">CBox - Configuration</h1>
     <div class="ui inverted section divider"></div>
     <div class="section">
         <div class="ui top attached secondary pointing tabular menu">
             <a data-tab="mail" class="item active">
               Mail
             </a>
-            {% if ('false' | custom_getenv('BOX4s_WAZUH')) == 'true' %}
+            {% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}
             <a data-tab="wazuh" class="item">
               Wazuh
             </a>
             {% endif %}
             <a data-tab="https" class="item">
-                HTTPS
+              HTTPS
             </a>
           </div>
           <div data-tab="mail" class="ui bottom attached active tab segment">
             <!-- Mail -->
             <form id="formSMTP" method="get" class="ui form" enctype="multipart/form-data">
-                <h4 class="ui dividing header">SMTP-Konfiguration</h4>
+                <h4 class="ui dividing header">SMTP-Configuration</h4>
                 <div class="field">
-                  <label>Absender</label>
+                  <label>Expéditeur</label>
                     <div class="ui left icon input">
-                        <input required type="email" id="senderMail" name="senderMail" placeholder="E-Mail-Adresse des Absenders">
+                        <input required type="email" id="senderMail" name="senderMail" placeholder="Adresse e-mail de l'expéditeur">
                         <i class="at icon"></i>
                     </div>
                 </div>
                 <div class="field">
-                  <label>Verbindung</label>
+                  <label>Connexion</label>
                   <div class="fields">
                     <div class="twelve wide field">
                         <div class="ui left icon input">
-                            <input required type="text" id="smtpHost" name="host" placeholder="SMTP-Host">
+                            <input required type="text" id="smtpHost" name="host" placeholder="SMTP-Hôte">
                             <i class="server icon"></i>
                         </div>
                     </div>
@@ -52,7 +52,7 @@
                             <input required type="number" id="smtpPort" name="port" placeholder="SMTP-Port">
                             <i class="plug icon"></i>
                         </div>
-                        <small class="helper">Meist 465, 587 oder 25.</small>
+                        <small class="helper">Généralement 465, 587 ou 25.</small>
                     </div>
                   </div>
                 </div>
@@ -65,68 +65,68 @@
                           <label>Secure (TLS)</label>
                         </div>
                         <br>
-                        <small class="helper">Sollte bei Port 465 aktiviert, sonst aus sein (587, 25).</small>
+                        <small class="helper">Doit être activé pour le port 465, sinon il devrait être désactivé (587, 25).</small>
                       </div>
                       <div class="seven wide column">
                         <div class="ui action input cert">
-                          <input id="cert-text" type="text" placeholder="TLS-Zertifikat.crt" readonly>
+                          <input id="cert-text" type="text" placeholder="Certificat-TLS.crt" readonly>
                           <input id="cert-file" accept=".crt,.pem,.cer" type="file" name="cert">
                           <div class="ui icon button">
                             <i class="attach icon"></i>
                           </div>
                         </div>
                         <br>
-                        <small class="helper">Sollte der Mail-Server ein selbstsigniertes Zertifikat verwenden, laden Sie es hier hoch.</small>
+                        <small class="helper">Si le serveur de messagerie doit utiliser un certificat auto-signé, téléchargez-le ici.</small>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="field">
-                  <label>Authentifikation</label>
+                  <label>Authentification</label>
                   <div class="ui left icon input">
-                      <input required type="text" id="smtpUsername" name="username" placeholder="SMTP-Username">
+                      <input required type="text" id="smtpUsername" name="username" placeholder="Nom d'utilisateur SMTP">
                       <i class="user icon"></i>
                   </div>
                 </div>
                 <div class="field">
                   <div class="ui left icon input">
-                    <input required type="password" id="smtpPassword" name="password" placeholder="SMTP-Passwort">
+                    <input required type="password" id="smtpPassword" name="password" placeholder="Mot de passe SMTP">
                     <i class="key icon"></i>
                   </div>
                 </div>
-                <button class="ui green button" type="submit">Änderungen anwenden</button>
-                <small class="helper">Um die Änderungen anzuwenden, wird die BOX4security neustarten.</small>
+                <button class="ui green button" type="submit">Appliquer</button>
+                <small class="helper">Afin d'appliquer les modifications, CBox redémarrera.</small>
               </form>
           </div>
-          {% if ('false' | custom_getenv('BOX4s_WAZUH')) == 'true' %}
+          {% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}
           <div id='wazuh-segment' data-tab="wazuh" class="ui bottom attached tab segment">
             <!-- Wazuh-->
-            <h4 class="ui dividing header">Endgeräte-IDS-Konfiguration</h4>
+            <h4 class="ui dividing header">Configuration Wazuh</h4>
             <div class="ui form" id="formWazuh">
                 <div class="field">
-                    <label>Passwort für Wazuh-Agents</label>
+                    <label>Mot de passe pour les agents Wazuh</label>
                     <div class="ui action input">
                         <input type="password">
                         <a id="copy-wazuh-pass" class="ui primary left labeled icon button">
                             <i class="ui icon copy"></i>
-                            Kopieren
+                            Copie
                         </a>
                         <a id="renew-wazuh-pass" class="ui secondary left labeled icon button">
                             <i class="ui icon random"></i>
-                            Erneuern
+                            Renouveler
                         </a>
                     </div>
                 </div>
-                <button disabled class="ui green button">Änderungen anwenden</button>
+                <button disabled class="ui green button">Appliquer</button>
             </div>
           </div>
           {% endif %}
           <div data-tab="https" class="ui bottom attached tab segment">
             <form id="formHTTPS" method="POST" class="ui form" enctype="multipart/form-data">
-                <h4 class="ui dividing header">HTTPS-Konfiguration</h4>
+                <h4 class="ui dividing header">Configuration-HTTPS</h4>
                 <div class="field">
                     <div class="ui action input cert">
-                        <input id="https-cert-text" type="text" placeholder="HTTPS-Zertifikat.pem" readonly>
+                        <input id="https-cert-text" type="text" placeholder="Certificat-HTTPS.pem" readonly>
                         <input id="https-cert-file" type="file" name="files[]" accept=".pem" autocomplete="off" required>
                         <div class="ui icon button">
                         <i class="attach icon"></i>
@@ -142,14 +142,14 @@
                         </div>
                     </div>
                 </div>
-                <button class="ui green button" type="submit">Änderungen anwenden</button>
-                <small class="helper">Um die Änderungen anzuwenden, wird die BOX4security neustarten.</small>
+                <button class="ui green button" type="submit">Appliquer</button>
+                <small class="helper">Afin d'appliquer les modifications, CBox redémarrera.</small>
               </form>
           </div>
     </div>
   <div class="ui vertical footer segment">
     <div class="ui center aligned container">
-    <img src="/static/Box4S_Logo.png" class="ui centered small image">
+    <img src="/static/CBox_Logo.png" class="ui centered small image">
   </div>
   </div>
   {% endblock %}
@@ -188,7 +188,7 @@
         msg.classList = "ui visible message"
         if(response.ok){
             msg.classList.add("success");
-            msg.innerHTML = '<div class="header">HTTPS-Konfiguration erfolgreich gespeichert.</div><p>Die BOX4security startet nun mit geänderter Konfiguration neu. Bitte haben Sie einen Moment Geduld. Die Seite wird automatisch neu geladen. Bei selbstsignierten Zertifikaten ist unter Umständen ein manuelles Neuladen des Tabs erforderlich. </p>'
+            msg.innerHTML = '<div class="header">Configuration HTTPS enregistrée avec succès.</div><p> CBox va maintenant redémarrer avec la configuration modifiée. S\'il vous plaît soyez patient. La page sera rechargée automatiquement. Dans le cas des certificats auto-signés, il peut être nécessaire de recharger manuellement l\'onglet. </p>'
             $('#formHTTPS').find('button').prop('disabled', true).html('<div class="ui active centered inline loader"></div>');
             setTimeout(async () => {
                 await waitForWeb();

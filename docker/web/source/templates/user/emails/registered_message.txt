@@ -1,15 +1,15 @@
 {% extends 'user/emails/base_message.txt' %}
 
 {% block message %}
-Vielen Dank für Ihre Registrierung für die {{ app_name }}.
+Merci de vous être inscrit au {{ app_name }}.
 
 {% if confirm_email_link -%}
-Für die Nutzung ist die Bestätigung Ihrer E-Mail-Adresse erforderlich.
+La confirmation de votre adresse e-mail est requise pour l'utilisation.
 
-Wenn Sie diese Registrierung initiiert haben, dann klicken Sie auf den nachstehenden Link:
+Une fois cette inscription initiée, cliquez sur le lien ci-dessous:
     {{ confirm_email_link }}
 
-Falls Sie diese Registrierung nicht initiiert haben, können Sie diese E-Mail ignorieren.
+Si vous n'avez pas initié cette inscription, vous pouvez ignorer cet e-mail.
 
 {%- endif %}
 {% endblock %}

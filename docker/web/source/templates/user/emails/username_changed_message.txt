@@ -1,9 +1,9 @@
 {% extends 'user/emails/base_message.txt' %}
 
 {% block message %}
-Ihr Benutzername wurde geändert.
+Votre nom d'utilisateur a été modifié.
 
-Wenn Sie die Änderung Ihres Benutzernamens nicht initiiert haben, bitte melden Sie sich an (mit Ihrer E-Mail-Adresse) und ändern Sie Ihr Passwort.
+Si vous n'avez pas initié le changement de votre nom d'utilisateur, (avec votre adresse e-mail) et modifiez votre mot de passe.
     {{ url_for('user.login', _external=True) }}
 {% endblock %}
 

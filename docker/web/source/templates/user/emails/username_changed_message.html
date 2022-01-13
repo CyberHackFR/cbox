@@ -1,6 +1,6 @@
 {% extends 'user/emails/base_message.html' %}
 
 {% block message %}
-<p>Ihr Benutzername wurde geändert.</p>
-<p>Wenn Sie die Änderung Ihres Benutzernamens nicht initiiert haben, bitte <a href="{{ url_for('user.login', _external=True) }}">melden Sie sich an</a> (mit Ihrer E-Mail-Adresse) und ändern Sie Ihr Passwort.</p>
+<p>Votre nom d'utilisateur a été modifié.</p>
+<p>Si vous n'avez pas initié le changement de votre nom d'utilisateur,<a href="{{ url_for('user.login', _external=True) }}">connexion</a> (avec votre adresse e-mail) et modifiez votre mot de passe.</p>
 {% endblock %}

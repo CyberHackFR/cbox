@@ -1,20 +1,20 @@
 {% extends 'user/emails/base_message.html' %}
 {% block message %}
-Ihnen wurde ein Account für die BOX4security angelegt.
+Un compte CBox a été créé pour vous.
 <br>
-Verwenden Sie zum <a href="{{ url_for('user.login', _external=True) }}">Einloggen</a> bitte: <br>
+Utiliser pour <a href="{{ url_for('user.login', _external=True) }}">connexion</a>: <br>
 <table>
   <tr>
     <td><b>E-Mail:</b></td>
     <td>{{ user.email }}</td>
   </tr>
   <tr>
-    <td><b>Passwort:</b></td>
+    <td><b>Mot de passe:</b></td>
     <td> {{ user_pass }}</td>
   </tr>
 </table>
 <br>
 
-Bitte beachten Sie, dass sich bei dem Kennwort um ein automatisch generiertes Kennwort handelt. Sie sollten dieses so schnell wie möglich ändern.
-Eine Änderung ist hier möglich: <a href="{{ url_for('user.change_password', _external=True) }}">BOX4security: Passwort ändern</a>
+Veuillez noter que le mot de passe est un mot de passe généré automatiquement. Vous devriez changer dès que possible.
+Changement est possible ici: <a href="{{ url_for('user.change_password', _external=True) }}">CBox: Changer le mot de passe</a>
 {% endblock %}

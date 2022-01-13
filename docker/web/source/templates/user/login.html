@@ -5,7 +5,7 @@
   <div class="column">
     <h2 class="ui foursgrey image header">
       <div class="content">
-        Einloggen zum Fortfahren
+        Connectez-vous pour continuer
       </div>
     </h2>
     <form class="ui large form" action="{{ url_for('user.login') }}" method="POST" role="form">
@@ -27,7 +27,7 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="lock icon"></i>
-            <input type="password" name="password" id="password" placeholder="Passwort">
+            <input type="password" name="password" id="password" placeholder="mot de passe">
           </div>
         </div>
         {% if form.password.errors %}
@@ -37,10 +37,10 @@
         {% endif %}
         {# Remember me #}
         {% if user_manager.USER_ENABLE_REMEMBER_ME %}
-          {{ render_checkbox_field(form.remember_me, "Angemeldet bleiben", tabindex=130) }}
+          {{ render_checkbox_field(form.remember_me, "Rester connecté", tabindex=130) }}
         {% endif %}
         {# Submit button #}
-        <button class="ui fluid large foursgrey-bg submit button">Login</button>
+        <button class="ui fluid large foursgrey-bg submit button">Connexion</button>
       </div>
 
       <div class="ui error message"></div>
@@ -49,8 +49,8 @@
     {% if user_manager.USER_ENABLE_FORGOT_PASSWORD %}
     <div class="ui message">
           <a href="{{ url_for('user.forgot_password') }}" tabindex='195'>
-              {%trans%}Passwort vergessen?{%endtrans%}</a><br>
-          <a id='btn-wizard-reset' href="/api/wizard/reset" tabindex="196">User-Einrichtung neustarten?</a>
+              {%trans%}Forgot Password{%endtrans%}</a><br>
+          <a id='btn-wizard-reset' href="/api/wizard/reset" tabindex="196">Redémarrer la configuration utilisateur?</a>
     </div>
     {% endif %}
   </div>
@@ -72,7 +72,7 @@
         // Reload without parameters
         window.location = window.location.pathname;
     } else {
-      alert("Die Einrichtung kann in diesem Stand nicht neugestartet werden.")
+      alert("L'installation ne peut pas être démarrée dans cet état.")
     }
   })
   </script>

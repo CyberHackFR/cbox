@@ -5,14 +5,14 @@
   <div class="column">
     <h2 class="ui foursgrey image header">
       <div class="content">
-        Willkommen zur BOX4security
+        Bienvenue dans CBox
       </div>
     </h2>
     <div class="ui success message">
       <div class="header">
-        Bevor Sie fortfahren können, legen Sie bitte intial ein administratives Konto an.
+        Avant de pouvoir continuer, veuillez d'abord créer un compte administrateur.
       </div>
-      <p>Nutzen Sie dazu eine E-Mailadresse innerhalb Ihres Zugriffs. Diese wird verwendet, um sich auf der Oberfläche anzumelden und das Passwort bei Verlust wiederherzustellen.</p>
+      <p>Pour ce faire, utilisez une adresse e-mail. Il permet de se connecter à l'interface et de restaurer le mot de passe en cas de perte.</p>
     </div>
   <form class="ui large form" action="{{ url_for('user.login') }}" method="POST" role="form">
     <div class="ui segment">
@@ -34,7 +34,7 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" id="{{ form.username.id }}" name="{{ form.username.name }}" placeholder="Benutzername">
+            <input type="text" id="{{ form.username.id }}" name="{{ form.username.name }}" placeholder="Nom d'utilisateur">
           </div>
         </div>
         {% if form.username.errors %}
@@ -46,7 +46,7 @@
     <div class="field">
       <div class="ui left icon input">
         <i class="key icon"></i>
-        <input type="password" id="{{ form.password.id }}" required="" name="{{ form.password.name }}" placeholder="Passwort">
+        <input type="password" id="{{ form.password.id }}" required="" name="{{ form.password.name }}" placeholder="Mot de passe">
       </div>
     </div>
     {% if form.password.errors %}
@@ -58,7 +58,7 @@
     <div class="field">
       <div class="ui left icon input">
         <i class="key icon"></i>
-        <input type="password" id="{{ form.retype_password.id }}" required="" name="{{ form.retype_password.name }}" placeholder="Passwort wiederholen">
+        <input type="password" id="{{ form.retype_password.id }}" required="" name="{{ form.retype_password.name }}" placeholder="Répéter mot de passe">
       </div>
     </div>
     {% if form.retype_password.errors %}
@@ -67,7 +67,7 @@
         {% endfor %}
     {% endif %}
     {% endif %}
-    <button class="ui fluid large foursgrey-bg submit button">Registrieren</button>
+    <button class="ui fluid large foursgrey-bg submit button">Enregistrer</button>
     </div>
 </form>
 

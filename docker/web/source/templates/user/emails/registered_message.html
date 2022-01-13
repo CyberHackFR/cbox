@@ -2,15 +2,15 @@
 
 {% block message %}
 
-<p>Vielen Dank für Ihre Registrierung für die {{ app_name }}.</p>
+<p>Merci de vous être inscrit au {{ app_name }}.</p>
 
 {% if confirm_email_link -%}
-<p>Für die Nutzung ist die Bestätigung Ihrer E-Mail-Adresse notwendig.</p>
+<p>La confirmation de votre adresse e-mail est requise pour l'utilisation.</p>
 
-<p>Wenn Sie diese Registrierung initiiert haben, dann klicken Sie auf den nachstehenden Link<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ confirm_email_link }}">E-Mail-Adresse bestätigen</a>.</p>
+<p>Une fois cette inscription initiée, cliquez sur le lien ci-dessous<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ confirm_email_link }}">Confirmez votre adresse email</a>.</p>
 
-<p>Falls Sie diese Registrierung nicht initiiert haben, können Sie diese E-Mail ignorieren.</p>
+<p>Si vous n'avez pas initié cette inscription, vous pouvez ignorer cet e-mail.</p>
 {%- endif %}
 
 {% endblock %}

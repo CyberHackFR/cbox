@@ -10,18 +10,18 @@
           {% endif %}
       {%- endwith %}
     {% endblock %}
-    <h1 class="ui header">BOX4security - Alarmierung</h1>
+    <h1 class="ui header">CBox - Alerte</h1>
     <div class="ui floating tiny message">
       <p>
-        Sie haben hier die Möglichkeit Alarmierungen anhand von definierten Daten-Features vorzunehmen.
+        Ici, vous avez la possibilité de configurer des alertes basées sur des caractéristiques de données définies.
       </p>
     </div>
     <div class="ui inverted section divider"></div>
     <div class="section">
-      <h2 class="ui header">BOX4s Quick Alerts<div class="sub header">Profitieren Sie von ausgewählten Security Alarmierungen. Diese definierten Regeln erfordern keine Bearbeitung sondern sind sofort einsatzbereit.</div></h2>
+      <h2 class="ui header">CBox - Alertes rapides<div class = "sub header"> Bénéficiez des alertes de sécurité sélectionnées. Ces règles définies ne nécessitent aucune modification mais sont immédiatement prêtes à l'emploi.</div></h2>
       <div class="ui middle aligned grid">
         <div class="nine wide column">
-          <h5 class="ui header">BOX4s Alarmadresse<div class="sub header">Definieren Sie zunächst die E-Mail-Adresse, an welche die vertraulichen Alarme übermittelt werden sollen.</div></h5>
+          <h5 class="ui header">Adresse d'alarme CBox <div class = "sub header"> Définissez l'adresse email à laquelle les alarmes confidentielles doivent être envoyées.</div></h5>
         </div>
         <div class="five wide column">
           <div class="ui fluid left icon input">
@@ -35,7 +35,7 @@
           </button>
         </div>
         <div class="fourteen wide column">
-          <h5 class="ui header">BOX4s IDS Malware Alert<div class="sub header">Erhalten Sie sofortige Alarmierung beim Auftreten von Malware zuzuordnendem Netzwerkverkehr.</div></h5>
+          <h5 class="ui header">CBox IDS Alerte Malware<div class="sub header">Recevez des alertes instantanées lié aux logiciels malveillants.</div></h5>
         </div>
         <div class="two wide center aligned column">
           <div class="ui fitted toggle checkbox">
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="fourteen wide column">
-          <h5 class="ui header">BOX4s Kritische Schwachstellen<div class="sub header">Erhalten Sie sofortige Alarmierung bei Identikation kritischer Schwachstellen.</div></h5>
+          <h5 class="ui header">CBox Vulnérabilités critiques<div class="sub header">Recevez des alertes instantanées lorsque des vulnérabilités critiques sont identifiées.</div></h5>
         </div>
         <div class="two wide center aligned column">
           <div class="ui fitted toggle checkbox">
@@ -51,7 +51,7 @@
           </div>
         </div>
         <div class="fourteen wide column">
-          <h5 class="ui header">BOX4s Kritische Alarme<div class="sub header">Erhalten Sie sofortige Alarmierung beim Auftreten von kritischen IDS-Alarmen.</div></h5>
+          <h5 class="ui header">CBox Alarmes critiques<div class="sub header">Erhalten Sie sofortige Alarmierung beim Auftreten von kritischen IDS-Alarmen.</div></h5>
         </div>
         <div class="two wide center aligned column">
           <div class="ui fitted toggle checkbox">
@@ -59,7 +59,7 @@
           </div>
         </div>
         <div class="fourteen wide column">
-          <h5 class="ui header">BOX4s Erhöhtes Datenaufkommen<div class="sub header">Erhalten Sie sofortige Alarmierung, wenn das Datenaufkommen um ein erhebliches Vielfaches höher ist als zuletzt.</div></h5>
+          <h5 class="ui header">CBox Augmentation du volume de données<div class="sub header">Recevez une alerte immédiate si le volume de données est nettement plus élevé qu'il ne l'était la dernière fois.</div></h5>
         </div>
         <div class="two wide center aligned column">
           <div class="ui fitted toggle checkbox">
@@ -105,30 +105,30 @@
   </div> -->
   <div class="ui vertical footer segment">
     <div class="ui center aligned container">
-    <img src="/static/Box4S_Logo.png" class="ui centered small image">
+    <img src="/static/CBox_Logo.png" class="ui centered small image">
   </div>
   </div>
   <div class="ui small modal">
     <i class="close icon"></i>
-    <div class="header">Alarmierung hinzufügen</div>
+    <div class="header">Ajouter une alerte</div>
     <div class="content">
       <form class="ui form">
         <div class="ui centered grid">
           <div class="row">
             <div class="eight wide required field">
-              <label>Name</label>
-              <input name="name" type="text" placeholder="Eindeutiger Name für die Alarmierung" value="{{request.args.get("name", default='')}}">
+              <label>Nom</label>
+              <input name="name" type="text" placeholder="Nom unique de l'alerte" value="{{request.args.get("name", default='')}}">
             </div>
           </div>
           <div class="row">
-            <div class="eight wide required field" data-tooltip='Wählen Sie die Grundlage anhand derer Alarme generiert werden sollen.'>
-              <label>Datengrundlage</label>
+            <div class="eight wide required field" data-tooltip='Sélectionnez la base sur laquelle générer des alarmes.'>
+              <label>Base de données</label>
               <div class="ui selection dropdown">
                 <input type="hidden" name="source">
                 <i class="dropdown icon"></i>
-                <div class="default text">Datengrundlage (*)</div>
+                <div class="default text">Base de données (*)</div>
                 <div class="menu">
-                  <div class="item" data-value="logstash-vulnwhisperer-*">Schwachstellen</div>
+                  <div class="item" data-value="logstash-vulnwhisperer-*">Vulnérabilité</div>
                   <div class="item" data-value="suricata-*">IDS</div>
                 </div>
               </div>
@@ -138,7 +138,7 @@
             <div class="six wide center aligned column">
               <div class="ui">
                 <div class="ui buttons">
-                  <button class="ui green button _add">Hinzufügen & aktivieren</button>
+                  <button class="ui green button _add">Ajouter et activer</button>
                 </div>
               </div>
             </div>
@@ -208,7 +208,7 @@ fetch(`//{{ request.host }}/api/rules/alerts_quick/`)
           .then((json) => {
           })
         } else {
-          alert("Bitte prüfen Sie erneut die hinterlegte E-Mail-Adresse. Der Alarm wurde nicht aktiviert.")
+          alert("Veuillez vérifier à nouveau l'adresse e-mail enregistrée. L'alarme n'a pas été activée.")
         }
       })
     },
@@ -265,11 +265,11 @@ fetch(`//{{ request.host }}/api/rules/alerts_quick/`)
          }
       })
     } else {
-      alert("Bitte geben Sie eine gültige E-Mail-Adresse an.");
+      alert("S'il vous plaît, mettez une adresse email valide.");
     }
   })
   $("a._flush").click((e) => {
-    if (confirm(`Sind Sie sicher alle Alarmierungen unwiderruflich zu LÖSCHEN?`)) {
+    if (confirm(`Êtes-vous sûr de devoir SUPPRIMER toutes les alarmes de manière irrévocable?`)) {
       getEndpoint(`rules/alerts/`, method='DELETE');
       $( `#tbl tbody` ).empty()
     }

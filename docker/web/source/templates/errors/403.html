@@ -4,12 +4,12 @@
   <div class="row">
     <div class="center center aligned middle column">
         <div class="ui segment">
-          <img class="ui centered large image" src="/static/Box4S_Logo.png">
+          <img class="ui centered large image" src="/static/CBox_Logo.png">
           <div class="ui divider"></div>
-          <h1 class="ui center header aligned foursgrey">Zugriff verboten</h1>
-          <p class="ui center aligned">Sie sind nicht berechtigt, diese Seite aufzurufen.</p>
+          <h1 class="ui center header aligned foursgrey">Accès interdit</h1>
+          <p class="ui center aligned">Vous n'êtes pas autorisé à accéder à cette page.</p>
           {% if current_user and current_user.roles%}
-          <p class="">Ihre Berechtigungen:</p>
+          <p class="">Vos autorisations:</p>
                 <div class="ui two link cards">
                     {% for r in roleURLs %}
                     <a class="ui card" href="{{r.url}}">
@@ -29,7 +29,7 @@
           <div class="ui buttons">
             <button class="ui left labeled small foursgrey-bg icon button">
                 <i class="left arrow icon"></i>
-                Zurück
+                Retour
             </button>
               {% if current_user %}
             <button class="ui right labeled small foursgrey-bg icon button">
