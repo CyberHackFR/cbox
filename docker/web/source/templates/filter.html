@@ -11,25 +11,25 @@
             {% endif %}
         {%- endwith %}
     {% endblock %}
-    <h1 class="ui header">BOX4Security - Filter</h1>
+    <h1 class="ui header">CBox - Filtre</h1>
     <div class="ui floating tiny message">
       <p>
-        Sie haben hier die Möglichkeit Security-Alerts anhand von definierten Daten-Features von der Aufzeichnung auszunehmen.
-        Dies eignet sich besonders, um False-Positives auszublenden.
-        Beachten Sie auch die Antworten auf <a href="/faq">häufig gestellte Fragen</a>.
+        Ici, vous avez la possibilité d'exclure les alertes de sécurité de l'enregistrement en fonction des caractéristiques de données définies.
+        Ceci est particulièrement adapté pour masquer les faux positifs.
+        Notez les réponses aux <a href="/faq"> questions fréquemment posées</a>.
       </p>
     </div>
     <div class="ui inverted section divider"></div>
     <div class="section">
-      <h2 class="ui header">BPF Filter<div class="sub header">Filter auf Ebene der Netzwerkkarte</div></h2>
+      <h2 class="ui header">Filtre BPF<div class="sub header">Filtres au niveau de la carte réseau</div></h2>
       <table id="tbl-bpf" class="ui celled single line small table">
         <thead>
           <tr>
-            <th>Quell-IP</th>
-            <th class="collapsing">Quell-Port</th>
-            <th>Ziel-IP</th>
-            <th class="collapsing">Ziel-Port</th>
-            <th class="collapsing">Protokoll</th>
+            <th>Source-IP</th>
+            <th class="collapsing">Source-Port</th>
+            <th>Destination-IP</th>
+            <th class="collapsing">Destination-Port</th>
+            <th class="collapsing">Protocole</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -47,7 +47,7 @@
             <div class="fluid ui labeled button">
               <a data-set='bpf' class="fluid ui negative button _flush">
                 <i class="exclamation triangle icon"></i>
-                Alle BPF-Regeln irreversibel löschen
+                Supprimer de manière irréversible toutes les règles BPF
               </a>
             </div>
           </div>
@@ -56,17 +56,17 @@
     </div>
     <div class="ui inverted section divider"></div>
     <div class="section">
-      <h2 class="ui header">Logstash Filter<div class="sub header">Filter auf Softwareebene</div></h2>
+      <h2 class="ui header">Filtre Logstash<div class="sub header">Filtre de niveau logiciel</div></h2>
     </div>
     <table id="tbl-logstash" class="ui celled small table">
       <thead>
         <tr>
-          <th>Quell-IP</th>
-          <th>Quell-Port</th>
-          <th>Ziel-IP</th>
-          <th>Ziel-Port</th>
-          <th>Protokoll</th>
-          <th>Angriffssignatur</th>
+          <th>Source-IP</th>
+          <th>Source-Port</th>
+          <th>Destination-IP</th>
+          <th>Destination-Port</th>
+          <th>Protocole</th>
+          <th>Signature d'attaque</th>
           <th lass="collapsing">Action</th>
         </tr>
       </thead>
@@ -84,7 +84,7 @@
           <div class="fluid ui labeled button">
             <a data-set="logstash" class="fluid ui negative button _flush">
               <i class="exclamation triangle icon"></i>
-              Alle Logstash-Regeln irreversibel löschen
+              Supprimer de manière irréversible toutes les règles Logstash
             </a>
           </div>
         </div>
@@ -93,42 +93,42 @@
   </div>
   <div class="ui vertical footer segment">
     <div class="ui center aligned container">
-    <img src="/static/Box4S_Logo.png" class="ui centered small image">
+    <img src="/static/CBox_Logo.png" class="ui centered small image">
   </div>
   </div>
   <div class="ui small modal">
     <i class="close icon"></i>
-    <div class="header">Filterregel hinzufügen</div>
+    <div class="header">Ajouter une règle de filtrage</div>
     <div class="content">
       <form class="ui form">
         <div class="ui centered grid">
           <div class="row">
-            <div class="four wide field" data-tooltip='Leer für beliebig'>
-              <label>Quell-IP</label>
-              <input name="src_ip" type="text" placeholder="Quell-IP" value="{{request.args.get("src_ip", default='')}}">
+            <div class="four wide field" data-tooltip='Vide pour rien'>
+              <label>Source-IP</label>
+              <input name="src_ip" type="text" placeholder="Source-IP" value="{{request.args.get("src_ip", default='')}}">
             </div>
             <div class="one column">
             </div>
-            <div class="three wide field" data-tooltip='Leer für beliebig'>
-              <label>Quell-Port</label>
-              <input name="src_port" type="number" placeholder="Quell-Port"  value="{{request.args.get("src_port", default='')}}">
+            <div class="three wide field" data-tooltip='Vide pour rien'>
+              <label>Source-Port</label>
+              <input name="src_port" type="number" placeholder="Source-Port"  value="{{request.args.get("src_port", default='')}}">
             </div>
           </div>
           <div class="row">
-            <div class="four wide field" data-tooltip='Leer für beliebig'>
-              <label>Ziel-IP</label>
-              <input name="dst_ip" type="text" placeholder="Ziel-IP" value="{{request.args.get("dst_ip", default='')}}">
+            <div class="four wide field" data-tooltip='Vide pour rien'>
+              <label>Destination-IP</label>
+              <input name="dst_ip" type="text" placeholder="Destination-IP" value="{{request.args.get("dst_ip", default='')}}">
             </div>
             <div class="one column">
             </div>
-            <div class="three wide field" data-tooltip='Leer für beliebig'>
-              <label>Ziel-Port</label>
-              <input name="dst_port" type="number" placeholder="Ziel-Port" value="{{request.args.get("dst_port", default='')}}">
+            <div class="three wide field" data-tooltip='Vide pour rien'>
+              <label>Destination-Port</label>
+              <input name="dst_port" type="number" placeholder="Destination-Port" value="{{request.args.get("dst_port", default='')}}">
             </div>
           </div>
           <div class="row">
-            <div class="eight wide field" data-tooltip='Leer für beliebig'>
-              <label>Protokoll</label>
+            <div class="eight wide field" data-tooltip='Vide pour rien'>
+              <label>Protocole</label>
               <select name="proto" class="ui dropdown">
                 <option value=" " selected></option>
               {% for value in ['', 'tcp', 'udp', 'icmp'] %}
@@ -145,21 +145,21 @@
             <div class="field">
               <input type="hidden" name="signature_id" value="{{request.args.get("signature_id", default='')}}">
             </div>
-            <div class="eight wide field" data-tooltip='Nur Logstash. Leer für beliebig.'>
-              <label>Alarmsignatur</label>
+            <div class="eight wide field" data-tooltip='Logstash uniquement. Vide pour rien.'>
+              <label>Signature d'alarme</label>
               <input name="signature" type="text" placeholder="" value="{{request.args.get("signature", default='')}}">
             </div>
           </div>
           <div class="row">
             <div class="six wide center aligned column">
               <h5 class="ui center aligned top attached header">
-                Regel hinzufügen
+                Ajouter une règle
               </h5>
               <div class="ui attached raised segment">
                 <div class="ui buttons">
-                  <button class="ui button _add" data-set="bpf" data-tooltip="Filter auf Eben der Netzwerk">BPF</button>
+                  <button class="ui button _add" data-set="bpf" data-tooltip="Filtres au niveau du réseau">BPF</button>
                   <div class="or" data-text="od."></div>
-                  <button class="ui button _add" data-set="logstash" data-tooltip="Filter auf Softwareebene">Logstash</button>
+                  <button class="ui button _add" data-set="logstash" data-tooltip="Filtre de niveau logiciel">Logstash</button>
                 </div>
               </div>
             </div>
@@ -228,7 +228,7 @@
 })();
   $("a._flush").click((e) => {
     var set = $(e.delegateTarget).data('set');
-    if (confirm(`Sind Sie sicher alle Regeln des ${set}-Filters unwiderruflich zu LÖSCHEN?`)) {
+    if (confirm(`Êtes-vous sûr de vouloir SUPPRIMER irrévocablement toutes les règles du filtre ${set}?`)) {
       getEndpoint(`api/rules/${set}/`, method='DELETE');
       $( `#tbl-${set} tbody` ).empty()
     }

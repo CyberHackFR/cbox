@@ -10,7 +10,7 @@
         {% endif %}
     {%- endwith %}
   {% endblock %}
-  <h1 class="ui header">BOX4Security - Updates<div class="sub header">Verfügbare Aktualisierungen</div></h1>
+  <h1 class="ui header">Mises à jour CBox<div class="sub header">Mises à jour disponibles</div></h1>
   <div class="ui inverted section divider"></div>
   <div class="section">
     <div class="table">
@@ -18,9 +18,9 @@
         <thead>
           <tr>
             <th class="collapsing">Version</th>
-            <th class="">Beschreibung</th>
-            <th class="collapsing">Zeit</th>
-            <th class="center aligned collapsing">Update</th>
+            <th class="">Description</th>
+            <th class="collapsing">Heure</th>
+            <th class="center aligned collapsing">Mettre à jour</th>
           </tr>
         </thead>
         <tbody>
@@ -38,7 +38,7 @@
       <i class="exclamation circle icon"></i>
       <div class="content">
         <div class="header">
-          Abfrage der verfügbaren Updates fehlgeschlagen
+          Échec de la requête des mises à jour disponibles
         </div>
       </div>
   </div>
@@ -52,15 +52,15 @@
       <i class="notched circle loading icon"></i>
       <div class="content">
         <div class="header">
-          Der Updatevorgang läuft..
+          Le processus de mise à jour est en cours...
         </div>
-        <p>Das System wird aktualisiert. Bitte lassen Sie das Fenster geöffnet.</p>
+        <p>Le système est en cours de mise à jour. Veuillez laisser la fenêtre ouverte.</p>
       </div>
     </div>
     <div class="ui segment">
       <p id="logLines"><br> </p>
     </div>
-    <a class="ui labeled icon button transition hidden" href="//{{request.host}}/api/update/log/download"><i class="icon green download"></i>Download Update-Log</a>
+    <a class="ui labeled icon button transition hidden" href="//{{request.host}}/api/update/log/download"><i class="icon green download"></i>Télécharger le journal de mise à jour</a>
   </div>
 </div>
 {% endblock %}
@@ -101,9 +101,9 @@
         },
         error: (jqXhr, textStatus, errorMessage) => {
           if(textStatus==="timeout"){
-            $('#tbl-errormsg').children('.content').append(`<p>Zeitüberschreitung beim Verbindungsaufbau mit dem Updateserver. Die Verbindung wird automatisch erneut aufgebaut. Bitte führen Sie die Aktion zu einem späteren Zeitpunkt durch. Bei fortlaufendem Auftreten dieses Fehlers ist die Überprüfung der Internetverbindung empfohlen.</p>`);
+            $('#tbl-errormsg').children('.content').append(`<p>La connexion au serveur de mise à jour a expiré. La connexion est automatiquement rétablie. Veuillez effectuer l'action à un moment ultérieur. Si cette erreur persiste, il est recommandé de vérifier votre connexion Internet.</p>`);
           } else {
-            $('#tbl-errormsg').children('.content').append(`<p>Fehler bei dem Verbindungsaufbau mit dem Updateserver. Die Verbindung wird automatisch erneut aufgebaut. Bitte führen Sie die Aktion zu einem späteren Zeitpunkt durch.</p>`);
+            $('#tbl-errormsg').children('.content').append(`<p>Erreur lors de l'établissement d'une connexion avec le serveur de mise à jour. La connexion est automatiquement rétablie. Veuillez effectuer l'action à un moment ultérieur.</p>`);
           }
           $('#tbl-errormsg').prev().addClass('transition hidden');
           $('#tbl-errormsg').removeClass('transition hidden');
@@ -127,7 +127,7 @@
             }
             if (version.version === "1.6.3") {
               // Set message for this tag, as it does not exist in the backend.
-              version.message = "Einführung der Update-Funktion und Hinzunahme standardisierter Dashboards"
+              version.message = "Introduction de la fonction de mise à jour et ajout de tableaux de bord standardisés"
             }
             var description = `<td>
                 <div class="ui accordion">
@@ -244,9 +244,9 @@
                   // update version table
                 });
                 // Block to change modal
-                modal.children().find('.message .header').text('Update abgeschlossen.');
+                modal.children().find('.message .header').text('Mise à jour terminée.');
                 modal.children().find('.message i').addClass('checkmark').removeClass('notched circle loading');
-                modal.children().find('.message .content p').text('Update erfolgreich abgeschlossen. Sie können das Fenster nun schließen.');
+                modal.children().find('.message .content p').text('Mise à jour terminée avec succès. Vous pouvez maintenant fermer la fenêtre.');
                 modal.append('<i class="close icon"></i>')
                 modal.children('.content').find('a.ui.labeled').removeClass('transition hidden');
               }
@@ -255,9 +255,9 @@
             case "rollback-running":
               {
                 // System is rolling back, display it to the user
-                modal.children().find('.message .header').text('Automatisches Zurücksetzen auf letzte Version');
+                modal.children().find('.message .header').text('Réinitialisation automatique à la dernière version');
                 modal.children().find('.message i').addClass('undo loading').removeClass('notched circle');
-                modal.children().find('.message .content p').html('Das Update konnte nicht erfolgreich abgeschlossen werden.<br> Bitte lassen Sie dieses Fenster geöffnet. Das System setzt sich automatisch auf den zuletzt erfolgreich installierten Stand zurück.');
+                modal.children().find('.message .content p').html('La mise à jour n\'a pas pu être effectuée avec succès.<br> Veuillez laisser cette fenêtre ouverte. Le système se réinitialise automatiquement au dernier statut installé avec succès.');
               }
               break;
             case "rollback-successful":
@@ -270,9 +270,9 @@
                   // update version table
                 });
                 // Block to change modal
-                modal.children().find('.message .header').text('Zurücksetzen erfolgreich abgeschlossen.');
+                modal.children().find('.message .header').text('Réinitialisation terminée avec succès.');
                 modal.children().find('.message i').addClass('green undo').removeClass('notched circle loading');
-                modal.children().find('.message .content p').text('Die BOX4security wurde auf die letzte erfolgreich installierte Version zurückgesetzt. Sie können das Fenster nun schließen.');
+                modal.children().find('.message .content p').text('CBox a été réinitialisé à la dernière version installée avec succès. Vous pouvez maintenant fermer la fenêtre.');
                 modal.append('<i class="close icon"></i>')
                 modal.children('.content').find('a.ui.labeled').removeClass('transition hidden');
               }

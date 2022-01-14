@@ -201,7 +201,7 @@
             }, 15000);
         } else {
             msg.classList.add("error");
-            msg.innerHTML = 'HTTPS-Konfiguration konnte nicht gespeichert werden.';
+            msg.innerHTML = 'La configuration HTTPS n\'a pas pu être enregistrée.';
             response.json().then(j => console.log(response.status + " " + j['message']));
     }
     form.insertBefore(msg, form.lastElementChild);
@@ -277,11 +277,11 @@
     msg.classList = "ui visible message"
     if(response.ok){
         msg.classList.add("success");
-        msg.innerHTML = '<div class="header">SMTP-Konfiguration erfolgreich gespeichert.</div><p>Die BOX4security startet nun mit geänderter Konfiguration neu. Bitte haben Sie einen Moment Geduld. Die Seite wird automatisch neu geladen.</p>'
+        msg.innerHTML = '<div class="header">Configuration SMTP enregistrée avec succès.</div><p>CBox va maintenant redémarrer avec la configuration modifiée. S\'il vous plaît soyez patient. La page sera rechargée automatiquement.</p>'
         $('#formSMTP').find('button').prop('disabled', true).html('<div class="ui active centered inline loader"></div>');
     } else {
         msg.classList.add("error");
-        msg.innerHTML = 'SMTP-Konfiguration konnte nicht gespeichert werden.';
+        msg.innerHTML = 'La configuration SMTP n\'a pas pu être enregistrée.';
     }
     form.insertBefore(msg, form.lastElementChild);
     if(response.ok){
@@ -294,7 +294,7 @@
 
     });
   </script>
-{% if ('false' | custom_getenv('BOX4s_WAZUH')) == 'true' %}
+{% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}
   <script>
     // Scripts for Wazuh Config
     var wazuhSegment = document.getElementById('wazuh-segment');
@@ -309,7 +309,7 @@
         temp.val(inPass.val()).select();
         document.execCommand("copy");
         temp.remove();
-        alert('Wazuh-Agent-Passwort in die Zwischenablage kopiert.');
+        alert('Mot de passe de l\'agent Wazuh copié dans le presse-papiers.');
     });
     document.getElementById('renew-wazuh-pass').addEventListener('click', async (e) => {
         e.preventDefault();
@@ -328,9 +328,9 @@
             var successNode = document.createElement('div');
             ['ui', 'inverted', 'green', 'segment']
                 .forEach(cl => successNode.classList.add(cl));
-            successNode.innerHTML = '<p><i class="ui icon check"></i> Passwort der Wazuh-Agents erfolgreich aktualisiert.</p>';
+            successNode.innerHTML = '<p><i class="ui icon check"></i> Le mot de passe des agents Wazuh a été mis à jour avec succès.</p>';
             wazuhSegment.insertBefore(successNode, wazuhSegment.getElementsByTagName('h4')[0].nextSibling);
-            alert('Neues Wazuh-Agent-Passwort generiert und in die Zwischenablage kopiert.');
+            alert('Nouveau mot de passe d\'agent Wazuh généré et copié dans le presse-papiers.');
         });
     });
     fetch('/api/config/wazuh')
@@ -342,7 +342,7 @@
         e.preventDefault();
         if(!inPass.val().length > 0)
         {
-            alert("Das Passwort für die Wazuh-Agents kann nicht leer sein.")
+            alert("Le mot de passe des agents Wazuh ne peut pas être vide.")
         } else {
             fetch('/api/config/wazuh', {
                 method: "PUT",
@@ -359,7 +359,7 @@
                     var successNode = document.createElement('div');
                     ['ui', 'inverted', 'green', 'segment']
                         .forEach(cl => successNode.classList.add(cl));
-                        successNode.innerHTML = '<p><i class="ui icon check"></i> Passwort der Wazuh-Agents erfolgreich aktualisiert.</p>'
+                        successNode.innerHTML = '<p><i class="ui icon check"></i> Le mot de passe des agents Wazuh a été mis à jour avec succès.</p>'
                     wazuhSegment.insertBefore(successNode, wazuhSegment.getElementsByTagName('h4')[0].nextSibling)
                     inPass.val(d.password);
             });

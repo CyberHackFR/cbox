@@ -88,12 +88,12 @@ curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true"
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/SIEM/SIEM-ProtokolleUndDienste.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/SIEM/SIEM-SocialMedia.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/SIEM/SIEM-Uebersicht.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Netzwerk/Netzwerk-Uebersicht.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Netzwerk/Netzwerk-GeoIPUndASN.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Netzwerk/Netzwerk-Datenfluesse.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Schwachstellen/Schwachstellen-Details.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Schwachstellen/Schwachstellen-Verlauf.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Schwachstellen/Schwachstellen-Uebersicht.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Reseau/Presentation-Reseau.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Reseau/Reseau-GeoIPetASN.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Reseau/Flux-Donnees.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Vulnerabilite/Details-Vulnerabilite.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Vulnerabilite/Historique-Vulnerabilites.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Vulnerabilite/Apercu-Vulnerabilite.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/System/docker.ndjson
 
 # Installiere Suricata Index Pattern

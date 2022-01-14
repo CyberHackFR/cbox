@@ -12,10 +12,10 @@
       {%- endwith %}
   {% endblock %}
   {% block user %}{% endblock %}
-  <h1 class="ui header">BOX4Security - Benutzer</h1>
+  <h1 class="ui header">CBox - Utilisateur</h1>
   <div class="ui floating tiny message">
     <p>
-      Sehen und bearbeiten Sie hier die Benutzer der BOX4security.
+      Affichez et modifiez les utilisateurs de CBox ici.
     </p>
   </div>
   <div id="errormsg"></div>
@@ -23,11 +23,11 @@
   <table class="ui celled single line small table">
     <thead>
       <tr>
-        <th class="">Benutzer</th>
-        <th class="">Berechtigungen</th>
-        <th class="collapsing">E-Mail<br> bestätigt</th>
-        <th class="collapsing">Aktiv</th>
-        <th class="collapsing">Aktionen</th>
+        <th class="">Utilisateur</th>
+        <th class="">Autorisations</th>
+        <th class="collapsing">E-Mail<br> confirmé</th>
+        <th class="collapsing">Actif</th>
+        <th class="collapsing">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -88,17 +88,17 @@
           {% endif %}
         </td>
         <td class="collapsing">
-          <a data-user-id="{{ u.id }}" data-tooltip="Nutzer bearbeiten" data-position="bottom center" data-action="edit" class="ui icon tiny blue button">
+          <a data-user-id="{{ u.id }}" data-tooltip="Modifier l'utilisateur" data-position="bottom center" data-action="edit" class="ui icon tiny blue button">
             <i class="edit icon"></i>
           </a>
-          <a data-user-id="{{ u.id }}" data-tooltip="Nutzer {% if not u.active %}ent{%endif%}sperren" data-position="bottom center" data-action="disable" class="ui icon tiny grey button {% if current_user.id == u.id %}disabled{%  endif %}">
+          <a data-user-id="{{ u.id }}" data-tooltip="Débloquer {% if not u.active %}des{%endif%}utilisateurs" data-position="bottom center" data-action="disable" class="ui icon tiny grey button {% if current_user.id == u.id %}disabled{%  endif %}">
             {% if u.active %}
               <i class="lock icon"></i>
             {% else %}
               <i class="unlock icon"></i>
             {% endif %}
           </a>
-          <a data-user-id="{{ u.id }}" data-tooltip="Nutzer löschen" data-position="bottom center" data-action="delete" class="ui icon tiny red button {% if current_user.id == u.id %}disabled{%  endif %}">
+          <a data-user-id="{{ u.id }}" data-tooltip="Supprimer l'utilisateur" data-position="bottom center" data-action="delete" class="ui icon tiny red button {% if current_user.id == u.id %}disabled{%  endif %}">
             <i class="trash alternate outline icon"></i>
           </a>
         </td>
@@ -118,7 +118,7 @@
   </div>
   <div id="modal-add" class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">Benutzer hinzufügen</div>
+    <div class="header">Ajouter utilisateur</div>
     <div class="content">
       <form method="POST" class="ui form">
          {{ userform.hidden_tag() }}
@@ -134,7 +134,7 @@
               {% endfor %}
           {% endif %}
           <div class="field">
-              <input type="text" id="{{ userform.first_name.id }}" name="{{ userform.first_name.name }}" placeholder="Vorname">
+              <input type="text" id="{{ userform.first_name.id }}" name="{{ userform.first_name.name }}" placeholder="Prénom">
           </div>
           {% if userform.last_name.errors %}
           {% for e in userform.last_name.errors %}
@@ -142,7 +142,7 @@
           {% endfor %}
           {% endif %}
           <div class="field">
-              <input type="text" id="{{ userform.last_name.id }}"name="{{ userform.last_name.name }}" placeholder="Nachname">
+              <input type="text" id="{{ userform.last_name.id }}"name="{{ userform.last_name.name }}" placeholder="Nom">
           </div>
           {% if userform.last_name.errors %}
               {% for e in userform.last_name.errors %}
@@ -151,7 +151,7 @@
           {% endif %}
           <div class="field">
             <select name="{{userform.roles.name}}" multiple="" class="ui dropdown">
-              <option value="">Berechtigungen</option>
+              <option value="">Permissions</option>
               {% for value in userform.roles.choices %}
                 <option value="{{value[0]}}">{{value[1]}}</option>
               {% endfor %}
@@ -163,12 +163,12 @@
               {% endfor %}
           {% endif %}
           <div class="ui message">
-            Nach Anlegen des Benutzers wird ein Passwort zufällig gewählt und dem angelegten Nutzer per E-Mail zugesandt. Dieses sollte zeitig aktualisiert und die E-Mailadresse bestätigt werden.
+            Après avoir créé l'utilisateur, un mot de passe est choisi au hasard et envoyé à l'utilisateur par email. Celui-ci doit être mis à jour en temps et l'adresse e-mail doit être confirmée.
           </div>
           <div class="field">
             <div class="ui toggle checkbox">
               <input type="checkbox" name="email_copy" tabindex="0" class="hidden">
-              <label>Kopie der E-Mail an mich senden</label>
+              <label>Envoyez-moi la copie de l'e-mail</label>
             </div>
           </div>
           {% if userform.email_copy.errors %}
@@ -182,7 +182,7 @@
   </div>
   <div id="modal-edit" class="ui tiny modal">
     <i class="close icon"></i>
-    <div class="header">Benutzer bearbeiten</div>
+    <div class="header">Modifier l'utilisateur</div>
     <div class="content">
       <form method="" class="ui form">
           <div class="field">
@@ -197,7 +197,7 @@
               {% endfor %}
           {% endif %}
           <div class="field">
-              <input type="text" id="edit-{{ userform.first_name.id }}" name="{{ userform.first_name.name }}" placeholder="Vorname">
+              <input type="text" id="edit-{{ userform.first_name.id }}" name="{{ userform.first_name.name }}" placeholder="Prénom">
           </div>
           {% if userform.last_name.errors %}
           {% for e in userform.last_name.errors %}
@@ -205,7 +205,7 @@
           {% endfor %}
           {% endif %}
           <div class="field">
-              <input type="text" id="edit-{{ userform.last_name.id }}"name="{{ userform.last_name.name }}" placeholder="Nachname">
+              <input type="text" id="edit-{{ userform.last_name.id }}"name="{{ userform.last_name.name }}" placeholder="Nom">
           </div>
           {% if userform.last_name.errors %}
               {% for e in userform.last_name.errors %}
@@ -214,7 +214,7 @@
           {% endif %}
           <div class="field">
             <select id="edit-{{ userform.roles.id }}" name="{{userform.roles.name}}" multiple="" class="ui dropdown">
-              <option value="">Berechtigungen</option>
+              <option value="">Permissions</option>
               {% for value in userform.roles.choices %}
                 <option value="{{value[0]}}">{{value[1]}}</option>
               {% endfor %}
@@ -228,13 +228,13 @@
           <div class="field">
             <div class="ui toggle checkbox">
               <input type="checkbox" id="edit-email_confirmed" name="email_confirmed" tabindex="0" class="hidden">
-              <label>E-Mail bestätigt</label>
+              <label>E-Mail confirmé</label>
             </div>
           </div>
           <!-- <div class="field">
             <div class="ui toggle checkbox">
               <input type="checkbox" id="edit-active" name="active" tabindex="0" class="hidden">
-              <label>Aktiv</label>
+              <label>Actif</label>
             </div>
           </div> -->
           <button id="edit-submit" class="ui fluid large foursgrey-bg submit button" type="submit" name="button">Enregistrer</button>
@@ -276,10 +276,10 @@
         if(!response.ok){
           var errormsg="";
           switch (response.status) {
-            case 403: errormsg = "Sie dürfen diese Aktion nicht ausführen. Nur Super Admins können andere Super Admins ernennen."; break;
-            case 404: errormsg = "Der zu bearbeitende Benutzer wurde nicht gefunden. Keine Änderungen wurden gespeichert."; break;
-            case 400: errormsg = "Die gestellte Anfrage enthielt für die Verarbeitung unverständliche Parameter."; break;
-            case 500: errormsg = "Die Änderungen am Benutzer konnten nicht in der Datenbank gespeichert werden."; break;
+            case 403: errormsg = "Vous n'êtes pas autorisé à effectuer cette action. Seuls les super-administrateurs peuvent nommer d'autres super-administrateurs."; break;
+            case 404: errormsg = "L'utilisateur à modifier n'a pas été trouvé. Aucune modification n'a été enregistrée."; break;
+            case 400: errormsg = "La demande contenait des paramètres incompréhensibles pour le traitement."; break;
+            case 500: errormsg = "Les modifications apportées à l'utilisateur n'ont pas pu être enregistrées dans la base de données."; break;
           };
           row = `<div class="ui red message">${errormsg}</div>`;
           $(`#edit-submit`).before(row);
@@ -291,14 +291,14 @@
     $(`tbody tr td a` ).on('click', (e) => {
       switch ($(e.delegateTarget).data('action')) {
         case 'delete':
-          if (confirm(`Soll dieser Nutzer wirklich unwiderruflich GELÖSCHT werden?`)) {
+          if (confirm(`Cet utilisateur doit-il vraiment être supprimé de manière irrévocable?`)) {
             fetch(`/api/user/${$(e.delegateTarget).data('user-id')}`, {method: 'DELETE'})
             .then((response) => {
               if(response.ok){
                 $(e.delegateTarget).closest('tr').remove();
               }
               else {
-                errormsg = "Sie dürfen diese Aktion nicht ausführen. Nur Super Admins können andere Super Admins löschen.";
+                errormsg = "Vous n'êtes pas autorisé à effectuer cette action. Seuls les super-administrateurs peuvent supprimer d'autres super-administrateurs.";
                 row = `<div class="ui red message">${errormsg}</div>`;
                 $(`#errormsg`).before(row);
               }
@@ -330,7 +330,7 @@
               location.reload();
             }
             else {
-              errormsg = "Sie dürfen diese Aktion nicht ausführen. Nur Super Admins können andere Super Admins (ent)sperren.";
+              errormsg = "Vous n'êtes pas autorisé à effectuer cette action. Seuls les super-administrateurs peuvent (dé)verrouiller d'autres super-administrateurs.";
               row = `<div class="ui red message">${errormsg}</div>`;
               $(`#errormsg`).before(row);
             }
