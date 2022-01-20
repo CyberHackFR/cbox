@@ -679,14 +679,14 @@ sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kiban
 # Import Dashboard
 # TODO: FIXIT Dashboard en frances
 echo -n "Installing Dashboards und Patterns.. " 1>&3
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Startseite/Startseite-Uebersicht.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Accueil/Accueil.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-Alarme.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-ASN.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-DNS.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-HTTP.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-ProtokolleUndDienste.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-ProtocolesEtServices.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-SocialMedia.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-Uebersicht.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-Apercu.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Reseau/Presentation-Reseau.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Reseau/Reseau-GeoIPetASN.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Reseau/Flux-Donnees.ndjson

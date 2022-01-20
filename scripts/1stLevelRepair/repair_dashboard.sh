@@ -19,14 +19,14 @@ export DEBIAN_FRONTEND=noninteractive
 exec 2>&1 1>>${LOG}
 
 echo -n "Inserting Dashboards.. " 1>&2
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/Startseite/Startseite-Uebersicht.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/Accueil/Accueil.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-Alarme.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-ASN.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-DNS.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-HTTP.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-ProtokolleUndDienste.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-ProtocolesEtServices.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-SocialMedia.ndjson
-curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-Uebersicht.ndjson
+curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/SIEM/SIEM-Apercu.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/Reseau/Presentation-Reseau.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/Reseau/Reseau-GeoIPetASN.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$CBOX_INSTALL_DIR/config/dashboards/Reseau/Flux-Donnees.ndjson
