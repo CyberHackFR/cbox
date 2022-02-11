@@ -51,7 +51,7 @@ function waitForNet() {
 
 echo -n "Stopping CBox Service.. " 1>&2
 
-if [[ $(systemctl list-units --all -t service --full --no-legend "box4security.service" | cut -f1 -d' ') == $n.service ]]; then
+if [[ $(systemctl list-units --all -t service --full --no-legend "cbox.service" | cut -f1 -d' ') == $n.service ]]; then
   sudo systemctl stop cbox.service
   #Remove all Docker containers and Volumes
   sudo docker rm -f $(docker ps -a -q) >/dev/null || :

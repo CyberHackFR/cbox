@@ -77,8 +77,8 @@ function rollback() {
   cp /var/lib/cbox/backup/.env.ls $CBOX_CONFIG_DIR/.env.ls
   rm -f /var/lib/cbox/backup/.env.es /var/lib/cbox/backup/.env.ls
 
-  echo "Setze Dienst auf Version $1 zurück"
-  cp $BOX4s_INSTALL_DIR/config/etc/systemd/box4security.service /etc/systemd/system/box4security.service
+  echo "Rétablir le service à la version $1"
+  cp $CBOX_INSTALL_DIR/config/etc/systemd/cbox.service /etc/systemd/system/cbox.service
 
   # sleep to wait for established connection
   sleep 8
@@ -87,7 +87,7 @@ function rollback() {
   docker-compose -f $CBOX_INSTALL_DIR/docker/cbox.yml pull -q
   docker-compose -f $CBOX_INSTALL_DIR/docker/wazuh/wazuh.yml pull -q
 
-  echo "Redémarrez le logiciel CBox."
+  echo "Redémarrez le CBox."
   # set version in file
   echo "VERSION=$1" > /var/lib/cbox/VERSION
   echo "CBOX_ENV=$ENV" >> /var/lib/cbox/VERSION

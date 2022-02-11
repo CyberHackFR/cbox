@@ -58,6 +58,8 @@ export DEBIAN_FRONTEND=noninteractive
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 INSTALL_DIR="/opt/cbox/"
 CONFIG_DIR="/etc/cbox/"
+# TODO: Temp
+TAG=0.0.1
 # Forward fd3 to the console
 # exec 3>&1
 # Forward stderr to $ERROR_LOG
@@ -77,7 +79,7 @@ function banner {
 }
 
 function testNet() {
-  # Returns 0 for successful internet connection and dns resolution, 1 else
+  # Returns 0 for successful internet connection and dns resolution , 1 else
   ping -q -c 1 -W 1 $1 >/dev/null;
   return $?
 }
@@ -221,12 +223,13 @@ echo -n "Checking and replacing default secrets.. " 1>&3
 if [[ -z $POSTGRES_PASSWORD || "$POSTGRES_PASSWORD" == "CHANGEME" ]]; then
     POSTGRES_PASSWORD=`genSecret`
 fi
-if [[ -z $IP2TOKEN || "$IP2TOKEN" == "GET_ME_FROM_IP2LOCATION.COM" ]]; then
-    echo "[ FAIL ]" 1>&3
-    echo "Installation requires a token for IP2Location. Go to https://lite.ip2location.com now and enter an API token below." 1>&3 
-    echo "Tokens are not validated on this end. Make sure the entered token is correct, otherwise the installation WILL fail. Token:" 1>&3 
-    read IP2TOKEN
-fi
+# TODO: Find solution!!!
+# if [[ -z $IP2TOKEN || "$IP2TOKEN" == "GET_ME_FROM_IP2LOCATION.COM" ]]; then
+#     echo "[ FAIL ]" 1>&3
+#     echo "Installation requires a token for IP2Location. Go to https://lite.ip2location.com now and enter an API token below." 1>&3 
+#     echo "Tokens are not validated on this end. Make sure the entered token is correct, otherwise the installation WILL fail. Token:" 1>&3 
+#     read IP2TOKEN
+# fi
 if [[ -z $SECRET_KEY || "$SECRET_KEY" == "CHANGEME" ]]; then
     SECRET_KEY=`genSecret`
 fi
@@ -262,32 +265,32 @@ echo "[ OK ]" 1>&3
 # Tags                                           #
 #                                                #
 ##################################################
-banner "Tags ..." # TODO: Tags for cbox
+# banner "Tags ..." # TODO: Tags for cbox
 
-# If manual isntallation, make all tags visible and choose the tag to install
-if [[ "$*" == *manual* ]]
-then
-  # --manual supplied => ask user which to install
-  # Fetch all TAGS as names
-  mapfile -t TAGS < <(curl -s -H "Accept: application/vnd.github.v3+json" \
-  https://api.github.com/repos/4sConsult/box4security/releases | jq -r .[].tag_name)
+# # If manual isntallation, make all tags visible and choose the tag to install
+# if [[ "$*" == *manual* ]]
+# then
+#   # --manual supplied => ask user which to install
+#   # Fetch all TAGS as names
+#   mapfile -t TAGS < <(curl -s -H "Accept: application/vnd.github.v3+json" \
+#   https://api.github.com/repos/releases | jq -r .[].tag_name)
 
-  echo "Available tags:" 1>&3
-  printf '%s\n' "${TAGS[@]}" 1>&3
-  echo "Type tag to install:" 1>&3
-  read TAG
-  while [[ ! " ${TAGS[@]} " =~ " ${TAG} " ]]; do
-    echo "$TAG is not in ${TAGS[@]}. Try again." 1>&3
-    read TAG
-  done
-  echo "$TAG will be installed.. [ OK ]" 1>&3
-else
-  # not manual, install most recent and valid tag
-  TAG=$(curl -s -H "Accept: application/vnd.github.v3+json" \
-  https://api.github.com/repos/4sConsult/box4security/releases/latest | jq -r '.tag_name')
-  echo "Installing the most recent tag $TAG.. [ OK ]" 1>&3
-fi
-echo "Installing $TAG."
+#   echo "Available tags:" 1>&3
+#   printf '%s\n' "${TAGS[@]}" 1>&3
+#   echo "Type tag to install:" 1>&3
+#   read TAG
+#   while [[ ! " ${TAGS[@]} " =~ " ${TAG} " ]]; do
+#     echo "$TAG is not in ${TAGS[@]}. Try again." 1>&3
+#     read TAG
+#   done
+#   echo "$TAG will be installed.. [ OK ]" 1>&3
+# else
+#   # not manual, install most recent and valid tag
+#   TAG=$(curl -s -H "Accept: application/vnd.github.v3+json" \
+#   https://api.github.com/repos/releases/latest | jq -r '.tag_name')
+#   echo "Installing the most recent tag $TAG.. [ OK ]" 1>&3
+# fi
+# echo "Installing $TAG."
 ##################################################
 #                                                #
 # Clone Repository                               #
@@ -403,7 +406,7 @@ sudo chmod 760 -R /data/elasticsearch
 sudo chmod 760 -R /data/elasticsearch_backup
 
 # Setup ElastAlert volume
-echo -n "varlib_postgresql:" 1>&1
+echo -n "varlib_elastalert_rules:" 1>&1
 sudo mkdir -p /var/lib/elastalert/rules
 sudo chown root:root /var/lib/elastalert/rules
 sudo chmod -R 777 /var/lib/elastalert/rules
@@ -464,7 +467,7 @@ echo -n "Downloading documentation.. " 1>&3
 delete_If_Exists /var/lib/cbox_docs
 mkdir -p /var/lib/cbox_docs
 cd /var/lib/cbox_docs
-sudo git clone https://github.com/4sconsult/box4s-docs.git . # TODO: Change repository
+sudo git clone https://github.com/CyberHackFR/cbox-docs.git . # TODO: Change repository
 echo " [ OK ]" 1>&3
 
 echo -n "Configuring CBox.. " 1>&3
@@ -599,11 +602,12 @@ sudo docker-compose -f $SCRIPTDIR/../../docker/cbox.yml pull
 sudo docker-compose -f $SCRIPTDIR/../../docker/wazuh/wazuh.yml pull
 echo " [ OK ] " 1>&3
 
+# TODO: fix this
 # Download IP2Location DBs for the first time
-echo -n "Downloading and unpacking geolocation database. This may take some time.. " 1>&3
-cd /tmp/
-curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBIN" -o IP2LOCATION-LITE-DB5.BIN.zip
-curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBINIPV6" -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
+# echo -n "Downloading and unpacking geolocation database. This may take some time.. " 1>&3
+# cd /tmp/
+# curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBIN" -o IP2LOCATION-LITE-DB5.BIN.zip
+# curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBINIPV6" -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
 sudo unzip -o IP2LOCATION-LITE-DB5.BIN.zip
 sudo mv IP2LOCATION-LITE-DB5.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.BIN
 sudo unzip -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
