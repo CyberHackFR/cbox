@@ -1,10 +1,11 @@
-FROM securecompliance/gvm:latest
+FROM securecompliance/gvm:20.08-v2
 #20.08-v1 oldtag
 
 ADD etc/ /etc/openvas/
 ADD scripts/ /root/
 
-RUN apt-get update && \
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -  && \
+    apt-get update && \
     apt-get install -y python3-venv && \
     rm -rf /var/cache/apk/* && \
     chmod +x /root/insertconfig.sh && \
