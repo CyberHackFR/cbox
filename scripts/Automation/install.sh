@@ -662,7 +662,7 @@ echo " [ OK ] " 1>&3
 
 echo -n "Installing new cronjobs.. " 1>&3
 cd $SCRIPTDIR/../../config/crontab
-su - amadmin -c "crontab $SCRIPTDIR/../../config/crontab/amadmin.crontab"
+su - amadmin -c "crontab $SCRIPTDIR/../../config/crontab/cboxadmin.crontab"
 echo " [ OK ] " 1>&3
 
 sudo systemctl daemon-reload
@@ -681,7 +681,7 @@ sleep 30
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kibana 600 && echo "  OK ] " 1>&3 || echo "  NOT OK ] " 1>&3
 
 # Import Dashboard
-# TODO: FIXIT Dashboard en frances
+
 echo -n "Installing Dashboards und Patterns.. " 1>&3
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/Accueil/Accueil.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@$SCRIPTDIR/../../config/dashboards/SIEM/SIEM-Alarme.ndjson

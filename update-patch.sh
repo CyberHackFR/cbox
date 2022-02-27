@@ -78,7 +78,7 @@ sudo /home/cboxadmin/cbox/scripts/System_Scripts/wait-for-healthy-container.sh n
 sudo docker cp /home/cboxadmin/cbox/docker/web/source/static/external web:/home/app/web/source/static/external
 
 # Import Dashboard
-# TODO: fix
+
 echo "### Install dashboards"
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/Accueil/Accueil.ndjson
 curl -s -X POST "localhost:5601/kibana/api/saved_objects/_import?overwrite=true" -H "kbn-xsrf: true" --form file=@/home/amadmin/box4security/config/dashboards/SIEM/SIEM-Alarme.ndjson
