@@ -1,3 +1,0 @@
-{% extends 'user/emails/base_subject.txt' %}
-
-{% block subject %}Compte{% endblock %}

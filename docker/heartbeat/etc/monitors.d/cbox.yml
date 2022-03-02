@@ -1,7 +1,0 @@
-# - type: http
-#   urls: ["https://cyberhackbox:9392"]
-#   #  ssl:
-#   #certificate_authorities: ['/etc/ca.crt']
-#   #supported_protocols: ["TLSv1.0", "TLSv1.1", "TLSv1.2"]
-#   schedule: '@every 1m'
-#   id: "Greenbone Security Manager"
