@@ -1,0 +1,26 @@
+{
+    "query": {
+        "bool": {
+            "must": [
+                {
+                "term": {
+                "alert.category.keyword": "Social Media Alerts by CyberHack"
+                }
+                },
+                {
+                "range": {
+                        "@timestamp": {
+                            "gte": "now-1d/d",
+                            "lte": "now"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+} 
+  
+  
+
+
+  

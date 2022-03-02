@@ -1,0 +1,15 @@
+{% extends 'user/emails/base_message.txt' %}
+
+{% block message %}
+Merci de vous être inscrit au {{ app_name }}.
+
+{% if confirm_email_link -%}
+La confirmation de votre adresse e-mail est requise pour l'utilisation.
+
+Une fois cette inscription initiée, cliquez sur le lien ci-dessous:
+    {{ confirm_email_link }}
+
+Si vous n'avez pas initié cette inscription, vous pouvez ignorer cet e-mail.
+
+{%- endif %}
+{% endblock %}

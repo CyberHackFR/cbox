@@ -1,0 +1,277 @@
+version: '3'
+
+services:
+  elasticsearch:
+    build: elasticsearch/.
+    container_name: elasticsearch
+    restart: always
+    ports:
+     - 127.0.0.1:9200:9200
+    image: cyberhackfr/elasticsearch:0.0.1
+    volumes:
+     - /data/elasticsearch:/data/elasticsearch
+     - /data/elasticsearch_backup:/data/elasticsearch_backup
+    env_file:
+      - /etc/cbox/.env.es
+  kibana:
+    build: kibana/.
+    container_name: kibana
+    restart: always
+    environment:
+     - INT_IP=${INT_IP}
+    env_file:
+     - /etc/cbox/wazuh.conf
+    ports:
+     - 127.0.0.1:5601:5601
+    image: cyberhackfr/kibana:0.0.1
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    stop_signal: SIGKILL
+    user: "1000:44269"
+  spiderfoot:
+    build: spiderfoot
+    container_name: spiderfoot
+    restart: always
+    volumes:
+        - spiderfoot_data:/var/lib/spiderfoot
+    ports:
+        - 5001:8080
+    user: "2000:44269"
+    image: cyberhackfr/spiderfoot:0.0.1
+  openvas:
+    build: openvas
+    container_name: openvas
+    restart: always
+    environment:
+      - INT_IP=${INT_IP}
+    ports:
+      - 127.0.0.1:9392:9392
+    expose:
+      - 9390
+    volumes:
+      - gvm-data:/data
+      - varlib_logstash:/var/lib/logstash
+    image: cyberhackfr/openvas:0.0.1
+    env_file:
+      - /etc/cbox/openvas.conf
+  suricata:
+    build: suricata/.
+    container_name: suricata
+    restart: always
+    image: cyberhackfr/suricata:0.0.1
+    network_mode: host
+    env_file:
+      - /etc/cbox/.env.suri
+    cap_add:
+      - NET_ADMIN
+      - SYS_NICE
+    volumes:
+      - varlib_suricata:/var/lib/suricata/rules
+      - data:/data
+      - varlib_cbox:/var/lib/cbox/
+    user: "0:44269"
+  metricbeat:
+    build: metricbeat/.
+    container_name: metricbeat
+    image: cyberhackfr/metricbeat:0.0.1
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+    user: "0:44269"
+  heartbeat:
+    build: heartbeat/.
+    container_name: heartbeat
+    image: cyberhackfr/heartbeat:0.0.1
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+  logstash:
+    build: logstash/.
+    container_name: logstash
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+    env_file:
+     - /etc/default/logstash
+     - /etc/cbox/db.conf
+     - /etc/cbox/.env.ls
+    ports:
+      - 9600:9600
+      - 5044:5044
+      - 5046:5046
+    image: cyberhackfr/logstash:0.0.1
+    volumes:
+      - varlib_logstash:/var/lib/logstash/
+      - etccbox_logstash:/etc/logstash/conf.d/general/
+      - varlib_cbox:/var/lib/cbox/
+    user: "0:44269"
+  filebeat:
+    build: filebeat/.
+    container_name: filebeat
+    depends_on:
+        elasticsearch:
+            condition: service_healthy
+    image: cyberhackfr/filebeat:0.0.1
+    volumes:
+      - varlib_logstash:/var/lib/logstash/
+      - data:/data
+    user: root:44269
+  web:
+    container_name: web
+    networks:
+      default:
+        ipv4_address: 172.20.08.11
+    image: cyberhackfr/web:0.0.1
+    build: web/.
+    command: >
+     bash -c "python main.py db upgrade head &&
+     gunicorn --bind 0.0.0.0:5000 main:app"
+    volumes:
+       - static_volume:/home/app/web/source/static
+       - /var/log/cbox/:/var/log/cbox/
+       - varlib_cbox/:/var/lib/cbox/
+       - varlib_elastalert_rules:/var/lib/elastalert/rules/
+       - /etc/cbox/smtp.conf:/etc/cbox/smtp.conf
+       - /etc/cbox/modules.conf:/etc/cbox/modules.conf
+       - /etc/msmtprc:/etc/cbox/msmtprc
+       - /etc/ssl/certs/CBox-SMTP.pem:/etc/ssl/certs/CBOx-SMTP.pem
+       - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+       - /etc/environment:/etc/environment
+       - /etc/cbox/logstash/CBox-special.conf:/etc/cbox/logstash/CBox-special.conf
+       - /etc/default/logstash:/etc/default/logstash
+       - /etc/netplan:/etc/_netplan/
+       - /etc/cbox/certs/:/etc/cbox/certs/
+       - /var/run/docker.sock:/var/run/docker.sock
+    expose:
+      - 5000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/_health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - web/web.env
+      - /etc/cbox/web.conf
+      - /etc/cbox/smtp.conf
+      - /etc/cbox/modules.conf
+      - /var/lib/cbox/VERSION
+    environment:
+      - CLIENT
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "app:44269"
+  db:
+    container_name: db
+    image: cyberhackfr/db:0.0.1
+    build: db/.
+    volumes:
+      - varlib_postgresql/:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"
+    env_file:
+      - /etc/cbox/db.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    user: "0:44269"
+  nginx:
+    container_name: nginx
+    image: cyberhackfr/nginx:0.0.1
+    build: nginx/.
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_volume:/home/app/web/source/static
+      - /etc/cbox/certs:/etc/nginx/certs
+    depends_on:
+      - web
+      - kibana
+      - wiki
+    user: "0:44269"
+  dnsmasq:
+    container_name: dnsmasq
+    image: cyberhackfr/dnsmasq:0.0.1
+    build: dnsmasq/.
+    ports:
+      - 53:5353/tcp
+      - 53:5353/udp
+    volumes:
+      - varlib_cbox:/var/lib/cbox/
+    user: "dnsmasq:44269"
+  elastalert:
+    container_name: elastalert
+    image: cyberhackfr/elastalert:0.0.1
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    build: elastalert/.
+    restart: always
+    volumes:
+      - varlib_elastalert_rules:/opt/elastalert/rules
+      - /var/lib/cbox/elastalert_smtp.yaml:/opt/elastalert/smtp_auth_file.yaml
+      - /etc/ssl/certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt
+    expose:
+      - 3030
+      - 3333
+    user: "0:44269"
+  core4s:
+    container_name: core4s
+    build: core4s/.
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /data/suricata/eve.json:/core4s/workfolder/suricata/eve.json
+      - /var/lib/cbox:/core4s/workfolder/var/lib/cbox
+      - varlib_logstash:/core4s/workfolder/var/lib/logstash
+      - varlib_cbox:/core4s/workfolder/wazuh_files
+      - /etc/cbox/:/core4s/config/secrets:ro
+    image: cyberhackfr/core4s:0.0.1
+  wiki:
+    container_name: wiki
+    image: cyberhackfr/wiki:0.0.1
+    build: wiki/.
+    restart: always
+    volumes:
+      - varlib_docs:/wiki/
+    expose:
+      - 80
+    user: "0:44269"
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.20.08.0/24
+volumes:
+  # to persist data beyond container's life
+  spiderfoot_data:
+  gvm-data:
+    external: true
+  static_volume:
+  data:
+    external: true
+  varlib_suricata:
+    external: true
+  varlib_postgresql:
+    external: true
+  varlib_cbox:
+    external: true
+  varlib_logstash:
+    external: true
+  varlib_docs:
+    external: true
+  varlib_elastalert_rules:
+    external: true
+  etccbox_logstash:
+    external: true

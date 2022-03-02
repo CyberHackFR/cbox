@@ -1,0 +1,21 @@
+[Unit]
+Description=cbox
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+RestartSec=5
+TimeoutSec=infinity
+# Pass environmentfile to service
+EnvironmentFile=/etc/environment
+EnvironmentFile=/etc/cbox/modules.conf
+
+# Compose CBox up
+ExecStart=/usr/bin/cbox/cbox_service.sh up
+
+# Compose CBox down
+ExecStop=/usr/bin/cbox/cbox_service.sh down
+
+[Install]
+WantedBy=multi-user.target

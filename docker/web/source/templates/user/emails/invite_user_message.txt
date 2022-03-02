@@ -1,0 +1,12 @@
+{% extends 'user/emails/base_message.html' %}
+
+{% block message %}
+Un compte CBox a été créé pour vous.
+
+Verwenden Sie zum Login bitte:
+E-Mail: {{ user.email }}
+Mot de passe: {{ user_pass }}
+
+Veuillez noter que le mot de passe est un mot de passe généré automatiquement. Vous devriez changer dès que possible.
+Changement est possible ici: {{ url_for('user.change_password',_external=True) }}
+{% endblock %}

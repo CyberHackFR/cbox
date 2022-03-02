@@ -1,0 +1,20 @@
+{% extends 'user/emails/base_message.html' %}
+{% block message %}
+Un compte CBox a été créé pour vous.
+<br>
+Utiliser pour <a href="{{ url_for('user.login', _external=True) }}">connexion</a>: <br>
+<table>
+  <tr>
+    <td><b>E-Mail:</b></td>
+    <td>{{ user.email }}</td>
+  </tr>
+  <tr>
+    <td><b>Mot de passe:</b></td>
+    <td> {{ user_pass }}</td>
+  </tr>
+</table>
+<br>
+
+Veuillez noter que le mot de passe est un mot de passe généré automatiquement. Vous devriez changer dès que possible.
+Changement est possible ici: <a href="{{ url_for('user.change_password', _external=True) }}">CBox: Changer le mot de passe</a>
+{% endblock %}

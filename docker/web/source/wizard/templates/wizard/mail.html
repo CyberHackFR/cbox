@@ -1,0 +1,262 @@
+{% extends "wizard/base.html" %}
+{% block content %}
+    <div class="one column">
+        <div class="ui one column grid segments">
+            <div class="ui segment row">
+                <div class="column">
+                    <div class="ui success message">
+                        <div class="header">
+                            Configuration SMTP
+                        </div>
+                        <p>
+                            Par défaut, CBox utilise le serveur SMTP Microsoft Office 365 via une communication SMTPS cryptée.<br>
+                            Si vous en préférez un autre, tel qu'un serveur SMTP interne, configurez l'accès ici.
+                        </p>
+                        <p>
+                            Vous avez également la possibilité de stocker ici un certificat de votre autorité de certification interne.<br>
+                            Sinon, un certificat auto-signé par CBox est utilisé pour la communication HTTPS.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="ui segment row">
+                <div class="column">
+                    <form id="formSMTP" method="get" class="ui form" enctype="multipart/form-data">
+                        <h3 class="ui header">Configuration-SMTP</h3>
+                        <h5 class="ui header">Expéditeur</h5>
+                        <div class="field">
+                            <div class="ui left icon input">
+                                <input required type="email" id="senderMail" name="senderMail" placeholder="Adresse e-mail de l'expéditeur">
+                                <i class="at icon"></i>
+                            </div>
+                        </div>
+                        <h5 class="ui header">Hôte SMTP</h5>
+                        <div class="fields">
+                            <div class="eight wide field">
+                                <div class="ui left icon input">
+                                    <input required type="text" id="smtpHost" name="host" placeholder="Hôte-SMTP">
+                                    <i class="server icon"></i>
+                                </div>
+                            </div>
+                            <div class="three wide field">
+                                <div class="ui left icon input">
+                                    <input required type="number" id="smtpPort" name="port" placeholder="SMTP-Port">
+                                    <i class="plug icon"></i>
+                                </div>
+                                <small class="helper">Généralement 465, 587 ou 25.</small>
+                            </div>
+                            <div class="five wide field">
+                                <div class="ui toggle checkbox">
+                                    <input type="checkbox" id="smtpTLS" name="tls">
+                                    <label>Secure (TLS)</label>
+                                </div>
+                                <br><br>
+                                <small class="helper">Doit être activé pour le port 465, sinon il devrait être désactivé (587, 25).</small>
+                            </div>
+                        </div>
+                        <h5 class="ui header">Certificat TLS (facultatif)</h5>
+                        <div class="fields">
+                            <div class="sixteen wide field">
+                                <div class="ui action input cert">
+                                    <input id="smtp-cert-text" type="text" placeholder="TLS-Zertifikat.crt" readonly>
+                                    <input id="smtp-cert-file" accept=".crt,.pem,.cer" type="file" name="cert">
+                                    <div class="ui icon button">
+                                        <i class="attach icon"></i>
+                                    </div>
+                                </div>
+                                <br>
+                                <small class="helper">Si le serveur de messagerie utilise un certificat auto-signé, téléchargez-le ici.</small>
+                            </div>
+                        </div>
+                        <h5 class="ui header">Authentification</h5>
+                        <div class="fields">
+                            <div class="eight wide field">
+                                <div class="ui left icon input">
+                                    <input required type="text" id="smtpUsername" name="username" placeholder="Nom d'utilisateur SMTP">
+                                    <i class="user icon"></i>
+                                </div>
+                            </div>
+                            <div class="eight wide field">
+                                <div class="ui left icon input">
+                                    <input required type="password" id="smtpPassword" name="password" placeholder="Mot de passe SMTP">
+                                    <i class="key icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui green button" type="submit">Appliquer</button> <br />
+                        <small class="helper">Afin d'appliquer les modifications, CBox redémarrera.</small>
+                    </form>
+                </div>
+            </div>
+            <div class="ui segment row">
+                <div class="column">
+                    <form id="formHTTPS" method="POST" class="ui form" enctype="multipart/form-data">
+                        <h3 class="ui header">Configuration HTTPS</h3>
+                        <div class="field">
+                            <div class="ui action input cert">
+                                <input id="https-cert-text" type="text" placeholder="Certificat-HTTPS.pem" readonly>
+                                <input id="https-cert-file" type="file" name="files[]" accept=".pem" autocomplete="off" required>
+                                <div class="ui icon button">
+                                    <i class="attach icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui action input cert">
+                                <input id="https-key-text" type="text" placeholder="PrivaterRSA-Key.pem" readonly>
+                                <input id="https-key-file" type="file" accept=".pem" name="files[]" autocomplete="off" required>
+                                <div class="ui icon button">
+                                    <i class="attach icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="ui green button" type="submit">Appliquer</button><br/>
+                        <small class="helper">Afin d'appliquer les modifications, CBox redémarrera.</small>
+                    </form>
+                </div>
+            </div>
+            <div class="ui segment centered row">
+                <a href="{{ url_for('wizard.verify') }}" class="ui large foursgrey-bg button">Continuer</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script>
+    const waitForWeb = async () =>  {
+      var done = false;
+      while (!done) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        fetch('//{{ request.host }}/api/_health')
+        .then(resp => {
+          if(resp.ok) {
+            done = true;
+          }
+        });
+      }
+    }
+    $("#https-cert-text, .ui.action.input.cert>.button").click(function() {
+        $(this).parent().find("#https-cert-file").click();
+    });
+    $('#https-cert-file', '.ui.action.input.cert')
+    .on('change', function(e) {
+        var name = e.target.files[0].name;
+        $('#https-cert-text', $(e.target).parent()).val(name);
+    });
+    $("#https-key-text, .ui.action.input.cert>.button").click(function() {
+        $(this).parent().find("#https-key-file").click();
+    });
+    $('#https-key-file', '.ui.action.input.cert')
+    .on('change', function(e) {
+        var name = e.target.files[0].name;
+        $('#https-key-text', $(e.target).parent()).val(name);
+    });
+    $('#formHTTPS').on('submit', async (e) => {
+        e.preventDefault();
+        var form = document.getElementById('formHTTPS');
+        var pemData = new FormData()
+        pemData.append('files[]', $('#https-cert-file')[0].files[0]);
+        pemData.append('files[]', $('#https-key-file')[0].files[0]);
+        const response = await fetch('//{{ request.host }}/api/config/cert', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+                body: pemData
+        });
+        var msg =  document.createElement('div');
+        msg.classList = "ui visible message"
+        if(response.ok){
+            msg.classList.add("success");
+            msg.innerHTML = '<div class="header">Configuration HTTPS enregistrée avec succès.</div><p>CBox va maintenant redémarrer avec la configuration modifiée. S\'il vous plaît soyez patient. La page sera rechargée automatiquement. Pour les certificats auto-signés, il peut être nécessaire de recharger manuellement l\'onglet. </p>'
+            $('#formHTTPS').find('button').prop('disabled', true).html('<div class="ui active centered inline loader"></div>');
+            $('button').prop('disabled', true);
+            setTimeout(async () => {
+                await waitForWeb();
+                // Reload without parameters
+                window.location = window.location.pathname;
+                var msg =  document.createElement('div');
+                msg.innerHTML = '<div class="header">Neustart abgeschlossen.</div>';
+                msg.classList = "ui visible message success";
+                form.appendChild(msg);
+            }, 15000);
+        } else {
+            msg.classList.add("error");
+            msg.innerHTML = 'La configuration HTTPS n\'a pas pu être enregistrée.';
+            response.json().then(j => console.log(response.status + " " + j['message']));
+        }
+        form.insertBefore(msg, form.lastElementChild);
+    });
+  </script>
+<script type="text/javascript">
+    $("#smtp-cert-text, .ui.action.input.cert>.button").click(function() {
+        $(this).parent().find("#smtp-cert-file").click();
+    });
+    $('#smtp-cert-file', '.ui.action.input.cert')
+    .on('change', function(e) {
+        var name = e.target.files[0].name;
+        $('#smtp-cert-text', $(e.target).parent()).val(name);
+    });
+    window.onload = function(){
+        fetch('//{{ request.host }}/api/config/smtp')
+        .then((resp) => resp.json())
+        .then((jso) => {
+            document.getElementById('smtpHost').value = jso.SMTP_HOST;
+            document.getElementById('smtpPort').value = jso.SMTP_PORT;
+            var checkTLS = $('#smtpTLS').parents()[0];
+            jso.SMTP_USE_TLS ? $(checkTLS).checkbox('check') : $(checkTLS).checkbox('uncheck');
+            document.getElementById('senderMail').value = jso.SMTP_SENDER_MAIL;
+            document.getElementById('smtpUsername').value = jso.SMTP_USERNAME;
+        });
+    };
+
+    $('#formSMTP').on('submit', async (e) => {
+        e.preventDefault();
+        var form = document.getElementById('formSMTP');
+        var formData = new FormData(form);
+        formData.delete('cert');
+        var certData = new FormData()
+        if($('#smtp-cert-file')[0].files[0]) {
+            certData.append('cert', $('#smtp-cert-file')[0].files[0])
+                    var responseCert = await fetch('//{{ request.host }}/api/config/smtp/cert', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                        },
+                            body: certData
+                    });
+        }
+        var jsonForm = JSON.stringify(Object.fromEntries(formData));
+        let response = await fetch('//{{ request.host }}/api/config/smtp', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: jsonForm
+        });
+        var msg =  document.createElement('div');
+        msg.classList = "ui visible message"
+        if(response.ok){
+            msg.classList.add("success");
+            msg.innerHTML = '<div class="header">Configuration SMTP enregistrée avec succès.</div><p>CBox va maintenant redémarrer avec la configuration modifiée. S\'il vous plaît soyez patient. La page sera rechargée automatiquement.</p>'
+            $('#formSMTP').find('button').prop('disabled', true).html('<div class="ui active centered inline loader"></div>');
+            $('button').prop('disabled', true);
+        } else {
+            msg.classList.add("error");
+            msg.innerHTML = 'La configuration SMTP n\'a pas pu être enregistrée.';
+        }
+        form.insertBefore(msg, form.lastElementChild);
+        if(response.ok){
+            setTimeout(async () => {
+            await waitForWeb();
+            // Reload without parameters
+            window.location = window.location.pathname;
+        }, 15000)};
+    });
+</script>
+<script type="text/javascript">
+$('.step.active').removeClass('active');
+$('#step-smtp').addClass('active');
+</script>
+{% endblock %}

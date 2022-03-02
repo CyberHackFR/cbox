@@ -1,0 +1,10 @@
+{% if user.first_name and user.last_name -%}
+Cher {{user.first_name}} {{user.last_name}},
+{% else -%}
+Bonjour,
+{% endif %}
+{% block message %}
+{% endblock %}
+
+Cordialement,
+CyberHack

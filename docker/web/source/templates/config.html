@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="ui main text container">
+    {# One-time system messages called Flash messages #}
+    {% block flash_messages %}
+        {%- with messages = get_flashed_messages(with_categories=true) -%}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="ui message {{category}}">{{ message|safe }}</div>
+                {% endfor %}
+            {% endif %}
+        {%- endwith %}
+    {% endblock %}
+    <h1 class="ui header">CBox - Configuration</h1>
+    <div class="ui inverted section divider"></div>
+    <div class="section">
+        <div class="ui top attached secondary pointing tabular menu">
+            <a data-tab="mail" class="item active">
+              Mail
+            </a>
+            {% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}
+            <a data-tab="wazuh" class="item">
+              Wazuh
+            </a>
+            {% endif %}
+            <a data-tab="https" class="item">
+              HTTPS
+            </a>
+          </div>
+          <div data-tab="mail" class="ui bottom attached active tab segment">
+            <!-- Mail -->
+            <form id="formSMTP" method="get" class="ui form" enctype="multipart/form-data">
+                <h4 class="ui dividing header">SMTP-Configuration</h4>
+                <div class="field">
+                  <label>Expéditeur</label>
+                    <div class="ui left icon input">
+                        <input required type="email" id="senderMail" name="senderMail" placeholder="Adresse e-mail de l'expéditeur">
+                        <i class="at icon"></i>
+                    </div>
+                </div>
+                <div class="field">
+                  <label>Connexion</label>
+                  <div class="fields">
+                    <div class="twelve wide field">
+                        <div class="ui left icon input">
+                            <input required type="text" id="smtpHost" name="host" placeholder="SMTP-Hôte">
+                            <i class="server icon"></i>
+                        </div>
+                    </div>
+                    <div class="four wide field">
+                        <div class="ui left icon input">
+                            <input required type="number" id="smtpPort" name="port" placeholder="SMTP-Port">
+                            <i class="plug icon"></i>
+                        </div>
+                        <small class="helper">Généralement 465, 587 ou 25.</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="fields">
+                  <div class="ui middle aligned grid field">
+                    <div class="row">
+                      <div class="nine wide column">
+                        <div class="ui toggle checkbox">
+                          <input type="checkbox" id="smtpTLS" name="tls">
+                          <label>Secure (TLS)</label>
+                        </div>
+                        <br>
+                        <small class="helper">Doit être activé pour le port 465, sinon il devrait être désactivé (587, 25).</small>
+                      </div>
+                      <div class="seven wide column">
+                        <div class="ui action input cert">
+                          <input id="cert-text" type="text" placeholder="Certificat-TLS.crt" readonly>
+                          <input id="cert-file" accept=".crt,.pem,.cer" type="file" name="cert">
+                          <div class="ui icon button">
+                            <i class="attach icon"></i>
+                          </div>
+                        </div>
+                        <br>
+                        <small class="helper">Si le serveur de messagerie doit utiliser un certificat auto-signé, téléchargez-le ici.</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Authentification</label>
+                  <div class="ui left icon input">
+                      <input required type="text" id="smtpUsername" name="username" placeholder="Nom d'utilisateur SMTP">
+                      <i class="user icon"></i>
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="ui left icon input">
+                    <input required type="password" id="smtpPassword" name="password" placeholder="Mot de passe SMTP">
+                    <i class="key icon"></i>
+                  </div>
+                </div>
+                <button class="ui green button" type="submit">Appliquer</button>
+                <small class="helper">Afin d'appliquer les modifications, CBox redémarrera.</small>
+              </form>
+          </div>
+          {% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}
+          <div id='wazuh-segment' data-tab="wazuh" class="ui bottom attached tab segment">
+            <!-- Wazuh-->
+            <h4 class="ui dividing header">Configuration Wazuh</h4>
+            <div class="ui form" id="formWazuh">
+                <div class="field">
+                    <label>Mot de passe pour les agents Wazuh</label>
+                    <div class="ui action input">
+                        <input type="password">
+                        <a id="copy-wazuh-pass" class="ui primary left labeled icon button">
+                            <i class="ui icon copy"></i>
+                            Copie
+                        </a>
+                        <a id="renew-wazuh-pass" class="ui secondary left labeled icon button">
+                            <i class="ui icon random"></i>
+                            Renouveler
+                        </a>
+                    </div>
+                </div>
+                <button disabled class="ui green button">Appliquer</button>
+            </div>
+          </div>
+          {% endif %}
+          <div data-tab="https" class="ui bottom attached tab segment">
+            <form id="formHTTPS" method="POST" class="ui form" enctype="multipart/form-data">
+                <h4 class="ui dividing header">Configuration-HTTPS</h4>
+                <div class="field">
+                    <div class="ui action input cert">
+                        <input id="https-cert-text" type="text" placeholder="Certificat-HTTPS.pem" readonly>
+                        <input id="https-cert-file" type="file" name="files[]" accept=".pem" autocomplete="off" required>
+                        <div class="ui icon button">
+                        <i class="attach icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui action input cert">
+                        <input id="https-key-text" type="text" placeholder="PrivaterRSA-Key.pem" readonly>
+                        <input id="https-key-file" type="file" accept=".pem" name="files[]" autocomplete="off" required>
+                        <div class="ui icon button">
+                        <i class="attach icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <button class="ui green button" type="submit">Appliquer</button>
+                <small class="helper">Afin d'appliquer les modifications, CBox redémarrera.</small>
+              </form>
+          </div>
+    </div>
+  <div class="ui vertical footer segment">
+    <div class="ui center aligned container">
+    <img src="/static/CBox_Logo.png" class="ui centered small image">
+  </div>
+  </div>
+  {% endblock %}
+{% block scripts %}
+  <script>
+    $("#https-cert-text, .ui.action.input.cert>.button").click(function() {
+        $(this).parent().find("#https-cert-file").click();
+    });
+    $('#https-cert-file', '.ui.action.input.cert')
+    .on('change', function(e) {
+        var name = e.target.files[0].name;
+        $('#https-cert-text', $(e.target).parent()).val(name);
+    });
+    $("#https-key-text, .ui.action.input.cert>.button").click(function() {
+        $(this).parent().find("#https-key-file").click();
+    });
+    $('#https-key-file', '.ui.action.input.cert')
+    .on('change', function(e) {
+        var name = e.target.files[0].name;
+        $('#https-key-text', $(e.target).parent()).val(name);
+    });
+    $('#formHTTPS').on('submit', async (e) => {
+        e.preventDefault();
+        var form = document.getElementById('formHTTPS');
+        var pemData = new FormData()
+        pemData.append('files[]', $('#https-cert-file')[0].files[0]);
+        pemData.append('files[]', $('#https-key-file')[0].files[0]);
+        const response = await fetch('//{{ request.host }}/api/config/cert', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+            },
+                body: pemData
+        });
+        var msg =  document.createElement('div');
+        msg.classList = "ui visible message"
+        if(response.ok){
+            msg.classList.add("success");
+            msg.innerHTML = '<div class="header">Configuration HTTPS enregistrée avec succès.</div><p> CBox va maintenant redémarrer avec la configuration modifiée. S\'il vous plaît soyez patient. La page sera rechargée automatiquement. Dans le cas des certificats auto-signés, il peut être nécessaire de recharger manuellement l\'onglet. </p>'
+            $('#formHTTPS').find('button').prop('disabled', true).html('<div class="ui active centered inline loader"></div>');
+            setTimeout(async () => {
+                await waitForWeb();
+                // Reload without parameters
+                window.location = window.location.pathname;
+                var msg =  document.createElement('div');
+                msg.innerHTML = '<div class="header">Neustart abgeschlossen.</div>';
+                msg.classList = "ui visible message success";
+                form.appendChild(msg);
+            }, 15000);
+        } else {
+            msg.classList.add("error");
+            msg.innerHTML = 'La configuration HTTPS n\'a pas pu être enregistrée.';
+            response.json().then(j => console.log(response.status + " " + j['message']));
+    }
+    form.insertBefore(msg, form.lastElementChild);
+    });
+  </script>
+  <script type="text/javascript">
+  $('div.item.active').removeClass('active');
+  $('#administration').addClass('active');
+
+  $('.menu .item').tab();
+
+  $("#cert-text, .ui.action.input.cert>.button").click(function() {
+    $(this).parent().find("#cert-file").click();
+  });
+
+  $('#cert-file', '.ui.action.input.cert')
+  .on('change', function(e) {
+    var name = e.target.files[0].name;
+    $('#cert-text', $(e.target).parent()).val(name);
+  });
+
+
+  window.onload = function(){
+    fetch('//{{ request.host }}/api/config/smtp')
+    .then((resp) => resp.json())
+    .then((jso) => {
+      document.getElementById('smtpHost').value = jso.SMTP_HOST;
+      document.getElementById('smtpPort').value = jso.SMTP_PORT;
+      var checkTLS = $('#smtpTLS').parents()[0];
+      jso.SMTP_USE_TLS ? $(checkTLS).checkbox('check') : $(checkTLS).checkbox('uncheck');
+      document.getElementById('senderMail').value = jso.SMTP_SENDER_MAIL;
+      document.getElementById('smtpUsername').value = jso.SMTP_USERNAME;
+    });
+  }
+  </script>
+  <script type="text/javascript">
+    const waitForWeb = async () =>  {
+      var done = false;
+      while (!done) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        fetch('//{{ request.host }}/api/_health')
+        .then(resp => {
+          if(resp.ok) {
+            done = true;
+          }
+        });
+      }
+    }
+    $('#formSMTP').on('submit', async (e) => {
+    e.preventDefault();
+    var form = document.getElementById('formSMTP');
+    var formData = new FormData(form);
+    formData.delete('cert');
+    var certData = new FormData()
+    certData.append('cert', $('#cert-file')[0].files[0])
+    var responseCert = await fetch('//{{ request.host }}/api/config/smtp/cert', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+      },
+        body: certData
+    });
+    var jsonForm = JSON.stringify(Object.fromEntries(formData));
+    let response = await fetch('//{{ request.host }}/api/config/smtp', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: jsonForm
+    });
+    var msg =  document.createElement('div');
+    msg.classList = "ui visible message"
+    if(response.ok){
+        msg.classList.add("success");
+        msg.innerHTML = '<div class="header">Configuration SMTP enregistrée avec succès.</div><p>CBox va maintenant redémarrer avec la configuration modifiée. S\'il vous plaît soyez patient. La page sera rechargée automatiquement.</p>'
+        $('#formSMTP').find('button').prop('disabled', true).html('<div class="ui active centered inline loader"></div>');
+    } else {
+        msg.classList.add("error");
+        msg.innerHTML = 'La configuration SMTP n\'a pas pu être enregistrée.';
+    }
+    form.insertBefore(msg, form.lastElementChild);
+    if(response.ok){
+      setTimeout(async () => {
+        await waitForWeb();
+        // Reload without parameters
+        window.location = window.location.pathname;
+      }, 15000);
+    }
+
+    });
+  </script>
+{% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}
+  <script>
+    // Scripts for Wazuh Config
+    var wazuhSegment = document.getElementById('wazuh-segment');
+    var inPass = $('#formWazuh input:password');
+    inPass.on('keyup', e => {
+        $('#formWazuh > .ui.green.button').prop("disabled", false);
+    });
+    document.getElementById('copy-wazuh-pass').addEventListener('click', async (e) => {
+        e.preventDefault();
+        var temp = $("<input>");
+        $("body").append(temp);
+        temp.val(inPass.val()).select();
+        document.execCommand("copy");
+        temp.remove();
+        alert('Mot de passe de l\'agent Wazuh copié dans le presse-papiers.');
+    });
+    document.getElementById('renew-wazuh-pass').addEventListener('click', async (e) => {
+        e.preventDefault();
+        fetch('/api/config/wazuh', {
+            method: 'POST'
+        }).then(r => r.json())
+        .then(d => {
+            inPass.val(d.password);
+            var temp = $("<input>");
+            $("body").append(temp);
+            temp.val(d.password).select();
+            document.execCommand("copy");
+            temp.remove();
+            var oldNodes = wazuhSegment.querySelectorAll('.inverted.segment');
+            oldNodes.forEach(node => wazuhSegment.removeChild(node));
+            var successNode = document.createElement('div');
+            ['ui', 'inverted', 'green', 'segment']
+                .forEach(cl => successNode.classList.add(cl));
+            successNode.innerHTML = '<p><i class="ui icon check"></i> Le mot de passe des agents Wazuh a été mis à jour avec succès.</p>';
+            wazuhSegment.insertBefore(successNode, wazuhSegment.getElementsByTagName('h4')[0].nextSibling);
+            alert('Nouveau mot de passe d\'agent Wazuh généré et copié dans le presse-papiers.');
+        });
+    });
+    fetch('/api/config/wazuh')
+        .then(r => r.json())
+        .then(d => {
+            inPass.val(d.password);
+        });
+    $('#formWazuh > .ui.green.button').on('click', async (e) => {
+        e.preventDefault();
+        if(!inPass.val().length > 0)
+        {
+            alert("Le mot de passe des agents Wazuh ne peut pas être vide.")
+        } else {
+            fetch('/api/config/wazuh', {
+                method: "PUT",
+                body: JSON.stringify({password: inPass.val()}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(r => r.json())
+                .then(d => {
+                    var oldNodes = wazuhSegment.querySelectorAll('.inverted.segment');
+                    oldNodes.forEach(node => wazuhSegment.removeChild(node));
+                    var successNode = document.createElement('div');
+                    ['ui', 'inverted', 'green', 'segment']
+                        .forEach(cl => successNode.classList.add(cl));
+                        successNode.innerHTML = '<p><i class="ui icon check"></i> Le mot de passe des agents Wazuh a été mis à jour avec succès.</p>'
+                    wazuhSegment.insertBefore(successNode, wazuhSegment.getElementsByTagName('h4')[0].nextSibling)
+                    inPass.val(d.password);
+            });
+        }
+    });
+  </script>
+{% endif %}
+{% endblock %}

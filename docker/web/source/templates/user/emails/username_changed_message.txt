@@ -1,0 +1,10 @@
+{% extends 'user/emails/base_message.txt' %}
+
+{% block message %}
+Votre nom d'utilisateur a été modifié.
+
+Si vous n'avez pas initié le changement de votre nom d'utilisateur, (avec votre adresse e-mail) et modifiez votre mot de passe.
+    {{ url_for('user.login', _external=True) }}
+{% endblock %}
+
+
