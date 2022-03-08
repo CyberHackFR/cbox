@@ -1,5 +1,0 @@
-MAILTO=box@cyberhack.fr
-# m h  dom mon dow   command
-
-# Check Disk Space Daily
-@daily  $BASEDIR/$GITDIR/scripts/Automation/diskspacealert.sh
