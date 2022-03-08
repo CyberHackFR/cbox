@@ -207,7 +207,7 @@ def faq_mail():
         client = request.values.get('company', 'CLIENT Non défini')
 
     # Build a subject or set default one of none given
-    subject = "[{}] {}".format(client, request.values.get('subject') or 'Formulaire de contact FAQ CyberhackBox')
+    subject = "[{}] {}".format(client, request.values.get('subject') or 'Formulaire de contact FAQ CyberBox')
 
     # Build the body
     body = """

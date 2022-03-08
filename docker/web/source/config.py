@@ -18,7 +18,7 @@ class Config():
     REMEMBER_COOKIE_HTTPONLY = True
 
     # representation name
-    USER_APP_NAME = "CyberHackBox"
+    USER_APP_NAME = "CyberBox"
     USER_ENABLE_CONFIRM_EMAIL = True
     USER_ALLOW_LOGIN_WITHOUT_CONFIRMED_EMAIL = False
     # Allow logins by username
@@ -92,7 +92,7 @@ try:
     if os.getenv('CBox_WAZUH') == "true":
         Dashboards.append(Dashboard(name='wazuh', url='/kibana/app/wazuh#?embed=true', parent_id='#siem', role='SIEM'))
 except Exception:
-    # BOX4s_WAZUH environment variable not defined. Ignored here.
+    # CBox_WAZUH environment variable not defined. Ignored here.
     pass
 
 RoleURLs = [

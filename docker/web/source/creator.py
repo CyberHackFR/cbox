@@ -26,7 +26,7 @@ class CreatorUserMan(UserManager):
     def unauthenticated_view(self):
         """Prepare a Flash message and redirect to USER_UNAUTHORIZED_ENDPOINT."""
         # Prepare Flash message
-        flash("You do not have permission to access the CyberHackBox.", 'error')
+        flash("You do not have permission to access the CyberBox.", 'error')
         url = request.url
         # Redirect to USER_UNAUTHENTICATED_ENDPOINT
         safe_next_url = self.make_safe_url(url)

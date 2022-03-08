@@ -14,6 +14,6 @@ migrate.init_app(app, db)
 userman = CreatorUserMan(app, db, User)
 app.register_blueprint(bpWizard, url_prefix="/wizard")
 
-from . import helpers # noqa
+from . import helpers  # noqa
 from . import routes  # noqa
 # disable pep8 checks for this one
