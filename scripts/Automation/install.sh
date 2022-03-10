@@ -740,4 +740,4 @@ echo "Postgres: $POSTGRES_USER:$POSTGRES_PASSWORD" 1>&3
 echo "IP2Location API Key: $IP2TOKEN" 1>&3
 echo "OpenVAS Password: $OPENVAS_PASS" 1>&3
 
-echo "BOX4security.. [ READY ]" | /usr/games/lolcat 1>&3
+echo "CyberBox.. [ READY ]" | /usr/games/lolcat 1>&3
