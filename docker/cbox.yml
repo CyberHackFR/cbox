@@ -69,7 +69,7 @@ services:
     volumes:
       - varlib_suricata:/var/lib/suricata/rules
       - data:/data
-      - varlib_cbox:/var/lib/cbox/
+      - varlib_cbox:/var/lib/cbox
     user: "0:44269"
   metricbeat:
     build: metricbeat/.
@@ -107,9 +107,9 @@ services:
       - 5046:5046
     image: cyberhackfr/logstash:0.0.1
     volumes:
-      - varlib_logstash:/var/lib/logstash/
-      - etccbox_logstash:/etc/logstash/conf.d/general/
-      - varlib_cbox:/var/lib/cbox/
+      - varlib_logstash:/var/lib/logstash
+      - etccbox_logstash:/etc/logstash/conf.d/general
+      - varlib_cbox:/var/lib/cbox
     user: "0:44269"
   filebeat:
     build: filebeat/.
@@ -119,7 +119,7 @@ services:
             condition: service_healthy
     image: cyberhackfr/filebeat:0.0.1
     volumes:
-      - varlib_logstash:/var/lib/logstash/
+      - varlib_logstash:/var/lib/logstash
       - data:/data
     user: root:44269
   web:
@@ -134,9 +134,9 @@ services:
      gunicorn --bind 0.0.0.0:5000 main:app"
     volumes:
        - static_volume:/home/app/web/source/static
-       - /var/log/cbox/:/var/log/cbox/
-       - varlib_cbox/:/var/lib/cbox/
-       - varlib_elastalert_rules:/var/lib/elastalert/rules/
+       - /var/log/cbox:/var/log/cbox
+       - varlib_cbox:/var/lib/cbox
+       - varlib_elastalert_rules:/var/lib/elastalert/rules
        - /etc/cbox/smtp.conf:/etc/cbox/smtp.conf
        - /etc/cbox/modules.conf:/etc/cbox/modules.conf
        - /etc/msmtprc:/etc/cbox/msmtprc
@@ -145,8 +145,8 @@ services:
        - /etc/environment:/etc/environment
        - /etc/cbox/logstash/CBox-special.conf:/etc/cbox/logstash/CBox-special.conf
        - /etc/default/logstash:/etc/default/logstash
-       - /etc/netplan:/etc/_netplan/
-       - /etc/cbox/certs/:/etc/cbox/certs/
+       - /etc/netplan:/etc/_netplan
+       - /etc/cbox/certs:/etc/cbox/certs
        - /var/run/docker.sock:/var/run/docker.sock
     expose:
       - 5000
@@ -172,7 +172,7 @@ services:
     image: cyberhackfr/db:0.0.1
     build: db/.
     volumes:
-      - varlib_postgresql/:/var/lib/postgresql/data
+      - varlib_postgresql:/var/lib/postgresql/data
     ports:
       - "127.0.0.1:5432:5432"
     env_file:
@@ -206,7 +206,7 @@ services:
       - 53:5353/tcp
       - 53:5353/udp
     volumes:
-      - varlib_cbox:/var/lib/cbox/
+      - varlib_cbox:/var/lib/cbox
     user: "dnsmasq:44269"
   elastalert:
     container_name: elastalert
@@ -235,7 +235,7 @@ services:
       - /var/lib/cbox:/core4s/workfolder/var/lib/cbox
       - varlib_logstash:/core4s/workfolder/var/lib/logstash
       - varlib_cbox:/core4s/workfolder/wazuh_files
-      - /etc/cbox/:/core4s/config/secrets:ro
+      - /etc/cbox:/core4s/config/secrets:ro
     image: cyberhackfr/core4s:0.0.1
   wiki:
     container_name: wiki
@@ -243,7 +243,7 @@ services:
     build: wiki/.
     restart: always
     volumes:
-      - varlib_docs:/wiki/
+      - varlib_docs:/wiki
     expose:
       - 80
     user: "0:44269"
