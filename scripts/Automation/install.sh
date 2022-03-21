@@ -608,10 +608,10 @@ echo " [ OK ] " 1>&3
 # cd /tmp/
 # curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBIN" -o IP2LOCATION-LITE-DB5.BIN.zip
 # curl -sL "https://www.ip2location.com/download/?token=$IP2TOKEN&file=DB5LITEBINIPV6" -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
-sudo unzip -o IP2LOCATION-LITE-DB5.BIN.zip
-sudo mv IP2LOCATION-LITE-DB5.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.BIN
-sudo unzip -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
-sudo mv IP2LOCATION-LITE-DB5.IPV6.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.IPV6.BIN
+#sudo unzip -o IP2LOCATION-LITE-DB5.BIN.zip
+sudo cp /home/adminsec/IP2LOCATION-LITE-DB5.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.BIN
+#sudo unzip -o IP2LOCATION-LITE-DB5.IPV6.BIN.zip
+sudo cp /home/adminsec/IP2LOCATION-LITE-DB5.IPV6.BIN /var/lib/cbox/IP2LOCATION-LITE-DB5.IPV6.BIN
 echo " [ OK ] " 1>&3
 
 
@@ -662,7 +662,7 @@ echo " [ OK ] " 1>&3
 
 echo -n "Installing new cronjobs.. " 1>&3
 cd $SCRIPTDIR/../../config/crontab
-su - amadmin -c "crontab $SCRIPTDIR/../../config/crontab/cboxadmin.crontab"
+su - cboxadmin -c "crontab $SCRIPTDIR/../../config/crontab/cboxadmin.crontab"
 echo " [ OK ] " 1>&3
 
 sudo systemctl daemon-reload
