@@ -14,5 +14,5 @@ services:
         volumes:
         - /var/lib/cbox/wazuh-authd.pass:/wazuh-config-mount/etc/authd.pass
         env_file:
-        - ../../config/secrets/wazuh.conf
+        - /opt/cbox/config/secrets/wazuh.conf
         - /etc/cbox/modules.conf
