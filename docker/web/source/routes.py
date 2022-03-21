@@ -283,7 +283,7 @@ def wiki_index():
     return render_template('docs.html', docs_url="/wiki/gollum/overview")
 
 
-@app.route('/intelligence', methods=['GET'])
+@app.route('/spiderfoot', methods=['GET'])
 @login_required
 @roles_required(['Super Admin', 'SIEM'])
 def spiderfoot():

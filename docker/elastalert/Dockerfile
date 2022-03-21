@@ -1,4 +1,4 @@
-FROM bitsensor/elastalert:3.0.0-beta.0
+FROM bitsensor/elastalert:3.0.0-beta.1
 
 USER root
 ADD etc/ /root/etc/

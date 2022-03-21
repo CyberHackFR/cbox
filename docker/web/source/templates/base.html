@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de" dir="ltr">
+<html lang="fr" dir="ltr">
   <head>
     <meta charset="utf-8">
     {% block head %}
@@ -33,7 +33,7 @@
                  <a class="item" href="/siem-proto">Protocoles & Services</a>
                  <a class="item" href="/siem-social-media">Média Social</a>
                  {% if ('false' | custom_getenv('CBox_WAZUH')) == 'true' %}<a class="item" href="/wazuh">Hôtes</a>{% endif %}
-                 <a class="item" href="/intelligence">Intelligence</a>
+                 <a class="item" href="/spiderfoot">Intelligence</a>
                  {% if current_user.has_role('Config') %}<a class="item" href="/siem-discover">Découvrir</a>{% endif %}
                </div>
              </div>
@@ -60,6 +60,18 @@
                  <a class="item" href="/network-overview">Aperçu</a>
       	         <a class="item" href="/network-streams">Flux de données</a>
       	         <a class="item" href="/network-asn">GeoIP & ASN</a>
+      	       </div>
+             </div>
+          </div>
+        {% endif %}
+        {% if current_user.has_role('Sensibilisation') or current_user.has_role('Dashboards-Master') %}
+          <div class="item" id="net">
+      	     <div class="ui dropdown pointing link item">
+               <i class="sitemap icon"></i> Sensibilisation <i class="dropdown icon"></i>
+               <div class="menu">
+                 <a class="item" href="/#">Hameçonnage</a>
+      	         <a class="item" href="/#">Formation</a>
+      	         <a class="item" href="/#"></a>
       	       </div>
              </div>
           </div>
