@@ -1,4 +1,4 @@
-"""BOX4security table
+"""CBox table
 
 Revision ID: a59fffda1b70
 Revises: ea1ce32ce8fd
@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     """Upgrade to migration."""
     op.create_table(
-        'box4security',
+        'CBox',
         sa.Column('id', sa.Integer(), nullable=False),
         sa.Column('name', sa.String(length=100), nullable=True),
         sa.Column('ip_address', sa.String(length=24), nullable=True),
@@ -38,9 +38,9 @@ def upgrade():
     op.create_table(
         'box4security_systemtype',
         sa.Column('id', sa.Integer(), nullable=False),
-        sa.Column('box4security', sa.Integer(), nullable=True),
+        sa.Column('CBox', sa.Integer(), nullable=True),
         sa.Column('systemtype_id', sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(['box4security'], ['box4security.id'], ondelete='CASCADE'),
+        sa.ForeignKeyConstraint(['CBox'], ['CBox.id'], ondelete='CASCADE'),
         sa.ForeignKeyConstraint(['systemtype_id'], ['systemtype.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('id')
     )
@@ -57,4 +57,4 @@ def downgrade():
     op.create_foreign_key('system_dns_id_fkey', 'system', 'system', ['dns_id'], ['id'])
     op.create_foreign_key('system_gateway_id_fkey', 'system', 'system', ['gateway_id'], ['id'])
     op.drop_table('box4security_systemtype')
-    op.drop_table('box4security')
+    op.drop_table('CBox')

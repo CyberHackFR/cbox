@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms_alchemy import ModelForm
-from .models import Network, NetworkType, System, SystemType, BOX4security
+from .models import Network, NetworkType, System, SystemType, CBox, BOX4security
 from wtforms import SelectMultipleField, SelectField
 
 
@@ -39,9 +39,9 @@ class SystemForm(ModelForm, FlaskForm):
 
 
 class BOX4sForm(ModelForm, FlaskForm):
-    """Form for BOX4s."""
+    """Form for CyberBox"""
     class Meta:
-        model = BOX4security
+        model = CBox
     dns_id = SelectField(
         'DNS-Server',
         coerce=int

@@ -1,4 +1,4 @@
-"""BOX4security model and relation to system
+"""CyberBox model and relation to system
 
 Revision ID: ea1ce32ce8fd
 Revises: c2bdbad3c958

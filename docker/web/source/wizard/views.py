@@ -1,5 +1,5 @@
 from flask import redirect, render_template, url_for, request, Blueprint
-from .models import System, Network, SystemType, NetworkType, BOX4security, ScanCategory
+from .models import System, Network, SystemType, NetworkType, CBox, ScanCategory
 from .forms import NetworkForm, SystemForm, BOX4sForm
 from .middleware import WizardMiddleware
 from source.extensions import db
@@ -53,12 +53,12 @@ def box4s():
     formBOX4s.gateway_id.choices = [(s.id, f"{s.name} ({s.ip_address})") for s in System.query.order_by('id').filter(System.types.any(name='Gateway'))]
     formBOX4s.gateway_id.choices += [(-1, "Autre..")]
     systemTypes = SystemType.query.filter(SystemType.name != 'CBox').order_by(SystemType.id.asc()).all()
-    BOX4s = BOX4security.query.order_by(BOX4security.id.asc()).first()
+    BOX4s = CBox.query.order_by(CBox.id.asc()).first()
     if request.method == 'POST':
         if formBOX4s.validate():
             if not BOX4s:
                 # BOX4s does not exist => create anew.
-                BOX4s = BOX4security()
+                BOX4s = CBox()
             formBOX4s.populate_obj(BOX4s)  # Copies matching attributes from form onto box4s
             BOX4s.name = "CBox"
             BOX4s.ids_enabled = False
@@ -107,7 +107,7 @@ def verify():
         return render_template('wizard/verify_progress.html')
     networks = Network.query.order_by(Network.id.asc()).all()
     systems = System.query.order_by(System.id.asc()).all()
-    BOX4s = BOX4security.query.order_by(BOX4security.id.asc()).first()
+    BOX4s = CBox.query.order_by(CBox.id.asc()).first()
     scan_categories = ScanCategory.query.order_by(ScanCategory.id.asc()).all()
     return render_template('wizard/verify.html', networks=networks, systems=systems, box4s=BOX4s, scan_categories=scan_categories)
 
@@ -117,7 +117,7 @@ def apply():
     # Step 0: Query Information.
     networks = Network.query.order_by(Network.id.asc()).all()
     systems = System.query.order_by(System.id.asc()).all()
-    BOX4s = BOX4security.query.order_by(BOX4security.id.asc()).first()
+    BOX4s = CBox.query.order_by(CBox.id.asc()).first()
 
     # Step 1: Set DNS in resolv.personal
     with open('/var/lib/cbox/resolv.personal', 'w') as fd_resolv:

@@ -24,7 +24,7 @@ class Network(db.Model):
     scan_weekday = db.Column(db.String(24))  # lower case
     scan_time = db.Column(db.Time())  # Start time for scan
     systems = db.relationship('System', backref='network')
-    boxes4security = db.relationship('BOX4security', backref='network')
+    boxes4security = db.relationship('CBox', backref='network')
 
     def __repr__(self):
         """Print Network in human readable form."""
@@ -101,21 +101,21 @@ class SystemSystemType(db.Model):
 
 
 class BOX4securitySystemType(db.Model):
-    """Association table for System Types and BOX4security."""
+    """Association table for System Types and CBox."""
     __tablename__ = 'box4security_systemtype'
     id = db.Column(db.Integer(), primary_key=True)
-    box4security = db.Column(db.Integer(), db.ForeignKey('box4security.id', ondelete='CASCADE'))
+    CBox = db.Column(db.Integer(), db.ForeignKey('CBox.id', ondelete='CASCADE'))
     systemtype_id = db.Column(db.Integer(), db.ForeignKey('systemtype.id', ondelete='CASCADE'))
 
 
-class BOX4security(db.Model):
-    """Extension of BOX4security model."""
-    __tablename__ = 'box4security'
+class CBox(db.Model):
+    """Extension of CBox model."""
+    __tablename__ = 'CBox'
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(100), unique=True)
-    ip_address = db.Column(db.String(24))  # BOX4security IP Address
+    ip_address = db.Column(db.String(24))  # CBox IP Address
     types = db.relationship('SystemType', secondary='box4security_systemtype')
-    location = db.Column(db.String(255))  # BOX4security Location
+    location = db.Column(db.String(255))  # CBox Location
     scan_enabled = db.Column(db.Boolean(), default=False)  # Scans active
     ids_enabled = db.Column(db.Boolean(), default=False)  # IDS enabled
     network_id = db.Column(db.Integer, db.ForeignKey('network.id'))
@@ -126,7 +126,7 @@ class BOX4security(db.Model):
     dhcp_enabled = db.Column(db.Boolean(), default=False)  # dhcp enabled
 
     def __repr__(self):
-        return f"BOX4s ({self.ip_address}) DNS:{self.dns.ip_address} Gateway:{self.gateway.ip_address}"
+        return f"CBox ({self.ip_address}) DNS:{self.dns.ip_address} Gateway:{self.gateway.ip_address}"
 
 
 class WizardState(db.Model):

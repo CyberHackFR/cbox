@@ -1,4 +1,4 @@
-"""BOX4s: DHCP col
+"""CyberBox: DHCP col
 
 Revision ID: d995a93c3a9c
 Revises: a59fffda1b70
