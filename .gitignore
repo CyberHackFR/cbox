@@ -4,3 +4,8 @@
 /docker/web/source/wazuh/*.msi
 .vscode/
 docker/elastalert/etc/elastalert/smtp_auth_file.yaml
+config/secrets/web.conf
+config/secrets/smtp.conf
+config/secrets/openvas.conf
+config/secrets/msmtprc
+config/secrets/db.conf
