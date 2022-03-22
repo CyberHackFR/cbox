@@ -56,8 +56,8 @@ export DEBIAN_FRONTEND=noninteractive
 
 # Get the actual dir of the installation script.
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-INSTALL_DIR="/opt/cbox/"
-CONFIG_DIR="/etc/cbox/"
+INSTALL_DIR="/opt/cbox"
+CONFIG_DIR="/etc/cbox"
 # TODO: Temp
 TAG=0.0.1
 # Forward fd3 to the console
@@ -177,7 +177,7 @@ fi
 
 # Disable systemd-resolved
 if service_exists systemd-resolved; then
-    sudo service systemd-resolved disable || :
+    sudo systemctl disable systemd-resolved || :
 fi
 echo "[ OK ]" 1>&3
 
@@ -649,8 +649,10 @@ banner "Starting CBox..."
 
 sudo systemctl start cbox
 
+#TODO fix path
 echo -n "Waiting for Elasticsearch to become available.. " 1>&3
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh elasticsearch
+#sudo $SCRIPTDIR/wait-for-healthy-container.sh elasticsearch
 echo " [ OK ] " 1>&3
 
 echo -n "Installing the scores index.. " 1>&3
