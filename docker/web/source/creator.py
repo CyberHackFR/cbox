@@ -18,7 +18,7 @@ class CreatorUserMan(UserManager):
         Returns True if sending mails works, else False.
         """
         try:
-            self.email_adapter.send_email_message("box@cyberhack.fr", "SMTP-TEST", "", "", "box@cyberhackf.r", "CyberHackBox")
+            self.email_adapter.send_email_message("box@cyberhack.fr", "SMTP-TEST", "", "", "box@cyberhack.fr", "CyberHackBox")
         except EmailError:
             return False
         return True
@@ -26,7 +26,7 @@ class CreatorUserMan(UserManager):
     def unauthenticated_view(self):
         """Prepare a Flash message and redirect to USER_UNAUTHORIZED_ENDPOINT."""
         # Prepare Flash message
-        flash("You do not have permission to access the CyberBox.", 'error')
+        flash("Vous n'êtes pas autorisé à accéder à CyberBox.", 'error')
         url = request.url
         # Redirect to USER_UNAUTHENTICATED_ENDPOINT
         safe_next_url = self.make_safe_url(url)

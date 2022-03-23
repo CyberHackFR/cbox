@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms_alchemy import ModelForm
-from .models import Network, NetworkType, System, SystemType, CBox, BOX4security
+from .models import Network, NetworkType, System, SystemType, CBox
 from wtforms import SelectMultipleField, SelectField
 
 

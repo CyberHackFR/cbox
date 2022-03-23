@@ -1,88 +1,129 @@
+FROM alpine:3.14
 #
-# Spiderfoot Dockerfile (Full - includes all CLI tools, etc.)
+# Get and install dependencies & packages
+RUN apk -U --no-cache add \
+            build-base \
+            curl \
+            git \
+	    jpeg-dev \
+	    libffi-dev \
+            libxml2 \
+            libxml2-dev \
+            libxslt \
+            libxslt-dev \
+	    musl \
+	    musl-dev \
+	    openjpeg-dev \
+            openssl \
+            openssl-dev \
+            python3 \
+            python3-dev \
+            py3-pip \
+            swig \
+	    tinyxml \
+	    tinyxml-dev \
+	    zlib-dev && \
 #
-# http://www.spiderfoot.net
+# Setup user
+    addgroup -g 2000 spiderfoot && \
+    adduser -S -s /bin/ash -u 2000 -D -g 2000 spiderfoot && \
 #
-# Written by: TheTechromancer
+# Install spiderfoot 
+    git clone --depth=1 -b v3.4 https://github.com/smicallef/spiderfoot /home/spiderfoot && \
+    cd /home/spiderfoot && \
+    pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir wheel && \ 
+    pip3 install --no-cache-dir -r requirements.txt && \ 
+    chown -R spiderfoot:spiderfoot /home/spiderfoot && \
+    sed -i "s#'root': '\/'#'root': '\/spiderfoot'#" /home/spiderfoot/sf.py && \
+    sed -i "s#'root', '\/'#'root', '\/spiderfoot'#" /home/spiderfoot/sf.py && \
 #
-
-FROM python:3
-
-# Install tools/dependencies from apt
-RUN apt-get -y update && apt-get -y install nmap
-
-# Install wafw00f
-RUN git clone https://github.com/EnableSecurity/wafw00f \
-    && cd wafw00f && python setup.py install
-
-# Compile other tools from source
-RUN mkdir /tools || true
-WORKDIR /tools
-
-# Install Golang tools
-RUN apt-get -y update && apt-get -y install golang
-ENV GOPATH="/go"
-ENV PATH="$GOPATH/bin:$PATH"
-RUN mkdir -p "$GOPATH/src" "$GOPATH/bin"
-
-# Install Ruby tools
-RUN apt-get -y update && apt-get -y install ruby ruby-dev bundler
-# WhatWeb
-RUN git clone https://github.com/urbanadventurer/WhatWeb \
-    && gem install rchardet mongo json && cd /tools/WhatWeb \
-    && bundle install && cd /tools
-
-RUN groupadd spiderfoot \
-    && useradd -m -g spiderfoot -d /home/spiderfoot -s /sbin/nologin \
-    -c "SpiderFoot User" spiderfoot
-
-# Place database and logs outside installation directory
-ENV SPIDERFOOT_DATA /var/lib/spiderfoot
-ENV SPIDERFOOT_LOGS /var/lib/spiderfoot/log
-ENV SPIDERFOOT_CACHE /var/lib/spiderfoot/cache
-
-RUN mkdir -p $SPIDERFOOT_DATA || true \
-    && mkdir -p $SPIDERFOOT_LOGS || true \
-    && mkdir -p $SPIDERFOOT_CACHE || true \
-    && chown spiderfoot:spiderfoot $SPIDERFOOT_DATA \
-    && chown spiderfoot:spiderfoot $SPIDERFOOT_LOGS \
-    && chown spiderfoot:spiderfoot $SPIDERFOOT_CACHE
-
+# Clean up
+    apk del --purge build-base \
+                    gcc \
+                    git \
+		    libffi-dev \
+                    libxml2-dev \
+                    libxslt-dev \
+		    musl-dev \
+                    openssl-dev \
+                    python3-dev \
+		    swig \
+		    tinyxml-dev && \
+    rm -rf /var/cache/apk/*
+#
+# Healthcheck
+#HEALTHCHECK --retries=10 CMD curl -s -XGET 'http://127.0.0.1:8080'
+HEALTHCHECK --retries=10 CMD curl -s -XGET 'http://127.0.0.1:8080/spiderfoot/'
+#
+# Set user, workdir and start spiderfoot
+USER spiderfoot:spiderfoot
 WORKDIR /home/spiderfoot
-COPY . .
+CMD ["/usr/bin/python3.9", "sf.py","-l", "0.0.0.0:8080"]
 
-ENV VIRTUAL_ENV=/opt/venv
-RUN mkdir -p "$VIRTUAL_ENV" || true
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-RUN python -m venv "$VIRTUAL_ENV"
 
-ARG REQUIREMENTS=requirements.txt
-COPY "$REQUIREMENTS" requirements.txt
-
-RUN chown -R spiderfoot:spiderfoot /tools
-RUN chown -R spiderfoot:spiderfoot "$VIRTUAL_ENV"
-RUN chown -R spiderfoot:spiderfoot "/home/spiderfoot"
-
-USER spiderfoot
-
-RUN pip install -U pip
-RUN pip install -r "$REQUIREMENTS"
-
-# Install Python tools
-RUN pip install dnstwist
-# CMSeeK
-WORKDIR /tools
-RUN git clone https://github.com/Tuhinshubhra/CMSeeK && cd CMSeeK \
-    && pip install -r requirements.txt && mkdir Results
-
-WORKDIR /home/spiderfoot
-
-#EXPOSE 5001
-
-# Run the application
-CMD python -c 'from spiderfoot import SpiderFootDb; \
-db = SpiderFootDb({"__database": "/var/lib/spiderfoot/spiderfoot.db"}); \
-db.configSet({ \
-    "sfp_tool_cmseek:cmseekpath": "/tools/CMSeeK/cmseek.py", \
-    "sfp_tool_whatweb:whatweb_path": "/tools/WhatWeb/whatweb" \
-})' || true && ./sf.py -l 0.0.0.0:8080
+# FROM alpine:3.14
+# # source: https://github.com/telekom-security/tpotce/blob/master/docker/spiderfoot/Dockerfile
+# # Get and install dependencies & packages
+# RUN sed -i 's/dl-cdn/dl-2/g' /etc/apk/repositories && \
+#     apk -U --no-cache add \
+#             build-base \
+#             curl \
+#             git \
+# 	    jpeg-dev \
+# 	    libffi-dev \
+#             libxml2 \
+#             libxml2-dev \
+#             libxslt \
+#             libxslt-dev \
+# 	    musl \
+# 	    musl-dev \
+# 	    openjpeg-dev \
+#             openssl \
+#             openssl-dev \
+#             python3 \
+#             python3-dev \
+# 	    py-cffi \
+# 	    py-pillow \
+#             py-future \
+#             py3-pip \
+#             swig \
+# 	    tinyxml \
+# 	    tinyxml-dev \
+# 	    zlib-dev && \
+# #
+# # Setup user
+#     addgroup -g 2000 spiderfoot && \
+#     adduser -S -s /bin/ash -u 2000 -D -g 2000 spiderfoot && \
+# #
+# # Install spiderfoot 
+#     git clone --depth=1 -b v3.1 https://github.com/smicallef/spiderfoot /home/spiderfoot && \
+#     cd /home/spiderfoot && \
+#     pip3 install --no-cache-dir wheel && \ 
+#     pip3 install --no-cache-dir -r requirements.txt && \ 
+#     chown -R spiderfoot:spiderfoot /home/spiderfoot && \
+#     sed -i "s#'__docroot': ''#'__docroot': '\/spiderfoot'#" /home/spiderfoot/sf.py && \
+#     sed -i 's#raise cherrypy.HTTPRedirect("\/")#raise cherrypy.HTTPRedirect("\/spiderfoot")#' /home/spiderfoot/sfwebui.py && \
+# #
+# # Clean up
+#     apk del --purge build-base \
+#                     gcc \
+#                     git \
+# 		    libffi-dev \
+#                     libxml2-dev \
+#                     libxslt-dev \
+# 		    musl-dev \
+#                     openssl-dev \
+#                     python3-dev \
+# 		    swig \
+# 		    tinyxml-dev && \
+#     rm -rf /var/cache/apk/*
+# #
+# # Healthcheck
+# #HEALTHCHECK --retries=10 CMD curl -s -XGET 'http://127.0.0.1:8080'
+# HEALTHCHECK --retries=10 CMD curl -s -XGET 'http://127.0.0.1:8080/spiderfoot/'
+# #
+# # Set user, workdir and start spiderfoot
+# USER spiderfoot:spiderfoot
+# WORKDIR /home/spiderfoot
+# CMD ["/usr/bin/python3.8", "sf.py","-l", "0.0.0.0:8080"]
