@@ -3,13 +3,17 @@ set -e
 
 # Initial information
 
-echo -e "  ___  ____  _____  _  _ 
- / __)(  _ \(  _  )( \/ )
-( (__  ) _ < )(_)(  )  ( 
- \___)(____/(_____)(_/\_)
+echo -e "_________        ___.               __________              
+         \_   ___ \___.__.\_ |__   __________\______   \ _______  ___
+         /    \  \<   |  | | __ \_/ __ \_  __ \    |  _//  _ \  \/  /
+         \     \___\___  | | \_\ \  ___/|  | \/    |   (  <_> >    < 
+          \______  / ____| |___  /\___  >__|  |______  /\____/__/\_ \
+                 \/\/          \/     \/             \/            \/
+
+
 
 Disclaimer:
-This script will install the CBox on this system.
+This script will install the CyberBox on this system.
 By running the script you confirm to know what you are doing:
 1. New packages will be installed.
 2. A new folder called '/data' will be created in your root directory.
@@ -240,7 +244,7 @@ echo "[ OK ]" 1>&3
 
 # Create the user $HOST_USER only if he does not exist
 # The used password is known to the whole dev-team
-echo -n "Creating CBox user on the host.. " 1>&3
+echo -n "Creating CyberBox user on the host.. " 1>&3
 id -u $HOST_USER &>/dev/null || sudo useradd -m -p $HOST_PASS -s /bin/bash $HOST_USER
 sudo usermod -aG sudo $HOST_USER
 grep -qxF "$HOST_USER ALL=(ALL) NOPASSWD: ALL" /etc/sudoers || echo "$HOST_USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -364,7 +368,7 @@ sudo chmod -R 777 /var/lib/cbox_suricata_rules/
 sudo docker volume create --driver local --opt type=none --opt device=/var/lib/cbox_suricata_rules/ --opt o=bind varlib_suricata
 echo " [ DONE ] " 1>&1
 
-# Setup CBox Settings volume
+# Setup CyberBox Settings volume
 echo -n "etccbox_logstash:" 1>&1
 sudo mkdir -p $CONFIG_DIR/logstash
 sudo cp -R $SCRIPTDIR/../../config/etc/logstash/* $CONFIG_DIR/logstash/
@@ -439,10 +443,10 @@ create_and_changePermission /etc/ssl/certs/CBox-SMTP.pem
 echo "[ OK ]" 1>&3
 ##################################################
 #                                                #
-# Installing CBox                                 #
+# Installing CyberBox                                 #
 #                                                #
 ##################################################
-banner "CBox ..."
+banner "CyberBox ..."
 
 echo -n "Setting environmental permissions.. " 1>&3
 sudo mkdir -p /etc/netplan || :
@@ -483,7 +487,7 @@ sudo cp config/secrets/* $CONFIG_DIR
 sed -i "s/SECRET_KEY=.*$/SECRET_KEY=$SECRET_KEY/g" $CONFIG_DIR/web.conf
 sed -i "s/DATABASE_URL=.*$/DATABASE_URL=postgresql:\/\/$POSTGRES_USER:$POSTGRES_PASSWORD@db:$POSTGRES_PORT\/$POSTGRES_DB/g" $CONFIG_DIR/web.conf
 sed -i "s/POSTGRES_PASSWORD=.*$/POSTGRES_PASSWORD=$POSTGRES_PASSWORD/g" $CONFIG_DIR/db.conf
-sed -i "s/IP2TOKEN=.*$/IP2TOKEN=$IP2TOKEN/g" $CONFIG_DIR/secrets.conf
+#sed -i "s/IP2TOKEN=.*$/IP2TOKEN=$IP2TOKEN/g" $CONFIG_DIR/secrets.conf
 sed -i "s/OPENVAS_PASS=.*$/OPENVAS_PASS=$OPENVAS_PASS/g" $CONFIG_DIR/openvas.conf
 sudo cp config/etc/etc_files/* /etc/ -R || :
 sudo cp config/secrets/msmtprc /etc/msmtprc
@@ -642,17 +646,16 @@ echo " [ OK ] " 1>&3
 
 ##################################################
 #                                                #
-# CBox start                                    #
+# CyberBox start                                 #
 #                                                #
 ##################################################
-banner "Starting CBox..."
+banner "Starting CyberBox..."
 
 sudo systemctl start cbox
 
-#TODO fix path
+
 echo -n "Waiting for Elasticsearch to become available.. " 1>&3
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh elasticsearch
-#sudo $SCRIPTDIR/wait-for-healthy-container.sh elasticsearch
 echo " [ OK ] " 1>&3
 
 echo -n "Installing the scores index.. " 1>&3
@@ -677,7 +680,7 @@ echo "INSERT INTO blocks_by_bpffilter(src_ip, src_port, dst_ip, dst_port, proto)
 echo " [ OK ] " 1>&3
 
 echo -n "Waiting for Kibana to become available.. " 1>&3
-sleep 300
+sleep 30
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kibana 600 && echo -n " [ OK  " 1>&3 || echo -n " [ NOT OK " 1>&3
 sleep 30
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kibana 600 && echo "  OK ] " 1>&3 || echo "  NOT OK ] " 1>&3
@@ -728,8 +731,9 @@ echo " [ OK ] " 1>&3
 
 echo -n "Updating tools. This may take a very long time.. " 1>&3
 sudo docker container restart suricata
-sleep 30
+sleep 80
 sudo docker exec suricata /root/scripts/update.sh
+sleep 80
 echo "[ suricata ] " 1>&3
 
 echo -n "Cleaning up.. " 1>&3
@@ -739,7 +743,7 @@ echo " [ OK ] " 1>&3
 echo "The following secrets were used:" 1>&3
 echo "Flask SECRET_KEY: $SECRET_KEY" 1>&3
 echo "Postgres: $POSTGRES_USER:$POSTGRES_PASSWORD" 1>&3
-echo "IP2Location API Key: $IP2TOKEN" 1>&3
+#echo "IP2Location API Key: $IP2TOKEN" 1>&3
 echo "OpenVAS Password: $OPENVAS_PASS" 1>&3
 
 echo "CyberBox.. [ READY ]" | /usr/games/lolcat 1>&3
