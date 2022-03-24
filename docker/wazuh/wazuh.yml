@@ -12,7 +12,30 @@ services:
         - "514:514/udp"
         - "55000:55000"
         volumes:
+        - ossec_api_configuration:/var/ossec/api/configuration
+        - ossec_etc:/var/ossec/etc
+        - ossec_logs:/var/ossec/logs
+        - ossec_queue:/var/ossec/queue
+        - ossec_var_multigroups:/var/ossec/var/multigroups
+        - ossec_integrations:/var/ossec/integrations
+        - ossec_active_response:/var/ossec/active-response/bin
+        - ossec_agentless:/var/ossec/agentless
+        - ossec_wodles:/var/ossec/wodles
+        - filebeat_etc:/etc/filebeat
+        - filebeat_var:/var/lib/filebeat
         - /var/lib/cbox/wazuh-authd.pass:/wazuh-config-mount/etc/authd.pass
         env_file:
         - /opt/cbox/config/secrets/wazuh.conf
         - /etc/cbox/modules.conf
+volumes:
+  ossec_api_configuration:
+  ossec_etc:
+  ossec_logs:
+  ossec_queue:
+  ossec_var_multigroups:
+  ossec_integrations:
+  ossec_active_response:
+  ossec_agentless:
+  ossec_wodles:
+  filebeat_etc:
+  filebeat_var:
