@@ -1,7 +1,8 @@
-FROM alpine:3.14
-#
+FROM alpine:3.12
+# source: https://github.com/telekom-security/tpotce/blob/master/docker/spiderfoot/Dockerfile
 # Get and install dependencies & packages
-RUN apk -U --no-cache add \
+RUN sed -i 's/dl-cdn/dl-2/g' /etc/apk/repositories && \
+    apk -U --no-cache add \
             build-base \
             curl \
             git \
@@ -18,6 +19,9 @@ RUN apk -U --no-cache add \
             openssl-dev \
             python3 \
             python3-dev \
+	    py-cffi \
+	    py-pillow \
+            py-future \
             py3-pip \
             swig \
 	    tinyxml \
@@ -29,14 +33,16 @@ RUN apk -U --no-cache add \
     adduser -S -s /bin/ash -u 2000 -D -g 2000 spiderfoot && \
 #
 # Install spiderfoot 
-    git clone --depth=1 -b v3.4 https://github.com/smicallef/spiderfoot /home/spiderfoot && \
+    git clone --depth=1 -b v3.1 https://github.com/smicallef/spiderfoot /home/spiderfoot && \
     cd /home/spiderfoot && \
     pip3 install --upgrade pip && \
     pip3 install --no-cache-dir wheel && \ 
     pip3 install --no-cache-dir -r requirements.txt && \ 
+    pip3 install secure==0.2.1 && \
+    pip3 install networkx==2.5 && \
     chown -R spiderfoot:spiderfoot /home/spiderfoot && \
-    sed -i "s#'root': '\/'#'root': '\/spiderfoot'#" /home/spiderfoot/sf.py && \
-    sed -i "s#'root', '\/'#'root', '\/spiderfoot'#" /home/spiderfoot/sf.py && \
+    sed -i "s#'__docroot': ''#'__docroot': '\/spiderfoot'#" /home/spiderfoot/sf.py && \
+    sed -i 's#raise cherrypy.HTTPRedirect("\/")#raise cherrypy.HTTPRedirect("\/spiderfoot")#' /home/spiderfoot/sfwebui.py && \
 #
 # Clean up
     apk del --purge build-base \
@@ -59,7 +65,7 @@ HEALTHCHECK --retries=10 CMD curl -s -XGET 'http://127.0.0.1:8080/spiderfoot/'
 # Set user, workdir and start spiderfoot
 USER spiderfoot:spiderfoot
 WORKDIR /home/spiderfoot
-CMD ["/usr/bin/python3.9", "sf.py","-l", "0.0.0.0:8080"]
+CMD ["/usr/bin/python3.8", "sf.py","-l", "0.0.0.0:8080"]
 
 
 # FROM alpine:3.14
