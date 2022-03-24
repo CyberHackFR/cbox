@@ -680,7 +680,7 @@ echo "INSERT INTO blocks_by_bpffilter(src_ip, src_port, dst_ip, dst_port, proto)
 echo " [ OK ] " 1>&3
 
 echo -n "Waiting for Kibana to become available.. " 1>&3
-sleep 30
+sleep 300
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kibana 600 && echo -n " [ OK  " 1>&3 || echo -n " [ NOT OK " 1>&3
 sleep 30
 sudo $SCRIPTDIR/../../scripts/System_Scripts/wait-for-healthy-container.sh kibana 600 && echo "  OK ] " 1>&3 || echo "  NOT OK ] " 1>&3
@@ -731,9 +731,8 @@ echo " [ OK ] " 1>&3
 
 echo -n "Updating tools. This may take a very long time.. " 1>&3
 sudo docker container restart suricata
-sleep 80
+sleep 100
 sudo docker exec suricata /root/scripts/update.sh
-sleep 80
 echo "[ suricata ] " 1>&3
 
 echo -n "Cleaning up.. " 1>&3
