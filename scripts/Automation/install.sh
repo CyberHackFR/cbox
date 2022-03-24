@@ -18,7 +18,7 @@ By running the script you confirm to know what you are doing:
 1. New packages will be installed.
 2. A new folder called '/data' will be created in your root directory.
 3. A new sudo user called 'cboxadmin' will be created on this system.
-4. The CBox service will be enabled.
+4. The cbox service will be enabled.
 
 #############################################
 Usage:
@@ -427,6 +427,106 @@ sudo chmod -R 777 /var/lib/cbox_docs
 sudo docker volume create --driver local --opt type=none --opt device=/var/lib/cbox_docs --opt o=bind varlib_docs
 sudo chown -R root:44269 /var/lib/cbox_docs/
 sudo chmod 760 -R /var/lib/cbox_docs/
+echo " [ DONE ] " 1>&1
+
+# Setup Wazuh volume
+echo -n "ossec_api_configuration:" 1>&1
+sudo mkdir -p /var/lib/ossec_api_configuration
+sudo chown root:root /var/lib/ossec_api_configuration
+sudo chmod -R 777 /var/lib/ossec_api_configuration
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_api_configuration --opt o=bind ossec_api_configuration
+sudo chown -R root:44269 /var/lib/ossec_api_configuration/
+sudo chmod 760 -R /var/lib/ossec_api_configuration/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_etc:" 1>&1
+sudo mkdir -p /var/lib/ossec_etc
+sudo chown root:root /var/lib/ossec_etc
+sudo chmod -R 777 /var/lib/ossec_etc
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_etc --opt o=bind ossec_etc
+sudo chown -R root:44269 /var/lib/ossec_etc/
+sudo chmod 760 -R /var/lib/ossec_etc/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_logs:" 1>&1
+sudo mkdir -p /var/lib/ossec_logs
+sudo chown root:root /var/lib/ossec_logs
+sudo chmod -R 777 /var/lib/ossec_logs
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_logs --opt o=bind ossec_logs
+sudo chown -R root:44269 /var/lib/ossec_logs/
+sudo chmod 760 -R /var/lib/ossec_logs/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_queue:" 1>&1
+sudo mkdir -p /var/lib/ossec_queue
+sudo chown root:root /var/lib/ossec_queue
+sudo chmod -R 777 /var/lib/ossec_queue
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_queue --opt o=bind ossec_queue
+sudo chown -R root:44269 /var/lib/ossec_queue/
+sudo chmod 760 -R /var/lib/ossec_queue/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_var_multigroups:" 1>&1
+sudo mkdir -p /var/lib/ossec_var_multigroups
+sudo chown root:root /var/lib/ossec_var_multigroups
+sudo chmod -R 777 /var/lib/ossec_var_multigroups
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_var_multigroups --opt o=bind ossec_var_multigroups
+sudo chown -R root:44269 /var/lib/ossec_var_multigroups/
+sudo chmod 760 -R /var/lib/ossec_var_multigroups/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_integrations:" 1>&1
+sudo mkdir -p /var/lib/ossec_integrations
+sudo chown root:root /var/lib/ossec_integrations
+sudo chmod -R 777 /var/lib/ossec_integrations
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_integrations --opt o=bind ossec_integrations
+sudo chown -R root:44269 /var/lib/ossec_integrations/
+sudo chmod 760 -R /var/lib/ossec_integrations/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_active_response:" 1>&1
+sudo mkdir -p /var/lib/ossec_active_response
+sudo chown root:root /var/lib/ossec_active_response
+sudo chmod -R 777 /var/lib/ossec_active_response
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_active_response --opt o=bind ossec_active_response
+sudo chown -R root:44269 /var/lib/ossec_active_response/
+sudo chmod 760 -R /var/lib/ossec_active_response/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_agentless:" 1>&1
+sudo mkdir -p /var/lib/ossec_agentless
+sudo chown root:root /var/lib/ossec_agentless
+sudo chmod -R 777 /var/lib/ossec_agentless
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_agentless --opt o=bind ossec_agentless
+sudo chown -R root:44269 /var/lib/ossec_agentless/
+sudo chmod 760 -R /var/lib/ossec_agentless/
+echo " [ DONE ] " 1>&1
+
+echo -n "ossec_wodles:" 1>&1
+sudo mkdir -p /var/lib/ossec_wodles
+sudo chown root:root /var/lib/ossec_wodles
+sudo chmod -R 777 /var/lib/ossec_wodles
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/ossec_wodles --opt o=bind ossec_wodles
+sudo chown -R root:44269 /var/lib/ossec_wodles/
+sudo chmod 760 -R /var/lib/ossec_wodles/
+echo " [ DONE ] " 1>&1
+
+echo -n "filebeat_etc:" 1>&1
+sudo mkdir -p /var/lib/filebeat_etc
+sudo chown root:root /var/lib/filebeat_etc
+sudo chmod -R 777 /var/lib/filebeat_etc
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/filebeat_etc --opt o=bind filebeat_etc
+sudo chown -R root:44269 /var/lib/filebeat_etc/
+sudo chmod 760 -R /var/lib/filebeat_etc/
+echo " [ DONE ] " 1>&1
+
+echo -n "filebeat_var:" 1>&1
+sudo mkdir -p /var/lib/filebeat_var
+sudo chown root:root /var/lib/filebeat_var
+sudo chmod -R 777 /var/lib/filebeat_var
+sudo docker volume create --driver local --opt type=none --opt device=/var/lib/filebeat_var --opt o=bind filebeat_var
+sudo chown -R root:44269 /var/lib/filebeat_var/
+sudo chmod 760 -R /var/lib/filebeat_var/
 echo " [ DONE ] " 1>&1
 
 #Done with volumes
